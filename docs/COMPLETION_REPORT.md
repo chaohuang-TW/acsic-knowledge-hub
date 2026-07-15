@@ -39,7 +39,11 @@
 
 ## 部署結果
 
-已建立 GitHub Actions CI 與 Pages workflow。遠端 Actions 與公開網址狀態將在發布後確認。
+- Repository：`chaohuang-TW/acgf-strategy-os-demo`，visibility 為 Public。
+- CI 與 Deploy Pages 均已成功完成。
+- Pages Source 已設為 GitHub Actions，HTTPS 已強制啟用，自訂網域保持空白。
+- 正式網址：`https://chaohuang-tw.github.io/acgf-strategy-os-demo/`。
+- 已從線上重新讀取首頁、圖片、`#/compare`、`robots.txt` 與 noindex 設定。
 
 ## 安全檢查結果
 
@@ -58,4 +62,8 @@
 
 ## 尚需人工操作事項
 
-若 GitHub repository 的 Pages 來源尚未允許 GitHub Actions，需在 Settings → Pages 選擇 GitHub Actions；發布後將先嘗試完成並確認此設定。
+無。Pages 首次啟用與部署已完成。
+
+## 非阻斷性警告
+
+GitHub Actions 顯示部分官方或第三方 Actions 仍宣告 Node.js 20，GitHub runner 已自動以 Node.js 24 執行；CI 與部署均成功。
