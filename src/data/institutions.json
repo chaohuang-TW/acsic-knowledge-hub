@@ -1,0 +1,134 @@
+[
+  {
+    "id": "east-isle-agri-guarantee",
+    "demo": true,
+    "institutionName": "東嶼國農業信用保證局",
+    "countryName": "東嶼國",
+    "institutionType": "農業信用保證機構",
+    "tags": ["農業", "區域合作", "災害韌性"],
+    "serviceTargets": ["小規模農業經營者", "農業合作組織", "農產加工新創"],
+    "guaranteeMeasures": ["營運週轉示範保證", "設備更新示範保證", "災後復耕示範保證"],
+    "guaranteeCoverage": "依示範案件風險分級設定，不呈現正式比例或金額。",
+    "fundingSources": ["虛構公共準備金", "示範合作金融機構分攤"],
+    "riskSharing": "由虛構保證機構與示範合作金融機構共同承擔。",
+    "governanceModel": "跨部門政策委員會搭配獨立風險審查單位。",
+    "agricultureMeasures": ["季節性資金需求分類", "災害復原案件標記"],
+    "youthFarmerMeasures": ["初次經營者示範輔導", "青年農業計畫書欄位"],
+    "verificationStatus": "示範已檢核",
+    "confidenceLevel": "高",
+    "updatedAt": "2026-07-12",
+    "facts": ["本紀錄為完全虛構的 DEMO 資料。", "每個制度欄位均保留示範來源。"],
+    "inferences": ["結構化欄位有助於比較農業季節性風險。"],
+    "pending": ["正式研究時須重新確認法源、資金與風險分擔機制。"],
+    "sources": [
+      {
+        "id": "demo-east-isle-charter",
+        "title": "DEMO 東嶼制度章程摘要",
+        "sourceType": "示範一手來源",
+        "publisher": "虛構東嶼研究資料室",
+        "url": "https://east-isle-research.invalid/charter",
+        "accessedDate": "2026-07-12",
+        "note": "完全虛構，僅用於展示來源登錄欄位。"
+      }
+    ]
+  },
+  {
+    "id": "north-star-sme-guarantee",
+    "demo": true,
+    "institutionName": "北辰中小企業保證機構",
+    "countryName": "北辰聯邦",
+    "institutionType": "中小企業信用保證機構",
+    "tags": ["中小企業", "數位轉型", "地方創生"],
+    "serviceTargets": ["微型企業", "地方服務業", "數位轉型團隊"],
+    "guaranteeMeasures": ["創業準備示範保證", "數位設備示範保證"],
+    "guaranteeCoverage": "以風險層級文字描述，未設定虛構精確百分比。",
+    "fundingSources": ["虛構中央產業基金", "地方共同準備金"],
+    "riskSharing": "中央與地方示範基金分層承擔。",
+    "governanceModel": "區域委員會提案，中央風險單位複核。",
+    "agricultureMeasures": [],
+    "youthFarmerMeasures": [],
+    "verificationStatus": "示範待複核",
+    "confidenceLevel": "中",
+    "updatedAt": "2026-06-28",
+    "facts": ["本紀錄為完全虛構的 DEMO 資料。", "資料模型可呈現非農業型保證制度。"],
+    "inferences": ["分層治理可能有助於呈現區域差異。"],
+    "pending": ["示範治理流程尚待第二位人工審查者確認。"],
+    "sources": [
+      {
+        "id": "demo-north-star-review",
+        "title": "DEMO 北辰區域制度觀察稿",
+        "sourceType": "示範二手來源",
+        "publisher": "虛構北辰政策觀察室",
+        "url": "https://north-star-policy.invalid/review",
+        "accessedDate": "2026-06-28",
+        "note": "虛構二手來源，用於示範待複核狀態。"
+      }
+    ]
+  },
+  {
+    "id": "sea-mount-green-finance",
+    "demo": true,
+    "institutionName": "海岳綠色融資保證中心",
+    "countryName": "海岳共和國",
+    "institutionType": "綠色融資保證機構",
+    "tags": ["綠色融資", "農業", "能源轉型"],
+    "serviceTargets": ["低碳農業專案", "地方能源合作社", "循環經濟事業"],
+    "guaranteeMeasures": ["低碳設備示範保證", "轉型計畫示範保證"],
+    "guaranteeCoverage": "依環境效益與還款能力的示範分類呈現。",
+    "fundingSources": ["虛構綠色轉型準備金", "示範金融機構共同資金"],
+    "riskSharing": "保證中心、承貸機構與專案發起人分層承擔。",
+    "governanceModel": "風險審查與環境效益審查分開記錄。",
+    "agricultureMeasures": ["節能設備分類", "低碳生產轉型標記"],
+    "youthFarmerMeasures": ["青年永續提案示範欄位"],
+    "verificationStatus": "示範已檢核",
+    "confidenceLevel": "高",
+    "updatedAt": "2026-07-08",
+    "facts": ["本紀錄為完全虛構的 DEMO 資料。", "環境效益與信用風險分欄記錄。"],
+    "inferences": ["分欄設計可降低環境效益與授信判斷混用的風險。"],
+    "pending": ["正式研究應另行定義環境效益評估標準。"],
+    "sources": [
+      {
+        "id": "demo-sea-mount-framework",
+        "title": "DEMO 海岳綠色保證框架",
+        "sourceType": "示範一手來源",
+        "publisher": "虛構海岳綠色金融實驗室",
+        "url": "https://sea-mount-green.invalid/framework",
+        "accessedDate": "2026-07-08",
+        "note": "完全虛構，只供介面及資料治理測試。"
+      }
+    ]
+  },
+  {
+    "id": "cloud-field-rural-development",
+    "demo": true,
+    "institutionName": "雲原鄉村發展保證社",
+    "countryName": "雲原國",
+    "institutionType": "合作型保證機構",
+    "tags": ["鄉村發展", "農業", "青年農民"],
+    "serviceTargets": ["偏遠地區農業團隊", "社區型加工組織", "青年返鄉團隊"],
+    "guaranteeMeasures": ["社區共保示範機制", "小額設備示範保證"],
+    "guaranteeCoverage": "缺漏資訊維持待查證，不自動補入比例。",
+    "fundingSources": ["虛構會員共同基金"],
+    "riskSharing": "待查證。",
+    "governanceModel": "會員代表會與專業風險顧問共同參與。",
+    "agricultureMeasures": ["社區農產共同運銷分類"],
+    "youthFarmerMeasures": ["青年返鄉團隊專屬標記", "導師陪伴示範欄位"],
+    "verificationStatus": "待查證",
+    "confidenceLevel": "低",
+    "updatedAt": "2026-05-19",
+    "facts": ["本紀錄為完全虛構的 DEMO 資料。"],
+    "inferences": ["合作治理可能適合呈現地方型風險分擔。"],
+    "pending": ["風險分擔方式尚未填入。", "所有制度描述均須人工複核。"],
+    "sources": [
+      {
+        "id": "demo-cloud-field-note",
+        "title": "DEMO 雲原合作保證概念筆記",
+        "sourceType": "示範二手來源",
+        "publisher": "虛構雲原鄉村設計室",
+        "url": "https://cloud-field-rural.invalid/note",
+        "accessedDate": "2026-05-19",
+        "note": "虛構概念筆記，刻意保留待查證欄位。"
+      }
+    ]
+  }
+]
