@@ -80,3 +80,14 @@ The repository was renamed from `acgf-strategy-os-demo` on 2026-07-16. See [Repo
 - Unknown fields remain `null`, empty or explicitly pending.
 - Institution mandates and data dates differ; comparisons do not rank systems.
 - `noindex` and `robots.txt` discourage indexing but are not access controls.
+
+<!-- GENERATED:COVERAGE:START -->
+
+## Current governed coverage
+
+- Formal members: 20; observers: 1; countries/economies: 14; institutions: 21.
+- Level 1 complete: 21; strict Level 2 complete: 1; partial: 19; insufficient: 1; reliable Level 3 metrics: 0.
+- Source references: 52; unique official sources: 33; field-level evidence objects: 203.
+- User-visible governed content bilingual coverage: 100%; official native-language names: 11/21.
+
+<!-- GENERATED:COVERAGE:END -->

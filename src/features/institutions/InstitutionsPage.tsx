@@ -1,190 +1,165 @@
 import { useMemo, useState } from 'react';
 import { PageHeader, ResearchBadge } from '../../components/Layout';
 import { institutions } from '../../data/institutions';
+import { level2FieldLabels } from '../../data/level2-standards';
 import { useLocale } from '../../i18n';
-import type { Institution } from '../../types';
+import type { Institution, Level2Status, Locale, LocalizedText, SourceType } from '../../types';
 import { displayValue } from '../../utils/core';
 
 const ui = {
   en: {
     title: 'Member Institutions',
     intro:
-      'Bilingual research profiles with official names, source provenance, verification status and visible data gaps.',
-    states: 'Interface state preview',
-    normal: 'Data',
-    empty: 'Empty',
-    error: 'Error',
+      'Auditable bilingual profiles with strict Level 2 status, field evidence and visible research gaps.',
     search: 'Search',
     placeholder: 'Search institution, country, abbreviation or summary',
     country: 'Countries / Economies',
     type: 'Institution type',
-    verification: 'Verification',
+    status: 'Strict Level 2 status',
+    membership: 'ACSIC status',
     all: 'All',
-    verified: 'Verified',
-    partial: 'Partially verified',
-    pending: 'Pending verification',
-    agriculture: 'ACSIC status',
-    youth: 'Profile level',
-    any: 'Any',
-    yes: 'Member',
-    no: 'Observer',
+    member: 'Member',
+    observer: 'Observer',
     clear: 'Clear filters',
-    results: 'official institution records',
+    results: 'institution records',
     noResults: 'No matching results',
-    noResultsText:
-      'Adjust the search or filters. The system does not generate replacement records.',
-    emptyTitle: 'No public records',
-    emptyText: 'This preview confirms that the interface explains an empty dataset clearly.',
-    errorTitle: 'Public data could not be loaded',
-    errorText: 'This is an error-state preview. No content is sent to an external service.',
-    return: 'Return to data',
-    load: 'Load data',
+    noResultsText: 'Adjust the search or filters. Missing records are never generated.',
     details: 'View profile',
     close: 'Close profile',
+    officialName: 'Official English name',
+    nativeName: 'Official native-language name',
+    nativePending: 'Pending official-source confirmation',
+    translatedName: 'Traditional Chinese research name',
+    translation: 'Chinese-name status',
+    role: 'Institution type',
+    level2: 'Strict Level 2 status',
+    method: 'Completion method',
+    methodText:
+      'Verified applicable fields divided by all fields required by the central standard. A field is excluded only with a documented non-applicability reason.',
     service: 'Service targets',
-    tools: 'Policy tools',
-    verifiedDate: 'Last verified',
+    functions: 'Major functions',
+    established: 'Established year',
+    authority: 'Supervising or oversight relationship',
+    legal: 'Legal basis',
+    governance: 'Governance type',
+    funding: 'Funding or capital basis',
+    scope: 'Geographic scope',
     confidence: 'Confidence',
+    confidenceReason: 'Confidence rationale',
+    missingFields: 'Applicable fields still missing',
+    notApplicable: 'Documented non-applicable fields',
+    nextPriority: 'Next research priority',
+    evidence: 'Field-level evidence',
+    claims: 'Readable verified claims',
+    sources: 'Official sources',
+    sourceWarning: 'Source warning',
+    stale: 'Staleness warning',
+    unavailable: 'Temporarily unavailable',
+    complete: 'Complete',
+    partial: 'Partial',
+    insufficient: 'Insufficient',
+    not_assessed: 'Not assessed',
     high: 'High',
     medium: 'Medium',
     low: 'Low',
-    officialName: 'Official English name',
-    translatedName: 'Traditional Chinese name',
-    translation: 'Name translation status',
-    summary: 'Summary',
-    established: 'Established',
-    authority: 'Supervising authority',
-    legal: 'Legal basis',
-    programs: 'Guarantee programs or operations',
-    funding: 'Funding sources',
-    governance: 'Governance',
-    membership: 'ACSIC status',
-    website: 'Official website',
-    facts: 'Verified facts',
-    analysis: 'Analysis or inference',
-    pendingItems: 'Pending research',
-    sources: 'Official sources',
-    publisher: 'Publisher',
-    originalLanguage: 'Original language',
-    documentDate: 'Document date',
-    accessed: 'Accessed',
-    section: 'Section',
-    missing: 'Not stated in the official source',
     official: 'official',
     research_translation: 'research translation',
-    pendingTranslation: 'pending',
-    noInference: 'None. The system does not add inference automatically.',
+    pending: 'pending',
     noItems: 'None recorded.',
-    completeness: 'Completeness',
-    missingFields: 'Missing fields',
-    nextPriority: 'Next research priority',
-    fieldEvidence: 'Field-level evidence',
-    roleCategory: 'Role category',
+    officialWebsite: 'Official website',
+    openSource: 'Open source',
   },
   'zh-TW': {
     title: '會員機構',
-    intro: '以雙語研究檔案保存官方名稱、來源脈絡、查證狀態與清楚可見的資料缺口。',
-    states: '介面狀態預覽',
-    normal: '正常資料',
-    empty: '空資料',
-    error: '載入錯誤',
+    intro: '以嚴格 Level 2 狀態、欄位級證據與公開研究缺口呈現可稽核的完整雙語檔案。',
     search: '關鍵字搜尋',
     placeholder: '搜尋機構、國家、簡稱或摘要',
     country: '國家／經濟體',
     type: '機構類型',
-    verification: '查證狀態',
+    status: '嚴格 Level 2 狀態',
+    membership: 'ACSIC 身分',
     all: '全部',
-    verified: '已查證',
-    partial: '部分查證',
-    pending: '待查證',
-    agriculture: 'ACSIC 身分',
-    youth: '資料層級',
-    any: '全部',
-    yes: '正式會員',
-    no: '觀察員',
+    member: '正式會員',
+    observer: '觀察員',
     clear: '清除篩選',
-    results: '筆官方機構紀錄',
+    results: '筆機構紀錄',
     noResults: '沒有符合條件的結果',
-    noResultsText: '請調整搜尋或篩選，系統不會產生內容填補結果。',
-    emptyTitle: '目前沒有公開資料',
-    emptyText: '這是空資料狀態，用於確認無資料時仍有清楚說明。',
-    errorTitle: '公開資料載入失敗',
-    errorText: '這是錯誤狀態預覽，內容不會傳送至外部服務。',
-    return: '返回正常資料',
-    load: '載入公開資料',
+    noResultsText: '請調整搜尋或篩選；系統不會產生資料填補結果。',
     details: '檢視機構檔案',
     close: '關閉機構檔案',
+    officialName: '官方英文名稱',
+    nativeName: '官方原生語言名稱',
+    nativePending: '待官方來源確認',
+    translatedName: '繁體中文研究名稱',
+    translation: '中文名稱狀態',
+    role: '機構類型',
+    level2: '嚴格 Level 2 狀態',
+    method: '完整度算法',
+    methodText:
+      '以中央規格要求的全部欄位為基礎，計算已有證據的適用欄位比例；只有具正式理由的不適用欄位才能排除。',
     service: '服務對象',
-    tools: '政策工具',
-    verifiedDate: '最後查證',
+    functions: '主要功能',
+    established: '設立年份',
+    authority: '主管、監督或治理關係',
+    legal: '法源依據',
+    governance: '治理型態',
+    funding: '資金或資本基礎',
+    scope: '地理範圍',
     confidence: '資料可信度',
+    confidenceReason: '可信度理由',
+    missingFields: '仍缺漏的適用欄位',
+    notApplicable: '正式記錄的不適用欄位',
+    nextPriority: '下一步研究優先事項',
+    evidence: '欄位級證據',
+    claims: '可閱讀的已查證事實',
+    sources: '官方來源',
+    sourceWarning: '來源警示',
+    stale: '資料時效警示',
+    unavailable: '暫時無法存取',
+    complete: '完整',
+    partial: '部分完成',
+    insufficient: '證據不足',
+    not_assessed: '尚未評估',
     high: '高',
     medium: '中',
     low: '低',
-    officialName: '官方英文名稱',
-    translatedName: '繁體中文名稱',
-    translation: '名稱翻譯狀態',
-    summary: '摘要',
-    established: '設立年份',
-    authority: '主管或監督關係',
-    legal: '法源',
-    programs: '保證方案或業務',
-    funding: '資金來源',
-    governance: '治理架構',
-    membership: 'ACSIC 身分',
-    website: '官方網站',
-    facts: '已查證事實',
-    analysis: '分析或推論',
-    pendingItems: '待查證事項',
-    sources: '官方來源',
-    publisher: '發布者',
-    originalLanguage: '原始語言',
-    documentDate: '文件日期',
-    accessed: '查閱日期',
-    section: '章節',
-    missing: '官方資料未揭露',
     official: '官方',
     research_translation: '研究翻譯',
-    pendingTranslation: '待處理',
-    noInference: '無，系統不自動補入推論。',
-    noItems: '目前未記錄。',
-    completeness: '完整度',
-    missingFields: '缺漏欄位',
-    nextPriority: '下一步研究優先事項',
-    fieldEvidence: '欄位級證據',
-    roleCategory: '機構類型代碼',
+    pending: '待處理',
+    noItems: '目前沒有紀錄。',
+    officialWebsite: '官方網站',
+    openSource: '開啟來源',
   },
 } as const;
+
+const sourceTypeLabels: Record<SourceType, LocalizedText> = {
+  official_membership_roster: { en: 'Official membership roster', 'zh-TW': '官方會員名冊' },
+  official_institution_profile: { en: 'Official institution profile', 'zh-TW': '官方機構簡介' },
+  official_law_or_regulation: { en: 'Official law or regulation', 'zh-TW': '官方法律或法規' },
+  official_annual_report: { en: 'Official annual report', 'zh-TW': '官方年度報告' },
+  official_scheme_document: { en: 'Official scheme document', 'zh-TW': '官方制度文件' },
+  official_governance_document: { en: 'Official governance document', 'zh-TW': '官方治理文件' },
+  official_government_source: { en: 'Official government source', 'zh-TW': '政府官方來源' },
+  official_press_release: { en: 'Official press release', 'zh-TW': '官方新聞稿' },
+  official_strategy_document: { en: 'Official strategy document', 'zh-TW': '官方策略文件' },
+};
+
+function localizedList(items: LocalizedText[], locale: Locale, empty: string) {
+  return (
+    <ul>
+      {items.length ? items.map((item) => <li key={item.en}>{item[locale]}</li>) : <li>{empty}</li>}
+    </ul>
+  );
+}
+
+function statusLabel(status: Level2Status, locale: Locale) {
+  return ui[locale][status];
+}
 
 function InstitutionDetail({ record, onClose }: { record: Institution; onClose: () => void }) {
   const { locale } = useLocale();
   const c = ui[locale];
-  const translation =
-    record.nameTranslationStatus === 'pending'
-      ? c.pendingTranslation
-      : c[record.nameTranslationStatus];
-  const details: Array<[string, Institution[keyof Institution] | string]> = [
-    [c.officialName, record.name.en],
-    [c.translatedName, record.name['zh-TW']],
-    [c.translation, translation],
-    [c.summary, record.summary[locale]],
-    [c.established, record.establishedYear],
-    [c.authority, record.supervisingAuthority],
-    [c.legal, record.legalBasis],
-    [c.service, record.serviceTargets],
-    [c.programs, record.guaranteePrograms],
-    [c.funding, record.fundingSources],
-    [c.governance, record.governanceStructure],
-    [c.membership, record.acsicMembershipStatus],
-    [c.website, record.officialWebsite],
-    [c.roleCategory, record.institutionRoleCategory],
-    [c.completeness, `Level 1 ${record.level1Completion}% / Level 2 ${record.level2Completion}%`],
-    [c.missingFields, record.missingFields],
-    [c.nextPriority, record.nextResearchPriority[locale]],
-  ];
-  const list = (items: string[], empty: string) => (
-    <ul>{items.length ? items.map((item) => <li key={item}>{item}</li>) : <li>{empty}</li>}</ul>
-  );
+  const source = (id: string) => record.sourceReferences.find((item) => item.sourceId === id);
   return (
     <section className="detail-panel" aria-labelledby="detail-title">
       <div className="detail-heading">
@@ -192,8 +167,8 @@ function InstitutionDetail({ record, onClose }: { record: Institution; onClose: 
           <ResearchBadge />
           <h2 id="detail-title">{record.name[locale]}</h2>
           <p>
-            {locale === 'en' ? record.countryNameEn : record.countryNameZhTw} |{' '}
-            {record.type[locale]}
+            {record.countryName[locale]} · {record.type[locale]} · ACSIC{' '}
+            {record.acsicMembershipStatus === 'member' ? c.member : c.observer}
           </p>
         </div>
         <button className="button secondary" onClick={onClose}>
@@ -201,74 +176,178 @@ function InstitutionDetail({ record, onClose }: { record: Institution; onClose: 
         </button>
       </div>
       <div className="detail-grid">
-        {details.map(([label, value]) => (
-          <section key={label}>
-            <h3>{label}</h3>
-            <p>{displayValue(value as Institution[keyof Institution], locale)}</p>
-          </section>
-        ))}
+        <section>
+          <h3>{c.officialName}</h3>
+          <p>{record.name.officialEnglish}</p>
+        </section>
+        <section>
+          <h3>{c.nativeName}</h3>
+          <p>
+            {record.name.nativeName.status === 'official'
+              ? `${record.name.nativeName.value} (${record.name.nativeName.language})`
+              : c.nativePending}
+          </p>
+        </section>
+        <section>
+          <h3>{c.translatedName}</h3>
+          <p>
+            {record.name['zh-TW']} · {c[record.name.zhTWTranslationStatus]}
+          </p>
+        </section>
+        <section>
+          <h3>{c.role}</h3>
+          <p>{record.type[locale]}</p>
+        </section>
+        <section>
+          <h3>{c.level2}</h3>
+          <p>
+            {statusLabel(record.level2Status, locale)} · {record.level2Completion}%
+          </p>
+        </section>
+        <section>
+          <h3>{c.method}</h3>
+          <p>{c.methodText}</p>
+        </section>
+        <section>
+          <h3>{c.established}</h3>
+          <p>{displayValue(record.establishedYear, locale)}</p>
+        </section>
+        <section>
+          <h3>{c.legal}</h3>
+          <p>{displayValue(record.legalBasis, locale)}</p>
+        </section>
+        <section>
+          <h3>{c.authority}</h3>
+          <p>{displayValue(record.supervisingOrOversightAuthority, locale)}</p>
+        </section>
+        <section>
+          <h3>{c.governance}</h3>
+          <p>{displayValue(record.governanceType, locale)}</p>
+        </section>
+        <section>
+          <h3>{c.funding}</h3>
+          <p>{displayValue(record.fundingOrCapitalBasis, locale)}</p>
+        </section>
+        <section>
+          <h3>{c.scope}</h3>
+          <p>{displayValue(record.geographicScope, locale)}</p>
+        </section>
+        <section>
+          <h3>{c.service}</h3>
+          {localizedList(record.serviceTargets, locale, c.noItems)}
+        </section>
+        <section>
+          <h3>{c.functions}</h3>
+          {localizedList(record.majorFunctions, locale, c.noItems)}
+        </section>
+        <section>
+          <h3>{c.confidence}</h3>
+          <p>
+            {c[record.confidenceLevel]} · {record.confidenceScore}/100
+          </p>
+        </section>
+        <section>
+          <h3>{c.confidenceReason}</h3>
+          <p>{record.confidenceRationale[locale]}</p>
+        </section>
+        <section>
+          <h3>{c.nextPriority}</h3>
+          <p>{record.nextResearchPriority[locale]}</p>
+        </section>
+        <section>
+          <h3>{c.officialWebsite}</h3>
+          <p>
+            <a href={record.officialWebsite} target="_blank" rel="noreferrer">
+              {record.officialWebsite}
+            </a>
+          </p>
+        </section>
       </div>
       <div className="evidence-grid">
         <section>
-          <h3>{c.fieldEvidence}</h3>
+          <h3>{c.missingFields}</h3>
           <ul>
-            {Object.entries(record.fieldEvidence).map(([field, sourceIds]) => (
+            {record.missingFields.map((field) => (
               <li key={field}>
-                {field}: {sourceIds.join(', ')}
+                {(level2FieldLabels[field] ?? { en: field, 'zh-TW': field })[locale]}
               </li>
             ))}
           </ul>
         </section>
         <section>
-          <h3>{c.facts}</h3>
-          {list(record.verifiedFacts, c.noItems)}
-        </section>
-        <section>
-          <h3>{c.analysis}</h3>
-          {list(record.analysisInferences, c.noInference)}
-        </section>
-        <section>
-          <h3>{c.pendingItems}</h3>
-          {list(record.pendingItems, c.noItems)}
+          <h3>{c.notApplicable}</h3>
+          {record.notApplicableFields.length ? (
+            record.notApplicableFields.map((item) => (
+              <article key={item.field}>
+                <strong>
+                  {
+                    (level2FieldLabels[item.field] ?? { en: item.field, 'zh-TW': item.field })[
+                      locale
+                    ]
+                  }
+                </strong>
+                <p>{item.reason[locale]}</p>
+              </article>
+            ))
+          ) : (
+            <p>{c.noItems}</p>
+          )}
         </section>
       </div>
       <section className="sources-block">
+        <h3>{c.evidence}</h3>
+        {Object.entries(record.fieldEvidence).map(([field, entries]) => (
+          <article key={field} className="evidence-card">
+            <h4>{(level2FieldLabels[field] ?? { en: field, 'zh-TW': field })[locale]}</h4>
+            {entries.map((entry) => {
+              const item = source(entry.sourceId);
+              return (
+                <div key={entry.evidenceId}>
+                  <p>{entry.evidenceSummary[locale]}</p>
+                  <p>
+                    <strong>{item?.title}</strong> · {entry.pageOrSection} · {entry.verifiedDate}
+                  </p>
+                  {item && (
+                    <a href={item.url} target="_blank" rel="noreferrer">
+                      {c.openSource}
+                    </a>
+                  )}
+                </div>
+              );
+            })}
+          </article>
+        ))}
+      </section>
+      <section className="sources-block">
+        <h3>{c.claims}</h3>
+        <ul>
+          {record.verifiedFacts.map((claim) => (
+            <li key={claim.claimId}>{claim.statement[locale]}</li>
+          ))}
+        </ul>
+      </section>
+      <section className="sources-block">
         <h3>{c.sources}</h3>
-        {record.sourceReferences.map((source, index) => (
-          <dl key={source.id}>
-            <div>
-              <dt>#</dt>
-              <dd>{index + 1}</dd>
-            </div>
-            <div>
-              <dt>{c.publisher}</dt>
-              <dd>{source.publisher}</dd>
-            </div>
-            <div>
-              <dt>{c.originalLanguage}</dt>
-              <dd>{source.originalLanguage}</dd>
-            </div>
-            <div>
-              <dt>{c.documentDate}</dt>
-              <dd>{source.documentDate ?? c.missing}</dd>
-            </div>
-            <div>
-              <dt>{c.section}</dt>
-              <dd>{source.section}</dd>
-            </div>
-            <div>
-              <dt>{c.accessed}</dt>
-              <dd>{source.accessedDate}</dd>
-            </div>
-            <div>
-              <dt>URL</dt>
-              <dd>
-                <a href={source.url} target="_blank" rel="noreferrer">
-                  {source.url}
-                </a>
-              </dd>
-            </div>
-          </dl>
+        {record.sourceReferences.map((item, index) => (
+          <article key={item.sourceId} className="source-card">
+            <h4>
+              [{index + 1}] {item.title}
+            </h4>
+            <p>
+              {item.publisher} · {sourceTypeLabels[item.sourceType][locale]} ·{' '}
+              {item.originalLanguage} · {item.accessedDate}
+            </p>
+            <p>{item.notes[locale]}</p>
+            {(item.stalenessWarning || item.accessStatus === 'temporarily_unavailable') && (
+              <p className="warning">
+                <strong>{c.sourceWarning}:</strong>{' '}
+                {item.stalenessWarning ? c.stale : c.unavailable}
+              </p>
+            )}
+            <a href={item.url} target="_blank" rel="noreferrer">
+              {c.openSource}
+            </a>
+          </article>
         ))}
       </section>
     </section>
@@ -281,80 +360,56 @@ export function InstitutionsPage() {
   const [query, setQuery] = useState('');
   const [country, setCountry] = useState('all');
   const [type, setType] = useState('all');
-  const [verification, setVerification] = useState('all');
-  const [agriculture, setAgriculture] = useState('any');
-  const [youth, setYouth] = useState('any');
+  const [status, setStatus] = useState('all');
+  const [membership, setMembership] = useState('all');
   const [selected, setSelected] = useState<Institution | null>(null);
-  const [viewState, setViewState] = useState<'normal' | 'empty' | 'error'>('normal');
   const filtered = useMemo(
     () =>
-      viewState === 'normal'
-        ? institutions.filter((record) => {
-            const text = [
-              record.name.en,
-              record.name['zh-TW'],
-              record.summary.en,
-              record.summary['zh-TW'],
-              record.institutionAbbreviation,
-              record.countryNameEn,
-              record.countryNameZhTw,
-              ...record.name.aliases,
-            ]
-              .join(' ')
-              .toLocaleLowerCase();
-            return (
-              (!query || text.includes(query.toLocaleLowerCase())) &&
-              (country === 'all' || record.countryCode === country) &&
-              (type === 'all' || record.institutionType === type) &&
-              (verification === 'all' || record.verificationStatus === verification) &&
-              (agriculture === 'any' ||
-                record.acsicMembershipStatus === (agriculture === 'yes' ? 'member' : 'observer')) &&
-              (youth === 'any' || record.profileCompletenessLevel === Number(youth))
-            );
-          })
-        : [],
-    [agriculture, country, query, type, verification, viewState, youth],
+      institutions.filter((record) => {
+        const text = [
+          record.name.en,
+          record.name['zh-TW'],
+          record.name.nativeName.value,
+          record.summary.en,
+          record.summary['zh-TW'],
+          record.institutionAbbreviation,
+          record.countryName.en,
+          record.countryName['zh-TW'],
+          ...record.name.aliases,
+        ]
+          .filter(Boolean)
+          .join(' ')
+          .toLocaleLowerCase();
+        return (
+          (!query || text.includes(query.toLocaleLowerCase())) &&
+          (country === 'all' || record.countryCode === country) &&
+          (type === 'all' || record.institutionRoleCategory === type) &&
+          (status === 'all' || record.level2Status === status) &&
+          (membership === 'all' || record.acsicMembershipStatus === membership)
+        );
+      }),
+    [country, membership, query, status, type],
   );
+  const countries = [
+    ...new Map(
+      institutions.map((record) => [record.countryCode, record.countryName[locale]]),
+    ).entries(),
+  ];
+  const roles = [
+    ...new Map(
+      institutions.map((record) => [record.institutionRoleCategory, record.type[locale]]),
+    ).entries(),
+  ];
   const clear = () => {
     setQuery('');
     setCountry('all');
     setType('all');
-    setVerification('all');
-    setAgriculture('any');
-    setYouth('any');
+    setStatus('all');
+    setMembership('all');
   };
-  const countries = [
-    ...new Map(
-      institutions.map((record) => [
-        record.countryCode,
-        locale === 'en' ? record.countryNameEn : record.countryNameZhTw,
-      ]),
-    ).entries(),
-  ];
-  const types = [...new Set(institutions.map((record) => record.institutionType))];
   return (
     <section className="section-shell page-section">
       <PageHeader title={c.title} intro={c.intro} />
-      <section className="state-demo" aria-label={c.states}>
-        <span>{c.states}</span>
-        <div className="segmented-control">
-          {(
-            [
-              ['normal', c.normal],
-              ['empty', c.empty],
-              ['error', c.error],
-            ] as const
-          ).map(([value, label]) => (
-            <button
-              key={value}
-              aria-pressed={viewState === value}
-              onClick={() => setViewState(value)}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      </section>
       <form className="filter-panel" onSubmit={(event) => event.preventDefault()}>
         <label className="search-field">
           <span>{c.search}</span>
@@ -374,8 +429,8 @@ export function InstitutionsPage() {
             onChange={(event) => setCountry(event.target.value)}
           >
             <option value="all">{c.all}</option>
-            {countries.map(([code, label]) => (
-              <option key={code} value={code}>
+            {countries.map(([value, label]) => (
+              <option key={value} value={value}>
                 {label}
               </option>
             ))}
@@ -389,76 +444,48 @@ export function InstitutionsPage() {
             onChange={(event) => setType(event.target.value)}
           >
             <option value="all">{c.all}</option>
-            {types.map((value) => (
-              <option key={value}>{value}</option>
+            {roles.map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
             ))}
           </select>
         </label>
         <label>
-          <span>{c.verification}</span>
+          <span>{c.status}</span>
           <select
-            aria-label={c.verification}
-            value={verification}
-            onChange={(event) => setVerification(event.target.value)}
+            aria-label={c.status}
+            value={status}
+            onChange={(event) => setStatus(event.target.value)}
           >
             <option value="all">{c.all}</option>
-            <option value="verified">{c.verified}</option>
-            <option value="partially_verified">{c.partial}</option>
-            <option value="pending_verification">{c.pending}</option>
+            {(['complete', 'partial', 'insufficient', 'not_assessed'] as const).map((value) => (
+              <option key={value} value={value}>
+                {c[value]}
+              </option>
+            ))}
           </select>
         </label>
         <label>
-          <span>{c.agriculture}</span>
+          <span>{c.membership}</span>
           <select
-            aria-label={c.agriculture}
-            value={agriculture}
-            onChange={(event) => setAgriculture(event.target.value)}
+            aria-label={c.membership}
+            value={membership}
+            onChange={(event) => setMembership(event.target.value)}
           >
-            <option value="any">{c.any}</option>
-            <option value="yes">{c.yes}</option>
-            <option value="no">{c.no}</option>
-          </select>
-        </label>
-        <label>
-          <span>{c.youth}</span>
-          <select
-            aria-label={c.youth}
-            value={youth}
-            onChange={(event) => setYouth(event.target.value)}
-          >
-            <option value="any">{c.any}</option>
-            <option value="1">Level 1</option>
-            <option value="2">Level 2</option>
-            <option value="3">Level 3</option>
+            <option value="all">{c.all}</option>
+            <option value="member">{c.member}</option>
+            <option value="observer">{c.observer}</option>
           </select>
         </label>
         <button type="button" className="button secondary" onClick={clear}>
           {c.clear}
         </button>
       </form>
-      {viewState === 'error' ? (
-        <div className="state-message error-state" role="alert">
-          <h2>{c.errorTitle}</h2>
-          <p>{c.errorText}</p>
-          <button className="button secondary" onClick={() => setViewState('normal')}>
-            {c.return}
-          </button>
-        </div>
-      ) : viewState === 'empty' ? (
-        <div className="state-message">
-          <h2>{c.emptyTitle}</h2>
-          <p>{c.emptyText}</p>
-          <button className="button secondary" onClick={() => setViewState('normal')}>
-            {c.load}
-          </button>
-        </div>
-      ) : filtered.length === 0 ? (
+      {filtered.length === 0 ? (
         <div className="state-message">
           <h2>{c.noResults}</h2>
           <p>{c.noResultsText}</p>
-          <button className="button secondary" onClick={clear}>
-            {c.clear}
-          </button>
         </div>
       ) : (
         <>
@@ -475,17 +502,12 @@ export function InstitutionsPage() {
                     <small>{record.name.en}</small>
                   </div>
                   <span className={`status status-${record.confidenceLevel}`}>
-                    {record.verificationStatus === 'verified'
-                      ? c.verified
-                      : record.verificationStatus === 'partially_verified'
-                        ? c.partial
-                        : c.pending}
+                    {statusLabel(record.level2Status, locale)}
                   </span>
                 </div>
                 <p>
-                  {locale === 'en' ? record.countryNameEn : record.countryNameZhTw} |{' '}
-                  {record.type[locale]} | ACSIC{' '}
-                  {record.acsicMembershipStatus === 'member' ? 'Member' : 'Observer'}
+                  {record.countryName[locale]} · {record.type[locale]} · ACSIC{' '}
+                  {record.acsicMembershipStatus === 'member' ? c.member : c.observer}
                 </p>
                 <p>{record.summary[locale]}</p>
                 <dl className="record-summary">
@@ -494,40 +516,27 @@ export function InstitutionsPage() {
                     <dd>{displayValue(record.serviceTargets, locale)}</dd>
                   </div>
                   <div>
-                    <dt>{c.tools}</dt>
-                    <dd>{displayValue(record.policyTools, locale)}</dd>
+                    <dt>{c.functions}</dt>
+                    <dd>{displayValue(record.majorFunctions, locale)}</dd>
                   </div>
                   <div>
-                    <dt>{c.verifiedDate}</dt>
-                    <dd>{record.lastVerifiedDate}</dd>
-                  </div>
-                  <div>
-                    <dt>{c.confidence}</dt>
+                    <dt>{c.level2}</dt>
                     <dd>
-                      {record.confidenceLevel === 'high'
-                        ? c.high
-                        : record.confidenceLevel === 'medium'
-                          ? c.medium
-                          : c.low}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>{c.completeness}</dt>
-                    <dd>
-                      Level 1 {record.level1Completion}% / Level 2 {record.level2Completion}%
+                      {statusLabel(record.level2Status, locale)} · {record.level2Completion}%
                     </dd>
                   </div>
                   <div>
                     <dt>{c.missingFields}</dt>
                     <dd>{record.missingFields.length}</dd>
                   </div>
+                  <div>
+                    <dt>{c.confidence}</dt>
+                    <dd>
+                      {c[record.confidenceLevel]} · {record.confidenceScore}/100
+                    </dd>
+                  </div>
                 </dl>
                 <div className="record-footer">
-                  <div className="tag-list">
-                    {record.tags.map((tag) => (
-                      <span key={tag}>{tag}</span>
-                    ))}
-                  </div>
                   <button className="button secondary" onClick={() => setSelected(record)}>
                     {c.details}
                   </button>

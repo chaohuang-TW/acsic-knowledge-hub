@@ -7,7 +7,7 @@ import {
   COMPARISON_LIMITATION,
   COMPARISON_LIMITATION_EN,
   comparisonCsv,
-  comparisonFieldsFor,
+  comparisonRows,
   comparisonJson,
   comparisonMarkdown,
   displayValue,
@@ -185,11 +185,11 @@ export function ComparisonPage() {
                 </tr>
               </thead>
               <tbody>
-                {comparisonFieldsFor(locale).map(([key, label]) => (
-                  <tr key={String(key)}>
-                    <th scope="row">{label}</th>
-                    {selected.map((record) => (
-                      <td key={record.id}>{displayValue(record[key], locale)}</td>
+                {comparisonRows(selected, locale).map((row) => (
+                  <tr key={row.key}>
+                    <th scope="row">{row.label}</th>
+                    {row.values.map((value, index) => (
+                      <td key={selected[index]!.id}>{displayValue(value, locale)}</td>
                     ))}
                   </tr>
                 ))}
@@ -198,7 +198,7 @@ export function ComparisonPage() {
                   {selected.map((record) => (
                     <td key={record.id}>
                       {record.sourceReferences.map((source, index) => (
-                        <div key={source.id}>
+                        <div key={source.sourceId}>
                           [{index + 1}]{' '}
                           <a href={source.url} target="_blank" rel="noreferrer">
                             {source.title}
