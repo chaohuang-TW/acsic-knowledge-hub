@@ -2,7 +2,10 @@
   {
     "id": "cgcc-kh",
     "countryCode": "KH",
-    "countryName": { "en": "Cambodia", "zh-TW": "柬埔寨" },
+    "countryName": {
+      "en": "Cambodia",
+      "zh-TW": "柬埔寨"
+    },
     "sourceCountryLabel": "Cambodia",
     "officialEnglish": "Credit Guarantee Corporation of Cambodia",
     "zhTw": "柬埔寨信用保證公司",
@@ -15,7 +18,6 @@
     "establishedYear": 2020,
     "legalBasis": "Sub-Decree No. 140 ANKR.BK dated 1 September 2020",
     "ownershipOrLegalStatus": "State-owned enterprise",
-    "supervisingAuthority": "Ministry of Economy and Finance",
     "mandate": {
       "en": "Provide innovative credit guarantees to address credit-market constraints and improve financial inclusion.",
       "zh-TW": "透過創新信用保證回應信貸市場限制並提升金融包容。"
@@ -27,43 +29,37 @@
       "Wholesale guarantees",
       "Bond guarantees"
     ],
-    "profileSource": {
-      "title": "CGCC Story",
-      "publisher": "Credit Guarantee Corporation of Cambodia",
-      "url": "https://www.cgcc.com.kh/en/about-us/",
-      "language": "en",
-      "section": "CGCC Story; Vision and Mission; Products and Services",
-      "accessStatus": "accessible"
-    },
-    "level2ApplicableFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "supervisingAuthority",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "guaranteeDeliveryModel"
-    ],
-    "level2VerifiedFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "supervisingAuthority",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "guaranteeDeliveryModel"
-    ],
-    "missingFields": [],
     "typeSpecificProfile": {
       "guaranteeDeliveryModel": ["Individual", "Portfolio", "Wholesale", "Bond"]
-    }
+    },
+    "supervisingOrOversightAuthority": "Ministry of Economy and Finance",
+    "profileSourceId": "cgcc-kh-profile",
+    "sourceIds": ["acsic-2026-member-roster", "cgcc-kh-profile"],
+    "verifiedFieldKeys": [
+      "establishedYear",
+      "legalBasis",
+      "ownershipOrLegalStatus",
+      "supervisingOrOversightAuthority",
+      "mandate",
+      "serviceTargets",
+      "majorFunctions",
+      "guaranteeDeliveryModel"
+    ],
+    "nativeName": {
+      "value": null,
+      "language": null,
+      "status": "pending",
+      "sourceId": null
+    },
+    "notApplicableFields": []
   },
   {
     "id": "cgtmse-in",
     "countryCode": "IN",
-    "countryName": { "en": "India", "zh-TW": "印度" },
+    "countryName": {
+      "en": "India",
+      "zh-TW": "印度"
+    },
     "sourceCountryLabel": "India",
     "officialEnglish": "Credit Guarantee Fund Trust for Micro and Small Enterprises",
     "zhTw": "印度微型與小型企業信用保證基金信託",
@@ -76,47 +72,42 @@
     "establishedYear": 2000,
     "legalBasis": null,
     "ownershipOrLegalStatus": "Trust established by the Government of India and SIDBI",
-    "supervisingAuthority": "Ministry of Micro, Small and Medium Enterprises, Government of India",
     "mandate": {
       "en": "Operationalise credit guarantee schemes that improve collateral-free formal credit access for micro and small enterprises.",
       "zh-TW": "執行信用保證方案，協助微型與小型企業在缺乏擔保品時取得正式融資。"
     },
     "serviceTargets": ["Micro and small enterprises", "First-generation entrepreneurs"],
     "majorFunctions": ["Credit guarantee schemes for banks", "Credit guarantee schemes for NBFCs"],
-    "profileSource": {
-      "title": "About CGTMSE",
-      "publisher": "Credit Guarantee Fund Trust for Micro and Small Enterprises",
-      "url": "https://www.cgtmse.in/Home/VS/3",
-      "language": "en",
-      "section": "Objective; About CGTMSE",
-      "accessStatus": "accessible"
+    "typeSpecificProfile": {
+      "participatingFinancialInstitutions": ["Banks", "Eligible NBFCs"]
     },
-    "level2ApplicableFields": [
+    "supervisingOrOversightAuthority": "Ministry of Micro, Small and Medium Enterprises, Government of India",
+    "profileSourceId": "cgtmse-in-profile",
+    "sourceIds": ["acsic-2026-member-roster", "cgtmse-in-profile"],
+    "verifiedFieldKeys": [
       "establishedYear",
-      "legalBasis",
       "ownershipOrLegalStatus",
-      "supervisingAuthority",
+      "supervisingOrOversightAuthority",
       "mandate",
       "serviceTargets",
       "majorFunctions",
       "participatingFinancialInstitutions"
     ],
-    "level2VerifiedFields": [
-      "establishedYear",
-      "ownershipOrLegalStatus",
-      "supervisingAuthority",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "participatingFinancialInstitutions"
-    ],
-    "missingFields": ["legalBasis"],
-    "typeSpecificProfile": { "participatingFinancialInstitutions": ["Banks", "Eligible NBFCs"] }
+    "nativeName": {
+      "value": null,
+      "language": null,
+      "status": "pending",
+      "sourceId": null
+    },
+    "notApplicableFields": []
   },
   {
     "id": "asippindo-id",
     "countryCode": "ID",
-    "countryName": { "en": "Indonesia", "zh-TW": "印尼" },
+    "countryName": {
+      "en": "Indonesia",
+      "zh-TW": "印尼"
+    },
     "sourceCountryLabel": "Indonesia",
     "officialEnglish": "Association of Indonesia Credit Guarantee Corporations",
     "zhTw": "印尼信用保證公司協會",
@@ -129,7 +120,6 @@
     "establishedYear": 2012,
     "legalBasis": "PMK 99/PMK.010/2011 (historical basis cited by the official history page)",
     "ownershipOrLegalStatus": "Industry association",
-    "supervisingAuthority": null,
     "mandate": {
       "en": "Represent member guarantee companies, facilitate member interests and develop guarantee-industry professionals.",
       "zh-TW": "代表信用保證公司會員、協調會員利益並培育保證產業專業人才。"
@@ -140,43 +130,48 @@
       "Industry representation",
       "Professional development"
     ],
-    "profileSource": {
-      "title": "Sejarah Asippindo",
-      "publisher": "ASIPPINDO",
-      "url": "https://asippindo.or.id/sejarah/",
-      "language": "id",
-      "section": "Sejarah Asippindo",
-      "accessStatus": "accessible"
-    },
-    "level2ApplicableFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "memberComposition",
-      "coordinationRole"
-    ],
-    "level2VerifiedFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "coordinationRole"
-    ],
-    "missingFields": ["memberComposition", "supervisingAuthority"],
     "typeSpecificProfile": {
       "coordinationRole": "Member advocacy and professional development",
       "memberComposition": null
-    }
+    },
+    "supervisingOrOversightAuthority": null,
+    "profileSourceId": "asippindo-id-profile",
+    "sourceIds": ["acsic-2026-member-roster", "asippindo-id-profile"],
+    "verifiedFieldKeys": [
+      "establishedYear",
+      "legalBasis",
+      "ownershipOrLegalStatus",
+      "mandate",
+      "serviceTargets",
+      "majorFunctions",
+      "coordinationRole"
+    ],
+    "nativeName": {
+      "value": "Asosiasi Perusahaan Penjaminan Indonesia",
+      "language": "id",
+      "status": "official",
+      "sourceId": "asippindo-id-profile"
+    },
+    "notApplicableFields": [
+      {
+        "field": "guaranteeDeliveryModel",
+        "reason": {
+          "en": "The institution is an association or federation and does not directly deliver guarantees.",
+          "zh-TW": "該機構屬協會或聯合會，並不直接辦理信用保證。"
+        },
+        "basis": "role_methodology",
+        "sourceIds": ["asippindo-id-profile"],
+        "reviewedDate": "2026-07-16"
+      }
+    ]
   },
   {
     "id": "askrindo-id",
     "countryCode": "ID",
-    "countryName": { "en": "Indonesia", "zh-TW": "印尼" },
+    "countryName": {
+      "en": "Indonesia",
+      "zh-TW": "印尼"
+    },
     "sourceCountryLabel": "Indonesia",
     "officialEnglish": "PT. Asuransi Kredit Indonesia",
     "zhTw": "印尼信用保險股份有限公司",
@@ -189,44 +184,32 @@
     "establishedYear": 1971,
     "legalBasis": null,
     "ownershipOrLegalStatus": null,
-    "supervisingAuthority": null,
     "mandate": {
       "en": "Official institutional details require renewed access to the organisation's public profile.",
       "zh-TW": "機構詳細定位仍待官方公司簡介恢復穩定存取後補證。"
     },
     "serviceTargets": [],
     "majorFunctions": [],
-    "profileSource": {
-      "title": "Profil Perusahaan",
-      "publisher": "PT. Asuransi Kredit Indonesia",
-      "url": "https://askrindo.co.id/profil-perusahaan",
+    "typeSpecificProfile": {},
+    "supervisingOrOversightAuthority": null,
+    "profileSourceId": "askrindo-id-profile",
+    "sourceIds": ["acsic-2026-member-roster", "askrindo-id-profile"],
+    "verifiedFieldKeys": ["establishedYear"],
+    "nativeName": {
+      "value": null,
       "language": "id",
-      "section": "Company profile",
-      "accessStatus": "temporarily_unavailable"
+      "status": "pending",
+      "sourceId": null
     },
-    "level2ApplicableFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "supervisingAuthority",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions"
-    ],
-    "level2VerifiedFields": ["establishedYear"],
-    "missingFields": [
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "supervisingAuthority",
-      "serviceTargets",
-      "majorFunctions"
-    ],
-    "typeSpecificProfile": {}
+    "notApplicableFields": []
   },
   {
     "id": "jfc-jp",
     "countryCode": "JP",
-    "countryName": { "en": "Japan", "zh-TW": "日本" },
+    "countryName": {
+      "en": "Japan",
+      "zh-TW": "日本"
+    },
     "sourceCountryLabel": "Japan",
     "officialEnglish": "Japan Finance Corporation",
     "zhTw": "日本政策金融公庫",
@@ -239,7 +222,6 @@
     "establishedYear": 2008,
     "legalBasis": "The Japan Finance Corporation Act",
     "ownershipOrLegalStatus": "Policy-based financial institution",
-    "supervisingAuthority": null,
     "mandate": {
       "en": "Complement private financial activities and contribute to improved living standards in Japan.",
       "zh-TW": "補充民間金融機構的金融活動，並促進日本國民生活水準提升。"
@@ -250,44 +232,56 @@
       "Agriculture, forestry, fisheries and food businesses"
     ],
     "majorFunctions": ["Policy finance", "SME credit insurance programs"],
-    "profileSource": {
-      "title": "Profile",
-      "publisher": "Japan Finance Corporation",
-      "url": "https://www.jfc.go.jp/n/english/about/profile.html",
-      "language": "en",
-      "section": "Purpose; Establishment; Statutory Law",
-      "accessStatus": "accessible"
-    },
-    "level2ApplicableFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "policyFinanceRole",
-      "creditInsuranceOrGuaranteeRole"
-    ],
-    "level2VerifiedFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "policyFinanceRole",
-      "creditInsuranceOrGuaranteeRole"
-    ],
-    "missingFields": ["supervisingAuthority"],
     "typeSpecificProfile": {
       "policyFinanceRole": "Complements private financial institutions",
-      "creditInsuranceOrGuaranteeRole": "SME Unit credit insurance programs"
-    }
+      "creditInsuranceOrGuaranteeRole": "SME Unit credit insurance programs",
+      "businessUnits": [
+        "Micro Business and Individual Unit",
+        "Agriculture, Forestry, Fisheries and Food Business Unit",
+        "Small and Medium Enterprise Unit"
+      ],
+      "relationshipWithPrivateFinancialInstitutions": "Complements activities carried out by private financial institutions",
+      "fundingOrCapitalBasis": "All issued shares are held by the Government of Japan"
+    },
+    "supervisingOrOversightAuthority": "Government control through share ownership, competent ministries, the Financial Services Agency, the Board of Audit and the Diet",
+    "profileSourceId": "jfc-jp-profile",
+    "sourceIds": [
+      "acsic-2026-member-roster",
+      "jfc-jp-profile",
+      "jfc-guide-2024",
+      "jfc-japanese-profile",
+      "jfc-governance"
+    ],
+    "verifiedFieldKeys": [
+      "establishedYear",
+      "legalBasis",
+      "ownershipOrLegalStatus",
+      "mandate",
+      "serviceTargets",
+      "majorFunctions",
+      "policyFinanceRole",
+      "creditInsuranceOrGuaranteeRole",
+      "businessUnits",
+      "relationshipWithPrivateFinancialInstitutions",
+      "supervisingOrOversightAuthority",
+      "fundingOrCapitalBasis",
+      "geographicScope"
+    ],
+    "nativeName": {
+      "value": "株式会社日本政策金融公庫",
+      "language": "ja",
+      "status": "official",
+      "sourceId": "jfc-japanese-profile"
+    },
+    "notApplicableFields": []
   },
   {
     "id": "jfg-jp",
     "countryCode": "JP",
-    "countryName": { "en": "Japan", "zh-TW": "日本" },
+    "countryName": {
+      "en": "Japan",
+      "zh-TW": "日本"
+    },
     "sourceCountryLabel": "Japan",
     "officialEnglish": "Japan Federation of Credit Guarantee Corporations",
     "zhTw": "日本全國信用保證協會聯合會",
@@ -300,51 +294,66 @@
     "establishedYear": 1951,
     "legalBasis": "Designated under the Credit Guarantee Corporation Law in November 2008",
     "ownershipOrLegalStatus": "Nonprofit organisation",
-    "supervisingAuthority": null,
     "mandate": {
       "en": "Support the sound development of Japan's credit guarantee corporations and smooth SME financing.",
       "zh-TW": "促進日本各信用保證協會健全發展，並協助中小企業順利融資。"
     },
     "serviceTargets": ["Japan's 51 credit guarantee corporations", "SMEs indirectly"],
     "majorFunctions": ["Federation support", "Coordination of credit guarantee corporations"],
-    "profileSource": {
-      "title": "About Japan Federation of Credit Guarantee Corporations",
-      "publisher": "Japan Federation of Credit Guarantee Corporations",
-      "url": "https://www.zenshinhoren.or.jp/english/",
-      "language": "en",
-      "section": "About JFG",
-      "accessStatus": "accessible"
-    },
-    "level2ApplicableFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "memberComposition",
-      "coordinationRole"
-    ],
-    "level2VerifiedFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "memberComposition",
-      "coordinationRole"
-    ],
-    "missingFields": ["supervisingAuthority"],
     "typeSpecificProfile": {
       "memberComposition": "51 Credit Guarantee Corporations",
-      "coordinationRole": "Guarantee business support organisation"
-    }
+      "coordinationRole": "Guarantee business support organisation",
+      "sharedServices": [
+        "Research and studies",
+        "Training programmes",
+        "Publications",
+        "Group credit life insurance administration"
+      ],
+      "policyRepresentation": "Represents and coordinates the nationwide network of 51 credit guarantee corporations",
+      "trainingOrCapacityBuildingRole": "Plans and operates training for the credit guarantee network"
+    },
+    "supervisingOrOversightAuthority": null,
+    "profileSourceId": "jfg-jp-profile",
+    "sourceIds": ["acsic-2026-member-roster", "jfg-jp-profile", "jfg-japanese-profile"],
+    "verifiedFieldKeys": [
+      "establishedYear",
+      "legalBasis",
+      "ownershipOrLegalStatus",
+      "mandate",
+      "serviceTargets",
+      "majorFunctions",
+      "memberComposition",
+      "coordinationRole",
+      "sharedServices",
+      "policyRepresentation",
+      "trainingOrCapacityBuildingRole"
+    ],
+    "nativeName": {
+      "value": "一般社団法人 全国信用保証協会連合会",
+      "language": "ja",
+      "status": "official",
+      "sourceId": "jfg-japanese-profile"
+    },
+    "notApplicableFields": [
+      {
+        "field": "guaranteeDeliveryModel",
+        "reason": {
+          "en": "The institution is an association or federation and does not directly deliver guarantees.",
+          "zh-TW": "該機構屬協會或聯合會，並不直接辦理信用保證。"
+        },
+        "basis": "role_methodology",
+        "sourceIds": ["jfg-jp-profile"],
+        "reviewedDate": "2026-07-16"
+      }
+    ]
   },
   {
     "id": "kodit-kr",
     "countryCode": "KR",
-    "countryName": { "en": "Republic of Korea", "zh-TW": "韓國" },
+    "countryName": {
+      "en": "Republic of Korea",
+      "zh-TW": "韓國"
+    },
     "sourceCountryLabel": "Korea",
     "officialEnglish": "Korea Credit Guarantee Fund",
     "zhTw": "韓國信用保證基金",
@@ -357,7 +366,6 @@
     "establishedYear": 1976,
     "legalBasis": "Credit Guarantee Fund Act",
     "ownershipOrLegalStatus": "Public credit guarantee fund",
-    "supervisingAuthority": null,
     "mandate": {
       "en": "Provide credit guarantees and related services supporting enterprise finance.",
       "zh-TW": "提供信用保證及相關服務，以支持企業融資。"
@@ -369,41 +377,36 @@
       "Infrastructure guarantee",
       "Guarantee-aligned equity investment"
     ],
-    "profileSource": {
-      "title": "History",
-      "publisher": "Korea Credit Guarantee Fund",
-      "url": "https://www.kodit.or.kr/koditEng/cm/cntnts/cntntsView.do?cntntsId=11242&mi=2765",
-      "language": "en",
-      "section": "History; Businesses",
-      "accessStatus": "accessible"
-    },
-    "level2ApplicableFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "mainGuaranteeCategories"
-    ],
-    "level2VerifiedFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "mainGuaranteeCategories"
-    ],
-    "missingFields": ["supervisingAuthority"],
     "typeSpecificProfile": {
       "mainGuaranteeCategories": ["Credit guarantee", "Infrastructure guarantee", "P-CBO guarantee"]
-    }
+    },
+    "supervisingOrOversightAuthority": null,
+    "profileSourceId": "kodit-kr-profile",
+    "sourceIds": ["acsic-2026-member-roster", "kodit-kr-profile", "kodit-korean-home"],
+    "verifiedFieldKeys": [
+      "establishedYear",
+      "legalBasis",
+      "ownershipOrLegalStatus",
+      "mandate",
+      "serviceTargets",
+      "majorFunctions",
+      "mainGuaranteeCategories"
+    ],
+    "nativeName": {
+      "value": "신용보증기금",
+      "language": "ko",
+      "status": "official",
+      "sourceId": "kodit-korean-home"
+    },
+    "notApplicableFields": []
   },
   {
     "id": "koreg-kr",
     "countryCode": "KR",
-    "countryName": { "en": "Republic of Korea", "zh-TW": "韓國" },
+    "countryName": {
+      "en": "Republic of Korea",
+      "zh-TW": "韓國"
+    },
     "sourceCountryLabel": "Korea",
     "officialEnglish": "Korea Federation of Credit Guarantee Foundations",
     "zhTw": "韓國信用保證財團聯合會",
@@ -416,48 +419,52 @@
     "establishedYear": null,
     "legalBasis": null,
     "ownershipOrLegalStatus": "Federation of regional credit guarantee foundations",
-    "supervisingAuthority": null,
     "mandate": {
       "en": "Coordinate and support regional credit guarantee foundations; current details require further official-source verification.",
       "zh-TW": "協調並支援地方信用保證財團；現行細節仍待更多官方來源查證。"
     },
     "serviceTargets": ["Regional credit guarantee foundations"],
     "majorFunctions": ["Federation coordination"],
-    "profileSource": {
-      "title": "KOREG Official Website",
-      "publisher": "Korea Federation of Credit Guarantee Foundations",
-      "url": "https://www.koreg.or.kr/",
-      "language": "ko",
-      "section": "Official homepage",
-      "accessStatus": "accessible"
-    },
-    "level2ApplicableFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "memberComposition",
-      "coordinationRole"
-    ],
-    "level2VerifiedFields": [
-      "ownershipOrLegalStatus",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "coordinationRole"
-    ],
-    "missingFields": ["establishedYear", "legalBasis", "supervisingAuthority", "memberComposition"],
     "typeSpecificProfile": {
       "coordinationRole": "Federation coordination",
       "memberComposition": null
-    }
+    },
+    "supervisingOrOversightAuthority": null,
+    "profileSourceId": "koreg-kr-profile",
+    "sourceIds": ["acsic-2026-member-roster", "koreg-kr-profile"],
+    "verifiedFieldKeys": [
+      "ownershipOrLegalStatus",
+      "mandate",
+      "serviceTargets",
+      "majorFunctions",
+      "coordinationRole"
+    ],
+    "nativeName": {
+      "value": "신용보증재단중앙회",
+      "language": "ko",
+      "status": "official",
+      "sourceId": "koreg-kr-profile"
+    },
+    "notApplicableFields": [
+      {
+        "field": "guaranteeDeliveryModel",
+        "reason": {
+          "en": "The institution is an association or federation and does not directly deliver guarantees.",
+          "zh-TW": "該機構屬協會或聯合會，並不直接辦理信用保證。"
+        },
+        "basis": "role_methodology",
+        "sourceIds": ["koreg-kr-profile"],
+        "reviewedDate": "2026-07-16"
+      }
+    ]
   },
   {
     "id": "kotec-kr",
     "countryCode": "KR",
-    "countryName": { "en": "Republic of Korea", "zh-TW": "韓國" },
+    "countryName": {
+      "en": "Republic of Korea",
+      "zh-TW": "韓國"
+    },
     "sourceCountryLabel": "Korea",
     "officialEnglish": "Korea Technology Finance Corporation",
     "zhTw": "韓國技術保證基金",
@@ -470,7 +477,6 @@
     "establishedYear": 1989,
     "legalBasis": "Korea Technology Finance Corporation Act",
     "ownershipOrLegalStatus": "Non-profit government-affiliated institution; quasi-government agency",
-    "supervisingAuthority": "Ministry of SMEs and Startups",
     "mandate": {
       "en": "Facilitate technology finance for innovative SMEs and contribute to national economic growth.",
       "zh-TW": "促進創新中小企業取得科技金融，並貢獻國家經濟成長。"
@@ -482,43 +488,51 @@
       "Guarantee-linked equity investment",
       "Technology transfer and protection"
     ],
-    "profileSource": {
-      "title": "Company Overview",
-      "publisher": "Korea Technology Finance Corporation",
-      "url": "https://www.kibo.or.kr/english/about/about010100.do",
-      "language": "en",
-      "section": "Company Overview",
-      "accessStatus": "accessible"
-    },
-    "level2ApplicableFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "supervisingAuthority",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "technologyAppraisalRole"
-    ],
-    "level2VerifiedFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "supervisingAuthority",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "technologyAppraisalRole"
-    ],
-    "missingFields": [],
     "typeSpecificProfile": {
-      "technologyAppraisalRole": "Technology appraisal and valuation services"
-    }
+      "technologyAppraisalRole": "Technology appraisal and valuation services",
+      "guaranteeRole": "Guarantees liabilities of technology enterprises that lack sufficient collateral",
+      "fundingSources": [
+        "Contributions from financial companies",
+        "Government contributions",
+        "Other contributions"
+      ]
+    },
+    "supervisingOrOversightAuthority": "Ministry of SMEs and Startups",
+    "profileSourceId": "kotec-kr-profile",
+    "sourceIds": [
+      "acsic-2026-member-roster",
+      "kotec-kr-profile",
+      "kotec-act-current",
+      "kotec-korean-site-map"
+    ],
+    "verifiedFieldKeys": [
+      "establishedYear",
+      "legalBasis",
+      "ownershipOrLegalStatus",
+      "supervisingOrOversightAuthority",
+      "mandate",
+      "serviceTargets",
+      "majorFunctions",
+      "technologyAppraisalRole",
+      "guaranteeRole",
+      "fundingSources",
+      "fundingOrCapitalBasis"
+    ],
+    "nativeName": {
+      "value": "기술보증기금",
+      "language": "ko",
+      "status": "official",
+      "sourceId": "kotec-korean-site-map"
+    },
+    "notApplicableFields": []
   },
   {
     "id": "ojscgf-kg",
     "countryCode": "KG",
-    "countryName": { "en": "Kyrgyz Republic", "zh-TW": "吉爾吉斯共和國" },
+    "countryName": {
+      "en": "Kyrgyz Republic",
+      "zh-TW": "吉爾吉斯共和國"
+    },
     "sourceCountryLabel": "Kyrgyz Republic",
     "officialEnglish": "Open Joint Stock Company Guarantee Fund",
     "zhTw": "吉爾吉斯共和國保證基金股份有限公司",
@@ -531,44 +545,39 @@
     "establishedYear": 2016,
     "legalBasis": "Order of the Government of the Kyrgyz Republic",
     "ownershipOrLegalStatus": "Open joint stock company",
-    "supervisingAuthority": null,
     "mandate": {
       "en": "Support SME finance and entrepreneurship through guarantee products.",
       "zh-TW": "透過保證產品支持中小企業融資與創業發展。"
     },
     "serviceTargets": ["SMEs", "Entrepreneurs"],
     "majorFunctions": ["Credit guarantee products"],
-    "profileSource": {
-      "title": "Guarantee Fund Official Website",
-      "publisher": "OJSC Guarantee Fund",
-      "url": "https://gf.kg/en/",
-      "language": "en",
-      "section": "About; Mission and Vision",
-      "accessStatus": "accessible"
+    "typeSpecificProfile": {},
+    "supervisingOrOversightAuthority": null,
+    "profileSourceId": "ojscgf-kg-profile",
+    "sourceIds": ["acsic-2026-member-roster", "ojscgf-kg-profile"],
+    "verifiedFieldKeys": [
+      "establishedYear",
+      "legalBasis",
+      "ownershipOrLegalStatus",
+      "mandate",
+      "serviceTargets",
+      "majorFunctions"
+    ],
+    "nativeName": {
+      "value": null,
+      "language": null,
+      "status": "pending",
+      "sourceId": null
     },
-    "level2ApplicableFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions"
-    ],
-    "level2VerifiedFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions"
-    ],
-    "missingFields": ["supervisingAuthority"],
-    "typeSpecificProfile": {}
+    "notApplicableFields": []
   },
   {
     "id": "cgc-my",
     "countryCode": "MY",
-    "countryName": { "en": "Malaysia", "zh-TW": "馬來西亞" },
+    "countryName": {
+      "en": "Malaysia",
+      "zh-TW": "馬來西亞"
+    },
     "sourceCountryLabel": "Malaysia",
     "officialEnglish": "Credit Guarantee Corporation Malaysia Berhad",
     "zhTw": "馬來西亞信用保證公司",
@@ -581,46 +590,41 @@
     "establishedYear": 1972,
     "legalBasis": null,
     "ownershipOrLegalStatus": "Company majority-owned by Bank Negara Malaysia",
-    "supervisingAuthority": null,
     "mandate": {
       "en": "Bridge financial institutions and unserved or underserved MSMEs through guarantees and related support.",
       "zh-TW": "透過保證及相關支援，連結金融機構與未獲充分服務的微中小企業。"
     },
     "serviceTargets": ["Unserved and underserved MSMEs"],
     "majorFunctions": ["Guarantee schemes", "Financing", "MSME developmental programmes"],
-    "profileSource": {
-      "title": "Overview",
-      "publisher": "Credit Guarantee Corporation Malaysia Berhad",
-      "url": "https://www.cgc.com.my/en-us/about/overview/",
-      "language": "en",
-      "section": "About CGC; Vision; Mission",
-      "accessStatus": "accessible"
-    },
-    "level2ApplicableFields": [
-      "establishedYear",
-      "ownershipOrLegalStatus",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "guaranteeDeliveryModel"
-    ],
-    "level2VerifiedFields": [
-      "establishedYear",
-      "ownershipOrLegalStatus",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "guaranteeDeliveryModel"
-    ],
-    "missingFields": ["legalBasis", "supervisingAuthority"],
     "typeSpecificProfile": {
       "guaranteeDeliveryModel": ["Portfolio Guarantee", "Wholesale Guarantee"]
-    }
+    },
+    "supervisingOrOversightAuthority": null,
+    "profileSourceId": "cgc-my-profile",
+    "sourceIds": ["acsic-2026-member-roster", "cgc-my-profile"],
+    "verifiedFieldKeys": [
+      "establishedYear",
+      "ownershipOrLegalStatus",
+      "mandate",
+      "serviceTargets",
+      "majorFunctions",
+      "guaranteeDeliveryModel"
+    ],
+    "nativeName": {
+      "value": null,
+      "language": null,
+      "status": "pending",
+      "sourceId": null
+    },
+    "notApplicableFields": []
   },
   {
     "id": "cgfm-mn",
     "countryCode": "MN",
-    "countryName": { "en": "Mongolia", "zh-TW": "蒙古" },
+    "countryName": {
+      "en": "Mongolia",
+      "zh-TW": "蒙古"
+    },
     "sourceCountryLabel": "Mongolia",
     "officialEnglish": "Credit Guarantee Fund of Mongolia",
     "zhTw": "蒙古信用保證基金",
@@ -633,7 +637,6 @@
     "establishedYear": 2012,
     "legalBasis": null,
     "ownershipOrLegalStatus": "Credit guarantee fund",
-    "supervisingAuthority": null,
     "mandate": {
       "en": "Provide guarantee products supporting finance for SMEs and other eligible groups.",
       "zh-TW": "提供保證產品，支持中小企業及其他符合資格群體取得融資。"
@@ -650,36 +653,32 @@
       "Agriculture and food-production guarantees",
       "Green-business guarantees"
     ],
-    "profileSource": {
-      "title": "Зээлийн батлан даалтын сан",
-      "publisher": "Credit Guarantee Fund of Mongolia",
-      "url": "https://www.cgf.mn/",
+    "typeSpecificProfile": {},
+    "supervisingOrOversightAuthority": null,
+    "profileSourceId": "cgfm-mn-profile",
+    "sourceIds": ["acsic-2026-member-roster", "cgfm-mn-profile"],
+    "verifiedFieldKeys": [
+      "establishedYear",
+      "ownershipOrLegalStatus",
+      "mandate",
+      "serviceTargets",
+      "majorFunctions"
+    ],
+    "nativeName": {
+      "value": "Зээлийн батлан даалтын сан",
       "language": "mn",
-      "section": "САНГИЙН ТУХАЙ; БАТЛАН ДААЛТЫН БҮТЭЭГДЭХҮҮН",
-      "accessStatus": "accessible"
+      "status": "official",
+      "sourceId": "cgfm-mn-profile"
     },
-    "level2ApplicableFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions"
-    ],
-    "level2VerifiedFields": [
-      "establishedYear",
-      "ownershipOrLegalStatus",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions"
-    ],
-    "missingFields": ["legalBasis", "supervisingAuthority"],
-    "typeSpecificProfile": {}
+    "notApplicableFields": []
   },
   {
     "id": "dcgf-np",
     "countryCode": "NP",
-    "countryName": { "en": "Nepal", "zh-TW": "尼泊爾" },
+    "countryName": {
+      "en": "Nepal",
+      "zh-TW": "尼泊爾"
+    },
     "sourceCountryLabel": "Nepal",
     "officialEnglish": "Deposit and Credit Guarantee Fund",
     "zhTw": "尼泊爾存款與信用保證基金",
@@ -692,7 +691,6 @@
     "establishedYear": 1974,
     "legalBasis": "Deposit and Credit Guarantee Fund Act 2017",
     "ownershipOrLegalStatus": "Statutory deposit and credit guarantee fund",
-    "supervisingAuthority": null,
     "mandate": {
       "en": "Secure public deposits and institutional credits and strengthen confidence in the financial system.",
       "zh-TW": "保障公眾存款與機構授信，並強化對金融體系的信心。"
@@ -703,44 +701,47 @@
       "Agriculture, livestock, microfinance and SME borrowers"
     ],
     "majorFunctions": ["Deposit guarantee", "Credit guarantee"],
-    "profileSource": {
-      "title": "What We Do",
-      "publisher": "Deposit and Credit Guarantee Fund",
-      "url": "https://dcgf.gov.np/",
-      "language": "en",
-      "section": "About Us; Credit Guarantee; Vision and Mission",
-      "accessStatus": "accessible"
-    },
-    "level2ApplicableFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "depositGuaranteeRole",
-      "creditGuaranteeRole"
-    ],
-    "level2VerifiedFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "depositGuaranteeRole",
-      "creditGuaranteeRole"
-    ],
-    "missingFields": ["supervisingAuthority"],
     "typeSpecificProfile": {
       "depositGuaranteeRole": "Guarantees eligible natural-person deposits",
-      "creditGuaranteeRole": "Guarantees eligible BFI credit portfolios"
-    }
+      "creditGuaranteeRole": "Guarantees eligible BFI credit portfolios",
+      "coveredInstitutions": "Banks and financial institutions participating in eligible deposit and credit guarantee arrangements",
+      "governanceOfDualMandate": "The Act assigns both deposit guarantee and credit guarantee functions to the Fund"
+    },
+    "supervisingOrOversightAuthority": null,
+    "profileSourceId": "dcgf-np-profile",
+    "sourceIds": [
+      "acsic-2026-member-roster",
+      "dcgf-np-profile",
+      "dcgf-act-2073",
+      "dcgf-nepali-introduction"
+    ],
+    "verifiedFieldKeys": [
+      "establishedYear",
+      "legalBasis",
+      "ownershipOrLegalStatus",
+      "mandate",
+      "serviceTargets",
+      "majorFunctions",
+      "depositGuaranteeRole",
+      "creditGuaranteeRole",
+      "coveredInstitutions",
+      "governanceOfDualMandate"
+    ],
+    "nativeName": {
+      "value": "निक्षेप तथा कर्जा सुरक्षण कोष",
+      "language": "ne",
+      "status": "official",
+      "sourceId": "dcgf-nepali-introduction"
+    },
+    "notApplicableFields": []
   },
   {
     "id": "smec-pg",
     "countryCode": "PG",
-    "countryName": { "en": "Papua New Guinea", "zh-TW": "巴布亞紐幾內亞" },
+    "countryName": {
+      "en": "Papua New Guinea",
+      "zh-TW": "巴布亞紐幾內亞"
+    },
     "sourceCountryLabel": "Papua New Guinea",
     "officialEnglish": "Small & Medium Enterprises Corporation",
     "zhTw": "巴布亞紐幾內亞中小企業公司",
@@ -753,7 +754,6 @@
     "establishedYear": 2014,
     "legalBasis": "SME Corporation Act 2014",
     "ownershipOrLegalStatus": "Government implementing agency",
-    "supervisingAuthority": "Ministry of Commerce and Industry",
     "mandate": {
       "en": "Develop targeted, systemic and sustainable SME interventions in Papua New Guinea.",
       "zh-TW": "在巴布亞紐幾內亞推動具目標性、系統性與永續性的中小企業發展措施。"
@@ -764,49 +764,41 @@
       "Business formalisation",
       "Financial access support"
     ],
-    "profileSource": {
-      "title": "SME Corporation's Mandate",
-      "publisher": "Small & Medium Enterprises Corporation",
-      "url": "https://smecorp.gov.pg/",
-      "language": "en",
-      "section": "Mandate; What We Do",
-      "accessStatus": "accessible"
-    },
-    "level2ApplicableFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "supervisingAuthority",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "SMEDevelopmentMandate",
-      "financialAccessRole",
-      "trainingAndCapacityBuilding"
-    ],
-    "level2VerifiedFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "supervisingAuthority",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "SMEDevelopmentMandate",
-      "financialAccessRole",
-      "trainingAndCapacityBuilding"
-    ],
-    "missingFields": [],
     "typeSpecificProfile": {
       "SMEDevelopmentMandate": "National SME development",
       "financialAccessRole": "Access facilitation, not a general guarantee fund",
       "trainingAndCapacityBuilding": "MSME training and advisory"
-    }
+    },
+    "supervisingOrOversightAuthority": "Ministry of Commerce and Industry",
+    "profileSourceId": "smec-pg-profile",
+    "sourceIds": ["acsic-2026-member-roster", "smec-pg-profile"],
+    "verifiedFieldKeys": [
+      "establishedYear",
+      "legalBasis",
+      "ownershipOrLegalStatus",
+      "supervisingOrOversightAuthority",
+      "mandate",
+      "serviceTargets",
+      "majorFunctions",
+      "SMEDevelopmentMandate",
+      "financialAccessRole",
+      "trainingAndCapacityBuilding"
+    ],
+    "nativeName": {
+      "value": null,
+      "language": null,
+      "status": "pending",
+      "sourceId": null
+    },
+    "notApplicableFields": []
   },
   {
     "id": "cgcpng-pg",
     "countryCode": "PG",
-    "countryName": { "en": "Papua New Guinea", "zh-TW": "巴布亞紐幾內亞" },
+    "countryName": {
+      "en": "Papua New Guinea",
+      "zh-TW": "巴布亞紐幾內亞"
+    },
     "sourceCountryLabel": "Papua New Guinea",
     "officialEnglish": "Credit Guarantee Corporation of Papua New Guinea",
     "zhTw": "巴布亞紐幾內亞信用保證公司",
@@ -819,7 +811,6 @@
     "establishedYear": 2022,
     "legalBasis": null,
     "ownershipOrLegalStatus": "Credit Guarantee Corporation Limited",
-    "supervisingAuthority": null,
     "mandate": {
       "en": "Help eligible SMEs access credit from licensed financial institutions through guarantee services.",
       "zh-TW": "透過保證服務協助符合資格的中小企業向持牌金融機構取得融資。"
@@ -830,39 +821,35 @@
       "Financial-technology support",
       "Strategic partnerships"
     ],
-    "profileSource": {
-      "title": "Overview",
-      "publisher": "Credit Guarantee Corporation Limited",
-      "url": "https://www.cgc.com.pg/",
-      "language": "en",
-      "section": "Overview; Guarantee Services",
-      "accessStatus": "accessible"
-    },
-    "level2ApplicableFields": [
-      "establishedYear",
-      "ownershipOrLegalStatus",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "participatingFinancialInstitutions"
-    ],
-    "level2VerifiedFields": [
-      "establishedYear",
-      "ownershipOrLegalStatus",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "participatingFinancialInstitutions"
-    ],
-    "missingFields": ["legalBasis", "supervisingAuthority"],
     "typeSpecificProfile": {
       "participatingFinancialInstitutions": "Licensed financial institutions"
-    }
+    },
+    "supervisingOrOversightAuthority": null,
+    "profileSourceId": "cgcpng-pg-profile",
+    "sourceIds": ["acsic-2026-member-roster", "cgcpng-pg-profile"],
+    "verifiedFieldKeys": [
+      "establishedYear",
+      "ownershipOrLegalStatus",
+      "mandate",
+      "serviceTargets",
+      "majorFunctions",
+      "participatingFinancialInstitutions"
+    ],
+    "nativeName": {
+      "value": null,
+      "language": null,
+      "status": "pending",
+      "sourceId": null
+    },
+    "notApplicableFields": []
   },
   {
     "id": "philguarantee-ph",
     "countryCode": "PH",
-    "countryName": { "en": "Philippines", "zh-TW": "菲律賓" },
+    "countryName": {
+      "en": "Philippines",
+      "zh-TW": "菲律賓"
+    },
     "sourceCountryLabel": "The Philippines",
     "officialEnglish": "Philippine Guarantee Corporation",
     "zhTw": "菲律賓保證公司",
@@ -875,7 +862,6 @@
     "establishedYear": 2018,
     "legalBasis": "Executive Order No. 58, Series of 2018",
     "ownershipOrLegalStatus": "Government-owned and controlled corporation",
-    "supervisingAuthority": "Department of Finance (attached agency)",
     "mandate": {
       "en": "Provide public credit guarantee facilities across priority, housing and agriculture sectors.",
       "zh-TW": "提供涵蓋優先產業、住宅及農業等領域的公共信用保證機制。"
@@ -886,43 +872,41 @@
       "Housing credit guarantees",
       "Agriculture credit guarantees"
     ],
-    "profileSource": {
-      "title": "About Us",
-      "publisher": "Philippine Guarantee Corporation",
-      "url": "https://www.philguarantee.gov.ph/about-us/",
-      "language": "en",
-      "section": "About Us; Programs",
-      "accessStatus": "accessible"
-    },
-    "level2ApplicableFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "supervisingAuthority",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "mainGuaranteeCategories"
-    ],
-    "level2VerifiedFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "supervisingAuthority",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "mainGuaranteeCategories"
-    ],
-    "missingFields": [],
     "typeSpecificProfile": {
       "mainGuaranteeCategories": ["Priority sector", "Housing", "Agriculture"]
-    }
+    },
+    "supervisingOrOversightAuthority": "Department of Finance (attached agency)",
+    "profileSourceId": "philguarantee-ph-profile",
+    "sourceIds": [
+      "acsic-2026-member-roster",
+      "philguarantee-ph-profile",
+      "philguarantee-eo58-2018"
+    ],
+    "verifiedFieldKeys": [
+      "establishedYear",
+      "legalBasis",
+      "ownershipOrLegalStatus",
+      "supervisingOrOversightAuthority",
+      "mandate",
+      "serviceTargets",
+      "majorFunctions",
+      "mainGuaranteeCategories"
+    ],
+    "nativeName": {
+      "value": null,
+      "language": null,
+      "status": "pending",
+      "sourceId": null
+    },
+    "notApplicableFields": []
   },
   {
     "id": "cbsl-lk",
     "countryCode": "LK",
-    "countryName": { "en": "Sri Lanka", "zh-TW": "斯里蘭卡" },
+    "countryName": {
+      "en": "Sri Lanka",
+      "zh-TW": "斯里蘭卡"
+    },
     "sourceCountryLabel": "Sri Lanka",
     "officialEnglish": "Central Bank of Sri Lanka",
     "zhTw": "斯里蘭卡中央銀行",
@@ -935,7 +919,6 @@
     "establishedYear": 1950,
     "legalBasis": "Central Bank of Sri Lanka Act",
     "ownershipOrLegalStatus": "Central bank",
-    "supervisingAuthority": null,
     "mandate": {
       "en": "Perform central-bank functions; ACSIC relevance concerns specific credit and refinance schemes rather than the bank being a general guarantee corporation.",
       "zh-TW": "履行中央銀行職能；其 ACSIC 相關性在於特定信用保證與再融資方案，而非一般信用保證公司定位。"
@@ -946,26 +929,16 @@
       "Financial-system stability",
       "Selected credit and refinance schemes"
     ],
-    "profileSource": {
-      "title": "About the Bank",
-      "publisher": "Central Bank of Sri Lanka",
-      "url": "https://www.cbsl.gov.lk/en/about/about-the-bank",
-      "language": "en",
-      "section": "Overview; Functions; Laws",
-      "accessStatus": "accessible"
+    "typeSpecificProfile": {
+      "centralBankMandate": "Central banking and financial-system stability",
+      "creditGuaranteeSchemeRole": "Scheme-specific role only",
+      "refinanceOrGovernmentSchemeRole": "Selected rural credit and refinance schemes",
+      "responsibleUnit": null
     },
-    "level2ApplicableFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "mandate",
-      "majorFunctions",
-      "centralBankMandate",
-      "creditGuaranteeSchemeRole",
-      "refinanceOrGovernmentSchemeRole",
-      "responsibleUnit"
-    ],
-    "level2VerifiedFields": [
+    "supervisingOrOversightAuthority": null,
+    "profileSourceId": "cbsl-lk-profile",
+    "sourceIds": ["acsic-2026-member-roster", "cbsl-lk-profile"],
+    "verifiedFieldKeys": [
       "establishedYear",
       "legalBasis",
       "ownershipOrLegalStatus",
@@ -975,18 +948,21 @@
       "creditGuaranteeSchemeRole",
       "refinanceOrGovernmentSchemeRole"
     ],
-    "missingFields": ["responsibleUnit"],
-    "typeSpecificProfile": {
-      "centralBankMandate": "Central banking and financial-system stability",
-      "creditGuaranteeSchemeRole": "Scheme-specific role only",
-      "refinanceOrGovernmentSchemeRole": "Selected rural credit and refinance schemes",
-      "responsibleUnit": null
-    }
+    "nativeName": {
+      "value": null,
+      "language": null,
+      "status": "pending",
+      "sourceId": null
+    },
+    "notApplicableFields": []
   },
   {
     "id": "slecic-lk",
     "countryCode": "LK",
-    "countryName": { "en": "Sri Lanka", "zh-TW": "斯里蘭卡" },
+    "countryName": {
+      "en": "Sri Lanka",
+      "zh-TW": "斯里蘭卡"
+    },
     "sourceCountryLabel": "Sri Lanka",
     "officialEnglish": "Sri Lanka Export Credit Insurance Corporation",
     "zhTw": "斯里蘭卡出口信用保險公司",
@@ -999,7 +975,6 @@
     "establishedYear": 1979,
     "legalBasis": "Sri Lanka Export Credit Insurance Act No. 15 of 1978",
     "ownershipOrLegalStatus": "Statutory body",
-    "supervisingAuthority": "Ministry of Finance, Planning and Economic Development",
     "mandate": {
       "en": "Provide protection, guarantees, support and information for exporters, banks and other financial institutions.",
       "zh-TW": "為出口商、銀行與其他金融機構提供保障、保證、支援及資訊服務。"
@@ -1011,49 +986,41 @@
       "Export performance guarantees",
       "Buyer information"
     ],
-    "profileSource": {
-      "title": "Who We Are",
-      "publisher": "Sri Lanka Export Credit Insurance Corporation",
-      "url": "https://www.slecic.lk/web/index.php/en/about-us/who-we-are",
-      "language": "en",
-      "section": "Who We Are; Main Objectives",
-      "accessStatus": "accessible"
-    },
-    "level2ApplicableFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "supervisingAuthority",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "exportCreditInsuranceRole",
-      "bankGuaranteeRole",
-      "exporterSupport"
-    ],
-    "level2VerifiedFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "supervisingAuthority",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "exportCreditInsuranceRole",
-      "bankGuaranteeRole",
-      "exporterSupport"
-    ],
-    "missingFields": [],
     "typeSpecificProfile": {
       "exportCreditInsuranceRole": "Insurance against commercial and non-commercial payment risks",
       "bankGuaranteeRole": "Guarantees facilitating pre- and post-shipment finance",
       "exporterSupport": "Protection, information and support"
-    }
+    },
+    "supervisingOrOversightAuthority": "Ministry of Finance, Planning and Economic Development",
+    "profileSourceId": "slecic-lk-profile",
+    "sourceIds": ["acsic-2026-member-roster", "slecic-lk-profile"],
+    "verifiedFieldKeys": [
+      "establishedYear",
+      "legalBasis",
+      "ownershipOrLegalStatus",
+      "supervisingOrOversightAuthority",
+      "mandate",
+      "serviceTargets",
+      "majorFunctions",
+      "exportCreditInsuranceRole",
+      "bankGuaranteeRole",
+      "exporterSupport"
+    ],
+    "nativeName": {
+      "value": null,
+      "language": null,
+      "status": "pending",
+      "sourceId": null
+    },
+    "notApplicableFields": []
   },
   {
     "id": "tsmeg-tw",
     "countryCode": "TW",
-    "countryName": { "en": "Taiwan", "zh-TW": "臺灣" },
+    "countryName": {
+      "en": "Taiwan",
+      "zh-TW": "臺灣"
+    },
     "sourceCountryLabel": "Taiwan",
     "officialEnglish": "Small and Medium Enterprise Credit Guarantee Fund of Taiwan",
     "zhTw": "財團法人中小企業信用保證基金",
@@ -1066,22 +1033,19 @@
     "establishedYear": 1974,
     "legalBasis": null,
     "ownershipOrLegalStatus": "Foundation",
-    "supervisingAuthority": null,
     "mandate": {
       "en": "Help viable SMEs with insufficient collateral obtain finance through credit guarantees.",
       "zh-TW": "透過信用保證協助營運正常但擔保品不足的中小企業取得融資。"
     },
     "serviceTargets": ["SMEs with insufficient collateral"],
     "majorFunctions": ["Indirect guarantee", "Direct guarantee", "Co-guarantee"],
-    "profileSource": {
-      "title": "Profile and Services",
-      "publisher": "Small and Medium Enterprise Credit Guarantee Fund of Taiwan",
-      "url": "https://www.smeg.org.tw/en/basic/?node=10048",
-      "language": "en",
-      "section": "Profile; Services",
-      "accessStatus": "accessible"
+    "typeSpecificProfile": {
+      "guaranteeDeliveryModel": ["Indirect", "Direct", "Co-guarantee"]
     },
-    "level2ApplicableFields": [
+    "supervisingOrOversightAuthority": null,
+    "profileSourceId": "tsmeg-tw-profile",
+    "sourceIds": ["acsic-2026-member-roster", "tsmeg-tw-profile"],
+    "verifiedFieldKeys": [
       "establishedYear",
       "ownershipOrLegalStatus",
       "mandate",
@@ -1089,21 +1053,21 @@
       "majorFunctions",
       "guaranteeDeliveryModel"
     ],
-    "level2VerifiedFields": [
-      "establishedYear",
-      "ownershipOrLegalStatus",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "guaranteeDeliveryModel"
-    ],
-    "missingFields": ["legalBasis", "supervisingAuthority"],
-    "typeSpecificProfile": { "guaranteeDeliveryModel": ["Indirect", "Direct", "Co-guarantee"] }
+    "nativeName": {
+      "value": "中小企業信用保證基金",
+      "language": "zh-TW",
+      "status": "official",
+      "sourceId": "tsmeg-tw-profile"
+    },
+    "notApplicableFields": []
   },
   {
     "id": "tcg-th",
     "countryCode": "TH",
-    "countryName": { "en": "Thailand", "zh-TW": "泰國" },
+    "countryName": {
+      "en": "Thailand",
+      "zh-TW": "泰國"
+    },
     "sourceCountryLabel": "Thailand",
     "officialEnglish": "Thai Credit Guarantee Corporation",
     "zhTw": "泰國信用保證公司",
@@ -1116,46 +1080,40 @@
     "establishedYear": 1991,
     "legalBasis": "Small Industry Credit Guarantee Corporation Act B.E. 2534 (1991)",
     "ownershipOrLegalStatus": "State-owned specialised financial institution",
-    "supervisingAuthority": "Ministry of Finance",
     "mandate": {
       "en": "Help small enterprises obtain finance and strengthen financial-institution confidence in SME lending.",
       "zh-TW": "協助小型企業取得融資，並提升金融機構辦理中小企業授信的信心。"
     },
     "serviceTargets": ["Small enterprises"],
     "majorFunctions": ["Credit guarantees supporting small-enterprise finance"],
-    "profileSource": {
-      "title": "Corporate Profile and Objectives",
-      "publisher": "Thai Credit Guarantee Corporation",
-      "url": "https://www.tcg.or.th/en/aboutus.php",
-      "language": "en",
-      "section": "Corporate Profile; Objectives of Establishment",
-      "accessStatus": "accessible"
+    "typeSpecificProfile": {},
+    "supervisingOrOversightAuthority": "Ministry of Finance",
+    "profileSourceId": "tcg-th-profile",
+    "sourceIds": ["acsic-2026-member-roster", "tcg-th-profile"],
+    "verifiedFieldKeys": [
+      "establishedYear",
+      "legalBasis",
+      "ownershipOrLegalStatus",
+      "supervisingOrOversightAuthority",
+      "mandate",
+      "serviceTargets",
+      "majorFunctions"
+    ],
+    "nativeName": {
+      "value": "บรรษัทประกันสินเชื่ออุตสาหกรรมขนาดย่อม",
+      "language": "th",
+      "status": "official",
+      "sourceId": "tcg-th-profile"
     },
-    "level2ApplicableFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "supervisingAuthority",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions"
-    ],
-    "level2VerifiedFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "supervisingAuthority",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions"
-    ],
-    "missingFields": [],
-    "typeSpecificProfile": {}
+    "notApplicableFields": []
   },
   {
     "id": "acgf-tw",
     "countryCode": "TW",
-    "countryName": { "en": "Taiwan", "zh-TW": "臺灣" },
+    "countryName": {
+      "en": "Taiwan",
+      "zh-TW": "臺灣"
+    },
     "sourceCountryLabel": "Taiwan",
     "officialEnglish": "Agricultural Credit Guarantee Fund",
     "zhTw": "財團法人農業信用保證基金",
@@ -1168,50 +1126,38 @@
     "establishedYear": 1983,
     "legalBasis": "臺灣地區農業信用保證制度實施方案",
     "ownershipOrLegalStatus": "Foundation",
-    "supervisingAuthority": "農業部",
     "mandate": {
       "en": "Help farmers and fishers with insufficient collateral obtain finance and share lending risk with agricultural financial institutions.",
       "zh-TW": "協助擔保能力不足的農漁業者取得融資，並為農業金融機構分擔融資風險。"
     },
     "serviceTargets": ["Farmers", "Fishers", "Agricultural and fisheries businesses"],
     "majorFunctions": ["Agricultural credit guarantee"],
-    "profileSource": {
-      "title": "關於農信保",
-      "publisher": "財團法人農業信用保證基金",
-      "url": "https://www.acgf.org.tw/Page/PageEditor/E3IMAXWR5PUUPJ6B7M4CHQPSWE",
-      "language": "zh-TW",
-      "section": "基金概要; 理念; 沿革",
-      "accessStatus": "accessible"
-    },
-    "level2ApplicableFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "supervisingAuthority",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "agricultureSpecificMandate",
-      "partnerFinancialInstitutions",
-      "agriculturalPolicyRole"
-    ],
-    "level2VerifiedFields": [
-      "establishedYear",
-      "legalBasis",
-      "ownershipOrLegalStatus",
-      "supervisingAuthority",
-      "mandate",
-      "serviceTargets",
-      "majorFunctions",
-      "agricultureSpecificMandate",
-      "partnerFinancialInstitutions",
-      "agriculturalPolicyRole"
-    ],
-    "missingFields": [],
     "typeSpecificProfile": {
       "agricultureSpecificMandate": "Agriculture and fisheries finance",
       "partnerFinancialInstitutions": ["Contracted banks", "Farmers' and fishers' associations"],
       "agriculturalPolicyRole": "Supports implementation of agricultural finance policy"
-    }
+    },
+    "supervisingOrOversightAuthority": "農業部",
+    "profileSourceId": "acgf-tw-profile",
+    "sourceIds": ["acsic-current-member-institutions", "acgf-tw-profile"],
+    "verifiedFieldKeys": [
+      "establishedYear",
+      "legalBasis",
+      "ownershipOrLegalStatus",
+      "supervisingOrOversightAuthority",
+      "mandate",
+      "serviceTargets",
+      "majorFunctions",
+      "agricultureSpecificMandate",
+      "partnerFinancialInstitutions",
+      "agriculturalPolicyRole"
+    ],
+    "nativeName": {
+      "value": "財團法人農業信用保證基金",
+      "language": "zh-TW",
+      "status": "official",
+      "sourceId": "acgf-tw-profile"
+    },
+    "notApplicableFields": []
   }
 ]

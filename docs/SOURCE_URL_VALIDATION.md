@@ -27,3 +27,5 @@ Checked 2026-07-16 with redirects enabled and a 20-second timeout. These transpo
 | ACGF          | `https://www.acgf.org.tw/`                 |  200 | same URL                                                                |
 
 No official URL was replaced with a non-official mirror. Temporary transport errors are retained as research-quality warnings.
+
+Additional native-language and legal-source checks used in the calibration include JFC's Japanese profile and governance pages, JFG's Japanese profile, KODIT's Korean homepage, KOTEC's Korean site map and current statutory text, DCGF's Nepali introduction and Act, and PHILGUARANTEE's official establishing order. Each is registered once in `src/data/sources.json`; transport access does not by itself determine evidence completeness or confidence.

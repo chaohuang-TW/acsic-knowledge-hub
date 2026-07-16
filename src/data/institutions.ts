@@ -1,9 +1,16 @@
 import rawInstitutions from './institutions.json';
+import rawSources from './sources.json';
+import { level2FieldLabels, requiredLevel2Fields } from './level2-standards';
+import { hasResearchTranslation, localize, localizeList } from './translations';
 import type {
   AcsicMembershipStatus,
+  FieldEvidence,
   Institution,
   InstitutionRoleCategory,
   LocalizedText,
+  NativeName,
+  NotApplicableField,
+  SourceReference,
   TranslationStatus,
 } from '../types';
 
@@ -23,80 +30,22 @@ interface RawInstitution {
   establishedYear: number | null;
   legalBasis: string | null;
   ownershipOrLegalStatus: string | null;
-  supervisingAuthority: string | null;
+  supervisingOrOversightAuthority: string | null;
   mandate: LocalizedText;
   serviceTargets: string[];
   majorFunctions: string[];
-  profileSource: {
-    title: string;
-    publisher: string;
-    url: string;
-    language: string;
-    section: string;
-    accessStatus: 'accessible' | 'temporarily_unavailable';
-  };
-  level2ApplicableFields: string[];
-  level2VerifiedFields: string[];
-  missingFields: string[];
   typeSpecificProfile: Record<string, string | string[] | null>;
+  profileSourceId: string;
+  sourceIds: string[];
+  verifiedFieldKeys: string[];
+  nativeName: NativeName;
+  notApplicableFields: NotApplicableField[];
 }
 
-export const membershipRosterSource = {
-  sourceId: 'acsic-2026-member-roster',
-  institutionId: null,
-  title: 'List of ACSIC Members',
-  publisher: 'Credit Guarantee Fund Trust for Micro and Small Enterprises',
-  sourceType: 'official_acsic_event_member_roster',
-  sourceContextYear: 2026,
-  url: 'https://globalacsic2026.in/about-members/',
-  finalResolvedUrl: 'https://globalacsic2026.in/about-members/',
-  originalLanguage: 'en',
-  publicationDate: null,
-  documentDate: null,
-  accessedDate: '2026-07-16',
-  pageOrSection: 'List of ACSIC Members',
-  isPrimarySource: true as const,
-  accessStatus: 'accessible' as const,
-  stalenessWarning: false,
-  notes: {
-    en: 'Primary 2026 roster for 20 formal members across 14 countries or economies.',
-    'zh-TW': '2026 年 20 個正式會員及 14 個國家／經濟體的主要名冊證據。',
-  },
-  id: 'acsic-2026-member-roster',
-  documentType: 'official_index' as const,
-  year: 2026,
-  section: 'List of ACSIC Members',
-  official: true as const,
-};
+export const sourceRegistry = rawSources as SourceReference[];
+export const sourceById = new Map(sourceRegistry.map((source) => [source.sourceId, source]));
 
-export const observerRosterSource = {
-  sourceId: 'acsic-current-member-institutions',
-  institutionId: null,
-  title: 'ACSIC Member Institutions',
-  publisher: 'Small and Medium Enterprise Credit Guarantee Fund of Taiwan',
-  sourceType: 'official_member_institution_roster',
-  url: 'https://www.smeg.org.tw/en/basic/?node=10082',
-  finalResolvedUrl: 'https://www.smeg.org.tw/en/basic/?node=10082',
-  originalLanguage: 'en',
-  publicationDate: null,
-  documentDate: null,
-  accessedDate: '2026-07-16',
-  pageOrSection: 'Member Institutions; Observer',
-  isPrimarySource: true as const,
-  accessStatus: 'accessible' as const,
-  stalenessWarning: false,
-  notes: {
-    en: 'Cross-check roster and evidence that ACGF is the observer. Listed links are not used as official-website evidence.',
-    'zh-TW': '交叉查核名冊並確認 ACGF 為 Observer；頁面 href 不作為官方網站證據。',
-  },
-  id: 'acsic-current-member-institutions',
-  documentType: 'official_index' as const,
-  year: null,
-  section: 'Member Institutions; Observer',
-  official: true as const,
-};
-
-const roleLabels: Record<InstitutionRoleCategory, LocalizedText> = {
+export const roleCategoryLabels: Record<InstitutionRoleCategory, LocalizedText> = {
   credit_guarantee_corporation: { en: 'Credit guarantee corporation', 'zh-TW': '信用保證公司' },
   credit_guarantee_fund: { en: 'Credit guarantee fund', 'zh-TW': '信用保證基金' },
   guarantee_association: { en: 'Guarantee association', 'zh-TW': '信用保證協會' },
@@ -122,53 +71,132 @@ const roleLabels: Record<InstitutionRoleCategory, LocalizedText> = {
   },
 };
 
-function toInstitution(raw: RawInstitution): Institution {
-  const membershipSource =
-    raw.status === 'observer' ? observerRosterSource : membershipRosterSource;
-  const evidence = Object.fromEntries(
-    raw.level2VerifiedFields.map((field) => [field, [`${raw.id}-profile`]]),
+const evidenceSourceOverrides: Record<string, Record<string, string>> = {
+  'jfc-jp': {
+    businessUnits: 'jfc-guide-2024',
+    relationshipWithPrivateFinancialInstitutions: 'jfc-guide-2024',
+    officialPublications: 'jfc-guide-2024',
+    supervisingOrOversightAuthority: 'jfc-governance',
+    fundingOrCapitalBasis: 'jfc-governance',
+    geographicScope: 'jfc-japanese-profile',
+  },
+  'jfg-jp': {
+    sharedServices: 'jfg-japanese-profile',
+    policyRepresentation: 'jfg-japanese-profile',
+    trainingOrCapacityBuildingRole: 'jfg-japanese-profile',
+  },
+  'kotec-kr': {
+    legalBasis: 'kotec-act-current',
+    fundingOrCapitalBasis: 'kotec-act-current',
+    guaranteeRole: 'kotec-act-current',
+    fundingSources: 'kotec-act-current',
+  },
+  'philguarantee-ph': { legalBasis: 'philguarantee-eo58-2018' },
+  'dcgf-np': {
+    legalBasis: 'dcgf-act-2073',
+    coveredInstitutions: 'dcgf-act-2073',
+    governanceOfDualMandate: 'dcgf-act-2073',
+  },
+};
+
+function localizedTypeProfile(
+  profile: RawInstitution['typeSpecificProfile'],
+): Institution['typeSpecificProfile'] {
+  return Object.fromEntries(
+    Object.entries(profile).map(([key, value]) => [
+      key,
+      Array.isArray(value)
+        ? localizeList(value)
+        : typeof value === 'string'
+          ? localize(value)
+          : null,
+    ]),
   );
-  evidence.acsicMembershipStatus = [membershipSource.sourceId];
-  evidence.officialWebsite = [`${raw.id}-profile`];
-  const sourceReferences = [
-    { ...membershipSource, institutionId: raw.id },
-    {
-      sourceId: `${raw.id}-profile`,
-      institutionId: raw.id,
-      title: raw.profileSource.title,
-      publisher: raw.profileSource.publisher,
-      sourceType: 'official_institution_webpage',
-      url: raw.profileSource.url,
-      finalResolvedUrl: raw.profileSource.url,
-      originalLanguage: raw.profileSource.language,
-      publicationDate: null,
-      documentDate: null,
-      accessedDate: '2026-07-16',
-      pageOrSection: raw.profileSource.section,
-      isPrimarySource: true as const,
-      accessStatus: raw.profileSource.accessStatus,
-      stalenessWarning: raw.id === 'asippindo-id',
-      notes: {
-        en:
-          raw.profileSource.accessStatus === 'accessible'
-            ? 'Official institution source used for the verified profile fields.'
-            : 'Official source retained; access was temporarily unavailable during verification.',
-        'zh-TW':
-          raw.profileSource.accessStatus === 'accessible'
-            ? '用於查證機構檔案欄位的官方來源。'
-            : '保留官方來源；本次查核期間暫時無法穩定存取。',
-      },
-      id: `${raw.id}-profile`,
-      documentType: 'official_webpage' as const,
-      year: null,
-      section: raw.profileSource.section,
-      official: true as const,
-    },
-  ];
-  const completion = Math.round(
-    (raw.level2VerifiedFields.length / raw.level2ApplicableFields.length) * 100,
-  );
+}
+
+function fieldValue(record: Institution, field: string): unknown {
+  if (field in record.typeSpecificProfile) return record.typeSpecificProfile[field];
+  return (record as unknown as Record<string, unknown>)[field];
+}
+
+function localizedValue(value: unknown): LocalizedText | null {
+  if (typeof value === 'number') return { en: String(value), 'zh-TW': String(value) };
+  if (value && typeof value === 'object' && 'en' in value && 'zh-TW' in value)
+    return value as LocalizedText;
+  if (Array.isArray(value)) {
+    const items = value as LocalizedText[];
+    return {
+      en: items.map((item) => item.en).join('; '),
+      'zh-TW': items.map((item) => item['zh-TW']).join('、'),
+    };
+  }
+  return null;
+}
+
+function evidenceFor(record: Institution, field: string, sourceId: string): FieldEvidence {
+  const source = sourceById.get(sourceId);
+  if (!source) throw new Error(`Unknown source ${sourceId}`);
+  const value = localizedValue(fieldValue(record, field));
+  const label = level2FieldLabels[field] ?? { en: field, 'zh-TW': field };
+  const fallback = {
+    en: `${label.en} is identified in the cited official source.`,
+    'zh-TW': `引用的官方來源載明${label['zh-TW']}。`,
+  };
+  const summary = value
+    ? {
+        en: `The official source identifies ${label.en.toLowerCase()} as: ${value.en}.`,
+        'zh-TW': `官方來源載明${label['zh-TW']}為：${value['zh-TW']}。`,
+      }
+    : fallback;
   return {
+    evidenceId: `${record.id}-${field}-evidence`,
+    sourceId,
+    pageOrSection: source.pageOrSection,
+    evidenceSummary: summary,
+    evidenceType:
+      source.sourceType === 'official_law_or_regulation'
+        ? 'official_legal_text'
+        : source.sourceType.endsWith('_document')
+          ? 'official_document_summary'
+          : 'direct_official_statement',
+    verifiedDate: '2026-07-16',
+  };
+}
+
+function initialInstitution(raw: RawInstitution): Institution {
+  const typeSpecificProfile = localizedTypeProfile(raw.typeSpecificProfile);
+  const sourceReferences = raw.sourceIds.map((id) => {
+    const source = sourceById.get(id);
+    if (!source) throw new Error(`Unknown source ${id}`);
+    return source;
+  });
+  const fundingValues = raw.typeSpecificProfile.fundingSources;
+  const explicitFundingBasis = raw.typeSpecificProfile.fundingOrCapitalBasis;
+  const fundingOrCapitalBasis =
+    typeof explicitFundingBasis === 'string'
+      ? localize(explicitFundingBasis)
+      : Array.isArray(fundingValues)
+        ? {
+            en: fundingValues.join('; '),
+            'zh-TW': localizeList(fundingValues)
+              .map((item) => item['zh-TW'])
+              .join('、'),
+          }
+        : null;
+  const officialPublications =
+    raw.id === 'jfc-jp' ? [localize('Guide to Japan Finance Corporation 2024')] : [];
+  const acsicRoleNotes = {
+    en:
+      raw.status === 'observer'
+        ? 'ACSIC observer; excluded from formal-member totals.'
+        : 'Formal ACSIC member in the 2026 roster.',
+    'zh-TW':
+      raw.status === 'observer'
+        ? 'ACSIC 觀察員，不計入正式會員總數。'
+        : '2026 年名冊所列 ACSIC 正式會員。',
+  };
+  const ownership = raw.ownershipOrLegalStatus ? localize(raw.ownershipOrLegalStatus) : null;
+  const record: Institution = {
     id: raw.id,
     countryCode: raw.countryCode,
     countryName: raw.countryName,
@@ -176,8 +204,7 @@ function toInstitution(raw: RawInstitution): Institution {
     name: {
       en: raw.officialEnglish,
       officialEnglish: raw.officialEnglish,
-      native: raw.translationStatus === 'official' ? raw.zhTw : null,
-      nativeLanguage: raw.translationStatus === 'official' ? 'zh-TW' : null,
+      nativeName: raw.nativeName,
       'zh-TW': raw.zhTw,
       zhTWTranslationStatus: raw.translationStatus,
       aliases: raw.aliases,
@@ -188,99 +215,221 @@ function toInstitution(raw: RawInstitution): Institution {
     institutionRoleCategory: raw.role,
     officialWebsite: raw.website,
     establishedYear: raw.establishedYear,
-    legalBasis: raw.legalBasis,
-    ownershipOrLegalStatus: raw.ownershipOrLegalStatus,
-    supervisingAuthority: raw.supervisingAuthority,
+    legalBasis: raw.legalBasis ? localize(raw.legalBasis) : null,
+    ownershipOrLegalStatus: ownership,
+    supervisingOrOversightAuthority: raw.supervisingOrOversightAuthority
+      ? localize(raw.supervisingOrOversightAuthority)
+      : null,
     mandate: raw.mandate,
-    serviceTargets: raw.serviceTargets,
-    majorFunctions: raw.majorFunctions,
-    governanceType: raw.ownershipOrLegalStatus,
-    fundingOrCapitalBasis: null,
-    geographicScope: raw.countryName.en,
-    officialPublications: [],
-    acsicRoleNotes: {
-      en:
-        raw.status === 'observer'
-          ? 'ACSIC observer; excluded from formal-member totals.'
-          : 'Formal ACSIC member in the 2026 roster.',
-      'zh-TW':
-        raw.status === 'observer'
-          ? 'ACSIC 觀察員，不計入正式會員總數。'
-          : '2026 名冊所列 ACSIC 正式會員。',
-    },
-    typeSpecificProfile: raw.typeSpecificProfile,
+    serviceTargets: localizeList(raw.serviceTargets),
+    majorFunctions: localizeList(raw.majorFunctions),
+    governanceType: ownership,
+    fundingOrCapitalBasis,
+    geographicScope: raw.countryName,
+    officialPublications,
+    acsicRoleNotes,
+    typeSpecificProfile,
+    sourceIds: raw.sourceIds,
     sourceReferences,
-    fieldEvidence: evidence,
-    profileCompletenessLevel: completion === 100 ? 2 : 1,
+    fieldEvidence: {},
+    profileCompletenessLevel: 1 as const,
     level1Completion: 100,
-    level2Completion: completion,
-    level2ApplicableFields: raw.level2ApplicableFields,
-    level2VerifiedFields: raw.level2VerifiedFields,
-    missingFields: raw.missingFields,
-    notApplicableFields: [],
-    nextResearchPriority: {
-      en: raw.missingFields.length
-        ? `Verify: ${raw.missingFields.join(', ')}.`
-        : 'Add dated official Level 3 metrics only when definitions are comparable.',
-      'zh-TW': raw.missingFields.length
-        ? `待查證：${raw.missingFields.join('、')}。`
-        : '僅在定義可比較時，新增具日期的官方 Level 3 指標。',
-    },
+    level2Status: 'not_assessed' as const,
+    level2Completion: 0,
+    level2RequiredFields: requiredLevel2Fields(raw.role),
+    level2ApplicableFields: [],
+    level2VerifiedFields: [],
+    missingFields: [],
+    notApplicableFields: raw.notApplicableFields,
+    nextResearchPriority: { en: '', 'zh-TW': '' },
     membershipVerifiedDate: '2026-07-16',
     institutionVerifiedDate: '2026-07-16',
     lastVerifiedDate: '2026-07-16',
-    verificationStatus: completion === 100 ? 'verified' : 'partially_verified',
-    confidenceLevel: raw.profileSource.accessStatus === 'accessible' ? 'high' : 'medium',
-    originalLanguages: [...new Set(['en', raw.profileSource.language])],
+    verificationStatus: 'pending_verification' as const,
+    confidenceScore: 0,
+    confidenceLevel: 'low' as const,
+    confidenceRationale: { en: '', 'zh-TW': '' },
+    confidenceFactors: {
+      tier1SourceCount: 0,
+      sourceTypeCount: 0,
+      evidenceCoverage: 0,
+      hasStaleSource: false,
+      hasUnavailableCriticalSource: false,
+      unresolvedConflictCount: 0,
+      bilingualCoverage: 100,
+    },
+    originalLanguages: [...new Set(sourceReferences.map((source) => source.originalLanguage))],
     level3Metrics: [],
     tags: [raw.status, raw.role, raw.countryCode],
-    verifiedFacts: raw.level2VerifiedFields.map(
-      (field) => `${field}: verified by official source.`,
-    ),
+    verifiedFacts: [],
     analysisInferences: [],
-    pendingItems: raw.missingFields,
+    pendingItems: [],
+    unresolvedConflicts: [],
     countryNameEn: raw.countryName.en,
     countryNameZhTw: raw.countryName['zh-TW'],
     institutionNameEn: raw.officialEnglish,
     institutionNameZhTw: raw.zhTw,
     nameTranslationStatus: raw.translationStatus,
     institutionType: raw.role,
-    type: roleLabels[raw.role],
-    guaranteePrograms: raw.majorFunctions,
+    type: roleCategoryLabels[raw.role],
+    guaranteePrograms: localizeList(raw.majorFunctions),
     guaranteeCoverage: null,
-    fundingSources: [],
+    fundingSources: Array.isArray(fundingValues) ? localizeList(fundingValues) : [],
     riskSharingModel: null,
-    governanceStructure: raw.ownershipOrLegalStatus,
-    policyTools: raw.majorFunctions,
+    governanceStructure: ownership,
+    policyTools: localizeList(raw.majorFunctions),
     specialMeasures: [],
     agricultureRelatedMeasures:
-      raw.role === 'agricultural_credit_guarantee_fund' ? raw.majorFunctions : [],
+      raw.role === 'agricultural_credit_guarantee_fund' ? localizeList(raw.majorFunctions) : [],
     youthFarmerMeasures: [],
     documentDate: null,
-    notes: raw.missingFields.length ? `Missing: ${raw.missingFields.join(', ')}` : '',
+    notes: { en: '', 'zh-TW': '' },
   };
+
+  const verifiedFields = new Set(raw.verifiedFieldKeys);
+  verifiedFields.add('acsicRoleNotes');
+  if (verifiedFields.has('ownershipOrLegalStatus')) verifiedFields.add('governanceType');
+  if (raw.id === 'jfc-jp') verifiedFields.add('officialPublications');
+  const fieldEvidence: Record<string, FieldEvidence[]> = {};
+  for (const field of verifiedFields) {
+    if (!fieldValue(record, field)) continue;
+    const sourceId =
+      field === 'acsicRoleNotes'
+        ? raw.status === 'observer'
+          ? 'acsic-current-member-institutions'
+          : 'acsic-2026-member-roster'
+        : (evidenceSourceOverrides[raw.id]?.[field] ?? raw.profileSourceId);
+    fieldEvidence[field] = [evidenceFor(record, field, sourceId)];
+  }
+  record.fieldEvidence = fieldEvidence;
+
+  const excluded = new Set(raw.notApplicableFields.map((item) => item.field));
+  record.level2ApplicableFields = record.level2RequiredFields.filter(
+    (field) => !excluded.has(field),
+  );
+  record.level2VerifiedFields = record.level2ApplicableFields.filter(
+    (field) => fieldEvidence[field]?.length && fieldValue(record, field),
+  );
+  record.missingFields = record.level2ApplicableFields.filter(
+    (field) => !record.level2VerifiedFields.includes(field),
+  );
+  record.level2Completion = Math.round(
+    (record.level2VerifiedFields.length / record.level2ApplicableFields.length) * 100,
+  );
+
+  const tier1SourceCount = sourceReferences.filter((source) => source.tier === 'tier_1').length;
+  const sourceTypeCount = new Set(sourceReferences.map((source) => source.sourceType)).size;
+  const hasStaleSource = sourceReferences.some((source) => source.stalenessWarning);
+  const hasUnavailableCriticalSource = sourceReferences.some(
+    (source) =>
+      source.sourceId === raw.profileSourceId && source.accessStatus === 'temporarily_unavailable',
+  );
+  const evidenceCoverage = record.level2Completion;
+  const completeEligible =
+    record.missingFields.length === 0 &&
+    sourceTypeCount >= 3 &&
+    tier1SourceCount >= 3 &&
+    !hasStaleSource &&
+    !hasUnavailableCriticalSource;
+  record.level2Status = completeEligible
+    ? 'complete'
+    : record.level2VerifiedFields.length <= 1 || hasUnavailableCriticalSource
+      ? 'insufficient'
+      : 'partial';
+  record.profileCompletenessLevel = record.level2Status === 'complete' ? 2 : 1;
+  record.verificationStatus =
+    record.level2Status === 'complete'
+      ? 'verified'
+      : record.level2Status === 'insufficient'
+        ? 'pending_verification'
+        : 'partially_verified';
+
+  record.confidenceFactors = {
+    tier1SourceCount,
+    sourceTypeCount,
+    evidenceCoverage,
+    hasStaleSource,
+    hasUnavailableCriticalSource,
+    unresolvedConflictCount: 0,
+    bilingualCoverage: 100,
+  };
+  record.confidenceScore = Math.max(
+    0,
+    Math.min(
+      100,
+      Math.round(
+        evidenceCoverage * 0.6 +
+          Math.min(tier1SourceCount, 3) * 7 +
+          Math.min(sourceTypeCount, 3) * 5 -
+          (hasStaleSource ? 12 : 0) -
+          (hasUnavailableCriticalSource ? 30 : 0),
+      ),
+    ),
+  );
+  record.confidenceLevel =
+    record.level2Status === 'complete' && record.confidenceScore >= 80
+      ? 'high'
+      : record.level2Status === 'insufficient' || record.confidenceScore < 40
+        ? 'low'
+        : 'medium';
+  record.confidenceRationale = {
+    en:
+      record.confidenceLevel === 'high'
+        ? 'All applicable Level 2 fields have field-level Tier 1 evidence, with adequate source diversity and no critical access or staleness warning.'
+        : record.confidenceLevel === 'medium'
+          ? `The official sources establish a usable institutional profile, but ${record.missingFields.length} applicable Level 2 fields remain unverified.`
+          : 'Only a limited official profile can be established; the critical institution source is unavailable or evidence coverage is too low.',
+    'zh-TW':
+      record.confidenceLevel === 'high'
+        ? '所有適用 Level 2 欄位均有 Tier 1 欄位級證據，來源類型充分，且無關鍵存取或時效警示。'
+        : record.confidenceLevel === 'medium'
+          ? `官方來源足以建立基本機構輪廓，但仍有 ${record.missingFields.length} 個適用 Level 2 欄位待查證。`
+          : '目前僅能建立有限的官方輪廓；關鍵機構來源無法存取，或證據涵蓋率過低。',
+  };
+  const missingLabels = record.missingFields.map(
+    (field) => level2FieldLabels[field] ?? { en: field, 'zh-TW': field },
+  );
+  record.pendingItems = missingLabels;
+  record.nextResearchPriority = {
+    en: missingLabels.length
+      ? `Prioritise official evidence for: ${missingLabels.map((item) => item.en).join(', ')}.`
+      : 'Maintain current evidence and review source dates before adding Level 3 metrics.',
+    'zh-TW': missingLabels.length
+      ? `優先補查官方證據：${missingLabels.map((item) => item['zh-TW']).join('、')}。`
+      : '維護現有證據，並在新增 Level 3 指標前複核來源日期。',
+  };
+  record.notes = {
+    en: missingLabels.length
+      ? `${missingLabels.length} applicable Level 2 fields remain pending.`
+      : 'No applicable Level 2 field is pending.',
+    'zh-TW': missingLabels.length
+      ? `仍有 ${missingLabels.length} 個適用 Level 2 欄位待查證。`
+      : '沒有待查證的適用 Level 2 欄位。',
+  };
+  record.verifiedFacts = Object.entries(fieldEvidence).map(([field, evidence]) => ({
+    claimId: `${record.id}-${field}-claim`,
+    statement: evidence[0]!.evidenceSummary,
+    fieldKeys: [field],
+    sourceEvidenceIds: evidence.map((item) => item.evidenceId),
+    verifiedDate: '2026-07-16',
+  }));
+  return record;
 }
 
 /** Single governed production-data entry point. */
-export const institutions = (rawInstitutions as RawInstitution[]).map(toInstitution);
+const governedRawInstitutions = rawInstitutions as unknown as RawInstitution[];
+export const institutions = governedRawInstitutions.map(initialInstitution);
 
-export const roleCategoryLabels = roleLabels;
-
-export const membershipStats = {
-  formalMembers: institutions.filter((record) => record.acsicMembershipStatus === 'member').length,
-  observers: institutions.filter((record) => record.acsicMembershipStatus === 'observer').length,
-  countriesEconomies: new Set(
-    institutions
-      .filter((record) => record.acsicMembershipStatus === 'member')
-      .map((record) => record.countryCode),
-  ).size,
-  institutionsCovered: institutions.length,
-  level1Complete: institutions.filter((record) => record.level1Completion === 100).length,
-  level2Complete: institutions.filter((record) => record.level2Completion === 100).length,
-  level2Partial: institutions.filter(
-    (record) => record.level2Completion > 0 && record.level2Completion < 100,
-  ).length,
-  level3Reliable: institutions.filter((record) => record.level3Metrics.length > 0).length,
-  sources: institutions.reduce((count, record) => count + record.sourceReferences.length, 0),
-  lastMembershipVerificationDate: '2026-07-16',
-};
+export const untranslatedProductionValues = governedRawInstitutions.flatMap((raw) => {
+  const values = [
+    raw.legalBasis,
+    raw.ownershipOrLegalStatus,
+    raw.supervisingOrOversightAuthority,
+    ...raw.serviceTargets,
+    ...raw.majorFunctions,
+    ...Object.values(raw.typeSpecificProfile).flatMap((value) =>
+      Array.isArray(value) ? value : typeof value === 'string' ? [value] : [],
+    ),
+  ].filter((value): value is string => Boolean(value));
+  return values.filter((value) => !hasResearchTranslation(value));
+});
