@@ -1,8 +1,30 @@
 import { useMemo, useState } from 'react';
 import { PageHeader, ResearchBadge } from '../components/Layout';
-import { institutions, membershipStats } from '../data/institutions';
+import { coverageStats, membershipStats } from '../data/coverage';
+import { institutions, sourceRegistry } from '../data/institutions';
+import { level2FieldLabels } from '../data/level2-standards';
 import { useLocale } from '../i18n';
 import { routePath } from '../routing';
+import type { Locale, SourceType } from '../types';
+
+const sourceTypeLabels: Record<SourceType, Record<Locale, string>> = {
+  official_membership_roster: { en: 'Official membership roster', 'zh-TW': '官方會員名冊' },
+  official_institution_profile: { en: 'Official institution profile', 'zh-TW': '官方機構簡介' },
+  official_law_or_regulation: { en: 'Official law or regulation', 'zh-TW': '官方法律或法規' },
+  official_annual_report: { en: 'Official annual report', 'zh-TW': '官方年度報告' },
+  official_scheme_document: { en: 'Official scheme document', 'zh-TW': '官方制度文件' },
+  official_governance_document: { en: 'Official governance document', 'zh-TW': '官方治理文件' },
+  official_government_source: { en: 'Official government source', 'zh-TW': '政府官方來源' },
+  official_press_release: { en: 'Official press release', 'zh-TW': '官方新聞稿' },
+  official_strategy_document: { en: 'Official strategy document', 'zh-TW': '官方策略文件' },
+};
+
+const accessStatusLabels = {
+  accessible: { en: 'Accessible', 'zh-TW': '可存取' },
+  redirected: { en: 'Redirected', 'zh-TW': '已重新導向' },
+  temporarily_unavailable: { en: 'Temporarily unavailable', 'zh-TW': '暫時無法存取' },
+  archived: { en: 'Archived', 'zh-TW': '已封存' },
+} as const;
 
 const pageCopy = {
   en: {
@@ -294,7 +316,18 @@ export function HomePage() {
               locale === 'en' ? 'Level 2 Partial' : 'Level 2 部分完成',
               membershipStats.level2Partial,
             ],
-            [locale === 'en' ? 'Official sources' : '官方來源', membershipStats.sources],
+            [
+              locale === 'en' ? 'Level 2 Insufficient' : 'Level 2 證據不足',
+              membershipStats.level2Insufficient,
+            ],
+            [
+              locale === 'en' ? 'Source references' : '來源引用紀錄',
+              membershipStats.sourceReferences,
+            ],
+            [
+              locale === 'en' ? 'Unique official sources' : '不重複官方來源',
+              membershipStats.uniqueOfficialSources,
+            ],
           ].map(([label, value]) => (
             <article key={label}>
               <strong className="coverage-number">{value}</strong>
@@ -312,8 +345,8 @@ export function HomePage() {
             {[
               locale === 'en' ? '21 institution profiles' : '21 筆機構檔案',
               locale === 'en'
-                ? `${membershipStats.sources} official source records`
-                : `${membershipStats.sources} 筆官方來源紀錄`,
+                ? `${membershipStats.sourceReferences} references to ${membershipStats.uniqueOfficialSources} unique official sources`
+                : `${membershipStats.sourceReferences} 筆引用紀錄，連結 ${membershipStats.uniqueOfficialSources} 個不重複官方來源`,
               locale === 'en' ? 'English and Traditional Chinese interface' : '英文與繁體中文介面',
             ].map((item) => (
               <li key={item}>
@@ -427,37 +460,100 @@ export function SourcesPage() {
   const [institution, setInstitution] = useState('all');
   const [type, setType] = useState('all');
   const [year, setYear] = useState('all');
-  const all = institutions.flatMap((record) =>
-    record.sourceReferences.map((source) => ({ record, source })),
-  );
+  const [language, setLanguage] = useState('all');
+  const [access, setAccess] = useState('all');
+  const [stale, setStale] = useState('all');
+  const [tier, setTier] = useState('all');
   const countries = [
-    ...new Set(
-      institutions.map((record) =>
-        locale === 'en' ? record.countryNameEn : record.countryNameZhTw,
-      ),
-    ),
+    ...new Map(
+      institutions.map((record) => [record.countryCode, record.countryName[locale]]),
+    ).entries(),
   ];
-  const types = [...new Set(all.map(({ source }) => source.documentType))];
+  const types = [...new Set(sourceRegistry.map((source) => source.sourceType))];
   const years = [
     ...new Set(
-      all.map(({ source }) => source.year).filter((value): value is number => value !== null),
+      sourceRegistry
+        .map((source) => source.documentDate?.slice(0, 4) ?? source.publicationDate?.slice(0, 4))
+        .filter((value): value is string => Boolean(value)),
     ),
   ];
+  const languages = [...new Set(sourceRegistry.map((source) => source.originalLanguage))];
+  const institutionsFor = (sourceId: string) =>
+    institutions.filter((record) => record.sourceIds.includes(sourceId));
+  const supportedFields = (sourceId: string) =>
+    institutions.flatMap((record) =>
+      Object.entries(record.fieldEvidence)
+        .filter(([, entries]) => entries.some((entry) => entry.sourceId === sourceId))
+        .map(([field]) => (level2FieldLabels[field] ?? { en: field, 'zh-TW': field })[locale]),
+    );
   const filtered = useMemo(
     () =>
-      all.filter(
-        ({ record, source }) =>
+      sourceRegistry.filter(
+        (source) =>
           (country === 'all' ||
-            (locale === 'en' ? record.countryNameEn : record.countryNameZhTw) === country) &&
-          (institution === 'all' || record.id === institution) &&
-          (type === 'all' || source.documentType === type) &&
-          (year === 'all' || source.year === Number(year)),
+            institutionsFor(source.sourceId).some((record) => record.countryCode === country)) &&
+          (institution === 'all' ||
+            institutionsFor(source.sourceId).some((record) => record.id === institution)) &&
+          (type === 'all' || source.sourceType === type) &&
+          (year === 'all' ||
+            source.documentDate?.startsWith(year) ||
+            source.publicationDate?.startsWith(year)) &&
+          (language === 'all' || source.originalLanguage === language) &&
+          (access === 'all' || source.accessStatus === access) &&
+          (stale === 'all' || source.stalenessWarning === (stale === 'yes')) &&
+          (tier === 'all' || source.tier === tier),
       ),
-    [all, country, institution, locale, type, year],
+    [access, country, institution, language, stale, tier, type, year],
   );
   return (
     <section className="section-shell page-section">
       <PageHeader title={c.title} intro={c.intro} />
+      <div
+        className="problem-grid coverage-grid"
+        aria-label={locale === 'en' ? 'Source statistics' : '來源統計'}
+      >
+        {[
+          [locale === 'en' ? 'Source references' : '來源引用紀錄', coverageStats.sourceReferences],
+          [
+            locale === 'en' ? 'Unique official sources' : '不重複官方來源',
+            coverageStats.uniqueOfficialSources,
+          ],
+          [
+            locale === 'en' ? 'Institution profiles' : '官方機構簡介',
+            coverageStats.sourceTypes.official_institution_profile ?? 0,
+          ],
+          [
+            locale === 'en' ? 'Legal or statutory documents' : '法律或法規文件',
+            coverageStats.sourceTypes.official_law_or_regulation ?? 0,
+          ],
+          [
+            locale === 'en' ? 'Annual or integrated reports' : '年度或整合報告',
+            coverageStats.sourceTypes.official_annual_report ?? 0,
+          ],
+          [
+            locale === 'en' ? 'Scheme or programme documents' : '制度或方案文件',
+            coverageStats.sourceTypes.official_scheme_document ?? 0,
+          ],
+          [
+            locale === 'en' ? 'Governance documents' : '治理文件',
+            coverageStats.sourceTypes.official_governance_document ?? 0,
+          ],
+          [
+            locale === 'en' ? 'Membership rosters' : '官方會員名冊',
+            coverageStats.sourceTypes.official_membership_roster ?? 0,
+          ],
+          [locale === 'en' ? 'Staleness warnings' : '時效警示', coverageStats.staleSources],
+          [
+            locale === 'en' ? 'Temporarily unavailable' : '暫時無法存取',
+            coverageStats.unavailableSources,
+          ],
+        ].map(([label, value]) => (
+          <article key={label}>
+            <strong className="coverage-number">{value}</strong>
+            <p>{label}</p>
+          </article>
+        ))}
+      </div>
       <form className="filter-panel" onSubmit={(event) => event.preventDefault()}>
         <label>
           <span>{c.country}</span>
@@ -467,8 +563,10 @@ export function SourcesPage() {
             onChange={(event) => setCountry(event.target.value)}
           >
             <option value="all">{c.all}</option>
-            {countries.map((value) => (
-              <option key={value}>{value}</option>
+            {countries.map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
             ))}
           </select>
         </label>
@@ -496,7 +594,9 @@ export function SourcesPage() {
           >
             <option value="all">{c.all}</option>
             {types.map((value) => (
-              <option key={value}>{value}</option>
+              <option key={value} value={value}>
+                {sourceTypeLabels[value][locale]}
+              </option>
             ))}
           </select>
         </label>
@@ -513,52 +613,134 @@ export function SourcesPage() {
             ))}
           </select>
         </label>
+        <label>
+          <span>{locale === 'en' ? 'Original language' : '原始語言'}</span>
+          <select
+            aria-label={locale === 'en' ? 'Original language' : '原始語言'}
+            value={language}
+            onChange={(event) => setLanguage(event.target.value)}
+          >
+            <option value="all">{c.all}</option>
+            {languages.map((value) => (
+              <option key={value}>{value}</option>
+            ))}
+          </select>
+        </label>
+        <label>
+          <span>{locale === 'en' ? 'Access status' : '存取狀態'}</span>
+          <select
+            aria-label={locale === 'en' ? 'Access status' : '存取狀態'}
+            value={access}
+            onChange={(event) => setAccess(event.target.value)}
+          >
+            <option value="all">{c.all}</option>
+            <option value="accessible">{accessStatusLabels.accessible[locale]}</option>
+            <option value="redirected">{accessStatusLabels.redirected[locale]}</option>
+            <option value="temporarily_unavailable">
+              {accessStatusLabels.temporarily_unavailable[locale]}
+            </option>
+            <option value="archived">{accessStatusLabels.archived[locale]}</option>
+          </select>
+        </label>
+        <label>
+          <span>{locale === 'en' ? 'Staleness warning' : '時效警示'}</span>
+          <select
+            aria-label={locale === 'en' ? 'Staleness warning' : '時效警示'}
+            value={stale}
+            onChange={(event) => setStale(event.target.value)}
+          >
+            <option value="all">{c.all}</option>
+            <option value="yes">{locale === 'en' ? 'Warning' : '有警示'}</option>
+            <option value="no">{locale === 'en' ? 'No warning' : '無警示'}</option>
+          </select>
+        </label>
+        <label>
+          <span>Tier</span>
+          <select aria-label="Tier" value={tier} onChange={(event) => setTier(event.target.value)}>
+            <option value="all">{c.all}</option>
+            <option value="tier_1">Tier 1</option>
+            <option value="tier_2">Tier 2</option>
+          </select>
+        </label>
       </form>
       <div className="result-summary" aria-live="polite">
         {locale === 'en' ? `${filtered.length} ${c.results}` : `${filtered.length} ${c.results}`}
       </div>
       <div className="institution-list">
-        {filtered.map(({ record, source }) => (
-          <article key={`${record.id}-${source.id}`}>
-            <div className="record-title">
-              <div>
-                <ResearchBadge />
-                <h2>{source.title}</h2>
+        {filtered.map((source) => {
+          const related = institutionsFor(source.sourceId);
+          const fields = supportedFields(source.sourceId);
+          return (
+            <article key={source.sourceId}>
+              <div className="record-title">
+                <div>
+                  <ResearchBadge />
+                  <h2>{source.title}</h2>
+                </div>
+                <span className="status status-high">{locale === 'en' ? 'Official' : '官方'}</span>
               </div>
-              <span className="status status-high">{locale === 'en' ? 'Official' : '官方'}</span>
-            </div>
-            <p>
-              {record.name[locale]} | {source.documentType}
-            </p>
-            <dl className="record-summary">
-              <div>
-                <dt>{c.publisher}</dt>
-                <dd>{source.publisher}</dd>
+              <p>
+                {related.length
+                  ? related.map((record) => record.institutionAbbreviation).join(', ')
+                  : locale === 'en'
+                    ? 'Cross-institution roster'
+                    : '跨機構名冊'}{' '}
+                | {sourceTypeLabels[source.sourceType][locale]}
+              </p>
+              <dl className="record-summary">
+                <div>
+                  <dt>{c.publisher}</dt>
+                  <dd>{source.publisher}</dd>
+                </div>
+                <div>
+                  <dt>{c.section}</dt>
+                  <dd>{source.pageOrSection}</dd>
+                </div>
+                <div>
+                  <dt>{c.documentDate}</dt>
+                  <dd>{source.documentDate ?? c.missing}</dd>
+                </div>
+                <div>
+                  <dt>{c.accessed}</dt>
+                  <dd>{source.accessedDate}</dd>
+                </div>
+                <div>
+                  <dt>{c.originalLanguage}</dt>
+                  <dd>{source.originalLanguage}</dd>
+                </div>
+                <div>
+                  <dt>{locale === 'en' ? 'Tier' : '來源層級'}</dt>
+                  <dd>{source.tier === 'tier_1' ? 'Tier 1' : 'Tier 2'}</dd>
+                </div>
+                <div>
+                  <dt>{locale === 'en' ? 'Supported fields' : '支持欄位'}</dt>
+                  <dd>{fields.length ? fields.join(locale === 'en' ? '; ' : '、') : c.missing}</dd>
+                </div>
+                <div>
+                  <dt>{locale === 'en' ? 'Access status' : '存取狀態'}</dt>
+                  <dd>{accessStatusLabels[source.accessStatus][locale]}</dd>
+                </div>
+                <div>
+                  <dt>{locale === 'en' ? 'Staleness warning' : '時效警示'}</dt>
+                  <dd>
+                    {source.stalenessWarning
+                      ? locale === 'en'
+                        ? 'Yes'
+                        : '有'
+                      : locale === 'en'
+                        ? 'No'
+                        : '無'}
+                  </dd>
+                </div>
+              </dl>
+              <div className="record-footer">
+                <a className="button secondary" href={source.url} target="_blank" rel="noreferrer">
+                  {c.open}
+                </a>
               </div>
-              <div>
-                <dt>{c.section}</dt>
-                <dd>{source.section}</dd>
-              </div>
-              <div>
-                <dt>{c.documentDate}</dt>
-                <dd>{source.documentDate ?? c.missing}</dd>
-              </div>
-              <div>
-                <dt>{c.accessed}</dt>
-                <dd>{source.accessedDate}</dd>
-              </div>
-              <div>
-                <dt>{c.originalLanguage}</dt>
-                <dd>{source.originalLanguage}</dd>
-              </div>
-            </dl>
-            <div className="record-footer">
-              <a className="button secondary" href={source.url} target="_blank" rel="noreferrer">
-                {c.open}
-              </a>
-            </div>
-          </article>
-        ))}
+            </article>
+          );
+        })}
       </div>
     </section>
   );

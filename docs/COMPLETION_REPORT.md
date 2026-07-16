@@ -8,7 +8,7 @@
 - 首頁與未來資訊架構已雙語化；尚無官方資料的制度及活動頁使用明確空狀態。
 - 比較與報告可獨立選擇英文或繁體中文輸出，下載檔名採 ACSIC Knowledge Hub 品牌。
 - 每筆至少具有一個機構官方來源與會員名冊來源，並以 `fieldEvidence` 連結已填 Level 2 事實。
-- Level 1 完成 21／21；依機構類型適用欄位計算，Level 2 完成 15 筆、部分完成 6 筆；另列的研究缺口可包含 Level 2 範圍外欄位。本輪未納入缺乏完整定義的 Level 3 數字。
+- Level 1 完成 21／21；依單一版本化共通與機構角色別標準計算，嚴格 Level 2 為 1 筆完整、19 筆部分完成、1 筆證據不足。本輪仍未納入缺乏完整定義、單位與可比性的 Level 3 數字。
 - ASKRINDO 官方公司簡介標示暫時無法存取；ASIPPINDO 官方歷史頁標示過時警示。
 - 功能包含搜尋、篩選、排序、詳細頁、比較、三格式匯出、五類報告及資料來源頁。
 - 不連接私人核心資料，不建立後端、追蹤、自訂網域或 CNAME。
@@ -19,7 +19,19 @@
 
 ## Pre-publication validation
 
-- `pnpm check`: passed (format, lint, typecheck, 16 unit/data-governance tests, build and secret scan).
-- `pnpm test:e2e`: passed, 18/18 across desktop and mobile Chromium.
+- `pnpm check`: passed (generated-document consistency, format, lint, typecheck, 56 unit/data-governance tests, build and secret scan).
+- `pnpm test:e2e`: passed, 28/28 across desktop and mobile Chromium, including all 21 detail views, both languages, filters, comparison and downloads.
 - URL validation: 21 official entry points checked; temporary HTTP/bot-protection conditions are documented in `docs/SOURCE_URL_VALIDATION.md` and no non-official mirrors were substituted.
 - Local paths, tokens, API keys, passwords, personal records and prohibited files: none found.
+
+<!-- GENERATED:COMPLETION:START -->
+
+## Calibrated production result
+
+- Membership remains 20 formal members plus 1 observer across 14 countries/economies.
+- Strict Level 2: 1 complete, 19 partial and 1 insufficient. Level 3 reliable metrics remain 0.
+- 52 source-reference relationships resolve to 33 unique official sources and 203 field-evidence objects.
+- Governed user-visible data content has 100% English/Traditional-Chinese coverage; 11 official native-language names are confirmed.
+- Confidence distribution: high 1, medium 19, low 1.
+
+<!-- GENERATED:COMPLETION:END -->

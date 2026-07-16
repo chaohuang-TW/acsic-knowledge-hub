@@ -11,6 +11,8 @@ This guide governs English and Traditional Chinese content in ACSIC Knowledge Hu
 3. When the platform provides a careful Traditional Chinese rendering, mark it `research_translation`.
 4. If no reliable rendering is ready, keep the official English name visible, set the Chinese value to an explicit pending label and mark `pending`.
 5. Do not translate abbreviations, legal instrument titles or program names unless an official translation exists.
+6. Verify a native-language name against an accessible institution-owned source. An English profile or roster alone is not sufficient.
+7. Preserve legal-form prefixes and suffixes in native names, including Japanese corporate or association forms.
 
 ## Terminology
 
@@ -48,3 +50,5 @@ Every `SourceReference` records `originalLanguage` using a clear BCP 47 language
 - Dates, units, legal citations and URLs must not change during translation.
 - Avoid wording that implies ACSIC endorsement or official status.
 - If the two language versions diverge, correct the evidence first, then update both versions together.
+- Translate evidence summaries and confidence rationales as governed pairs. Source titles remain the originals published by the source owner.
+- Automated tests reject missing governed translations and internal data keys in human-readable reports.
