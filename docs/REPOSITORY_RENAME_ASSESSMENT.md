@@ -1,5 +1,9 @@
 # Repository Rename Assessment
 
+## 2026-07-16 execution status
+
+The target name is available and the current repository is Public on `main`. The connected GitHub App reports repository admin permission, but the installed connector action surface has no repository rename or repository settings mutation. Migration is paused before changing the Pages base so the live old-path site remains healthy. See `docs/REPOSITORY_MIGRATION_REPORT.md` for the verified state, single manual rename action and prepared migration matrix.
+
 ## Proposed change
 
 Rename `chaohuang-TW/acgf-strategy-os-demo` to `chaohuang-TW/acsic-knowledge-hub` after the bilingual release is stable.
