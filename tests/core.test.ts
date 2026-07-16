@@ -1,116 +1,136 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { institutions } from '../src/data/institutions';
 import type { Institution, InstitutionFilters, ReportType } from '../src/types';
 import {
+  COMPARISON_LIMITATION,
+  DISCLAIMER,
+  RESEARCH_LABEL,
   comparisonCsv,
   comparisonJson,
   comparisonMarkdown,
   defaultFilters,
-  DEMO_NOTICE,
-  DISCLAIMER,
   filterInstitutions,
   generateReport,
 } from '../src/utils/core';
 
-function filters(overrides: Partial<InstitutionFilters>): InstitutionFilters {
-  return { ...defaultFilters, ...overrides };
-}
+const filters = (overrides: Partial<InstitutionFilters>): InstitutionFilters => ({
+  ...defaultFilters,
+  ...overrides,
+});
+// TEST_ONLY：只用於確保舊版名稱不會回到生產資料或輸出。
+const forbiddenNames = ['東嶼國', '北辰', '海岳', '雲原'];
 
-describe('公開 DEMO 資料治理', () => {
-  it('所有資料都明確標示為 DEMO，且使用虛構來源網域', () => {
-    expect(institutions).toHaveLength(4);
-    expect(institutions.every((record) => record.demo)).toBe(true);
-    expect(
-      institutions.every((record) =>
-        record.sources.every((source) => new URL(source.url).hostname.endsWith('.invalid')),
-      ),
-    ).toBe(true);
+describe('官方公開資料治理', () => {
+  it('具有九筆指定真實機構，且 ACSIC 身分正確', () => {
+    expect(institutions).toHaveLength(9);
+    expect(institutions.find((r) => r.id === 'tw-acgf')?.acsicMembershipStatus).toBe('Observer');
+    expect(institutions.filter((r) => r.acsicMembershipStatus === 'Member')).toHaveLength(8);
   });
 
-  it('每筆資料都保留事實、推論、待查證事項與來源', () => {
+  it('每筆資料都有官方網站、來源、查閱日期及查證欄位', () => {
     for (const record of institutions) {
-      expect(record.facts.length).toBeGreaterThan(0);
-      expect(record.inferences.length).toBeGreaterThan(0);
-      expect(record.pending.length).toBeGreaterThan(0);
-      expect(record.sources.length).toBeGreaterThan(0);
+      expect(new URL(record.officialWebsite).protocol).toBe('https:');
+      expect(record.sourceReferences.length).toBeGreaterThanOrEqual(2);
+      expect(record.sourceReferences.every((source) => source.official)).toBe(true);
+      expect(
+        record.sourceReferences.every((source) => new URL(source.url).protocol === 'https:'),
+      ).toBe(true);
+      expect(
+        record.sourceReferences.every((source) => /^\d{4}-\d{2}-\d{2}$/.test(source.accessedDate)),
+      ).toBe(true);
+      expect(['verified', 'partially_verified', 'pending_verification']).toContain(
+        record.verificationStatus,
+      );
+      expect(['high', 'medium', 'low']).toContain(record.confidenceLevel);
     }
   });
 
-  it('全站免責聲明與 DEMO 標示完整', () => {
-    expect(DEMO_NOTICE).toContain('DEMO');
-    expect(DISCLAIMER).toContain('並非任何政府機關');
-    expect(DISCLAIMER).toContain('不構成政策、金融或法律建議');
+  it('已查證紀錄有官方來源與已查證事實', () => {
+    for (const record of institutions.filter((r) => r.verificationStatus === 'verified')) {
+      expect(record.sourceReferences.length).toBeGreaterThan(0);
+      expect(record.verifiedFacts.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('生產資料與主要輸出不含禁止的舊名稱或公開展示標籤', () => {
+    const content =
+      JSON.stringify(institutions) +
+      comparisonMarkdown(institutions.slice(0, 2)) +
+      generateReport('executive', institutions.slice(0, 1));
+    for (const value of [...forbiddenNames, 'DEMO 示範資料']) expect(content).not.toContain(value);
+    expect(RESEARCH_LABEL).toBe('官方公開資料研究版');
+  });
+
+  it('所有機構欄位完整，未揭露資料保留 null 或空陣列', () => {
+    for (const record of institutions) {
+      for (const key of [
+        'legalBasis',
+        'guaranteeCoverage',
+        'riskSharingModel',
+        'fundingSources',
+        'youthFarmerMeasures',
+      ] satisfies Array<keyof Institution>) {
+        expect(Object.hasOwn(record, key)).toBe(true);
+      }
+    }
+  });
+
+  it('資料集不保存缺少資料日期契約的動態數值物件', () => {
+    const dynamicKeys = [
+      'guaranteeRate',
+      'guaranteeLimit',
+      'guaranteeFee',
+      'beneficiaryCount',
+      'guaranteeAmount',
+    ];
+    for (const record of institutions)
+      for (const key of dynamicKeys) expect(Object.hasOwn(record, key)).toBe(false);
   });
 });
 
 describe('搜尋、篩選與排序', () => {
-  it('可依機構名稱關鍵字搜尋', () => {
-    expect(filterInstitutions(institutions, filters({ query: '東嶼' }))).toHaveLength(1);
+  it('可搜尋中文、英文與簡稱', () => {
+    expect(filterInstitutions(institutions, filters({ query: '農業信用' }))).toHaveLength(1);
+    expect(filterInstitutions(institutions, filters({ query: 'CGCC' }))).toHaveLength(1);
+    expect(filterInstitutions(institutions, filters({ query: 'Japan' }))).toHaveLength(2);
   });
-
-  it('可依國家、類型、標籤與查證狀態組合篩選', () => {
-    const result = filterInstitutions(
-      institutions,
-      filters({
-        country: '海岳共和國',
-        type: '綠色融資保證機構',
-        tag: '農業',
-        verification: '示範已檢核',
-      }),
-    );
-    expect(result.map((record) => record.id)).toEqual(['sea-mount-green-finance']);
+  it('可組合國家、類型、標籤與查證狀態', () => {
+    expect(
+      filterInstitutions(
+        institutions,
+        filters({
+          country: '柬埔寨',
+          type: '國營信用保證機構',
+          tag: '農業',
+          verification: 'verified',
+        }),
+      ).map((r) => r.id),
+    ).toEqual(['kh-cgcc']);
   });
-
-  it('可依農業與青年農民措施篩選', () => {
-    expect(filterInstitutions(institutions, filters({ agriculture: '無' }))).toHaveLength(1);
-    expect(filterInstitutions(institutions, filters({ youth: '有' }))).toHaveLength(3);
-  });
-
-  it('無符合條件時回傳空陣列，不自動補資料', () => {
-    expect(filterInstitutions(institutions, filters({ query: '不存在的機構' }))).toEqual([]);
-  });
-
-  it('支援最近、較早與名稱排序', () => {
-    expect(filterInstitutions(institutions, filters({ sort: 'newest' }))[0]?.updatedAt).toBe(
-      '2026-07-12',
-    );
-    expect(filterInstitutions(institutions, filters({ sort: 'oldest' }))[0]?.updatedAt).toBe(
-      '2026-05-19',
-    );
-    expect(filterInstitutions(institutions, filters({ sort: 'name' }))).toHaveLength(4);
-  });
+  it('無結果時回傳空陣列', () =>
+    expect(filterInstitutions(institutions, filters({ query: '不存在的機構' }))).toEqual([]));
 });
 
-describe('比較匯出', () => {
+describe('比較匯出與報告', () => {
   const selected = institutions.slice(0, 2);
-
-  it('Markdown 包含比較欄位、DEMO 與免責聲明', () => {
-    const output = comparisonMarkdown(selected);
-    expect(output).toContain('# DEMO 跨機構比較');
-    expect(output).toContain('服務對象');
-    expect(output).toContain(DISCLAIMER);
-  });
-
-  it('CSV 包含 DEMO、免責聲明與兩筆機構', () => {
-    const output = comparisonCsv(selected);
-    expect(output).toContain('DEMO 跨機構比較');
-    expect(output).toContain('非官方聲明');
-    expect(output).toContain(selected[1]!.institutionName);
-  });
-
-  it('JSON 可解析且保留 DEMO、免責聲明與資料', () => {
-    const output = JSON.parse(comparisonJson(selected)) as {
-      label: string;
+  it('三種比較格式都有來源、日期、免責聲明及限制', () => {
+    for (const output of [comparisonMarkdown(selected), comparisonCsv(selected)]) {
+      expect(output).toContain('官方來源');
+      expect(output).toContain('2026-07-16');
+      expect(output).toContain(DISCLAIMER);
+      expect(output).toContain(COMPARISON_LIMITATION);
+    }
+    const json = JSON.parse(comparisonJson(selected)) as {
       disclaimer: string;
+      comparisonLimitation: string;
       institutions: Institution[];
     };
-    expect(output.label).toBe(DEMO_NOTICE);
-    expect(output.disclaimer).toBe(DISCLAIMER);
-    expect(output.institutions).toHaveLength(2);
+    expect(json.disclaimer).toBe(DISCLAIMER);
+    expect(json.comparisonLimitation).toBe(COMPARISON_LIMITATION);
+    expect(json.institutions).toHaveLength(2);
   });
-});
 
-describe('報告範本', () => {
   const reportTypes: ReportType[] = [
     'executive',
     'country',
@@ -118,23 +138,21 @@ describe('報告範本', () => {
     'meeting-qa',
     'presentation',
   ];
-
-  it.each(reportTypes)('%s 範本保留必要治理欄位', (type) => {
-    const output = generateReport(type, institutions.slice(0, 2), new Date('2026-07-15'));
-    expect(output).toContain('# DEMO');
-    expect(output).toContain('產製日期：2026-07-15');
-    expect(output).toContain('資料最後更新日期：2026-07-12');
-    expect(output).toContain('## 已查證事實（示範）');
-    expect(output).toContain('## 分析推論（示範）');
-    expect(output).toContain('## 待查證事項');
-    expect(output).toContain('## 示範來源');
-    expect(output).toContain(DISCLAIMER);
+  it.each(reportTypes)('%s 報告分開事實、推論、待查證與來源', (type) => {
+    const output = generateReport(type, selected, new Date('2026-07-16'));
+    for (const heading of [
+      '產製日期：2026-07-16',
+      '資料最後查證日期',
+      '## 官方來源',
+      '## 已查證事實',
+      '## 分析／推論',
+      '## 待查證事項',
+      '## 比較限制',
+      '## 免責聲明',
+    ])
+      expect(output).toContain(heading);
   });
 
-  it('沒有資料時明確顯示待查證，不自動補值', () => {
-    const output = generateReport('executive', [], new Date('2026-07-15'));
-    expect(output).toContain('資料最後更新日期：待查證');
-    expect(output).toContain('- 待查證');
-    expect(output).toContain('- 無，不自動補填。');
-  });
+  it('入口文件保留 noindex', () =>
+    expect(readFileSync('index.html', 'utf8')).toContain('noindex, nofollow, noarchive'));
 });

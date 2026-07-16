@@ -9,6 +9,7 @@ import {
   DisclaimerPage,
   GovernancePage,
   HomePage,
+  SourcesPage,
 } from './pages/StaticPages';
 
 const routes = [
@@ -17,6 +18,7 @@ const routes = [
   '/institutions',
   '/compare',
   '/reports',
+  '/sources',
   '/governance',
   '/about',
   '/disclaimer',
@@ -48,6 +50,7 @@ export default function App() {
       {route === '/institutions' && <InstitutionsPage />}
       {route === '/compare' && <ComparisonPage />}
       {route === '/reports' && <ReportsPage />}
+      {route === '/sources' && <SourcesPage />}
       {route === '/governance' && <GovernancePage />}
       {route === '/about' && <AboutPage />}
       {route === '/disclaimer' && <DisclaimerPage />}

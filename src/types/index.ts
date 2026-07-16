@@ -1,38 +1,54 @@
-export type VerificationStatus = '示範已檢核' | '示範待複核' | '待查證';
-export type ConfidenceLevel = '高' | '中' | '低';
+export type VerificationStatus = 'verified' | 'partially_verified' | 'pending_verification';
+export type ConfidenceLevel = 'high' | 'medium' | 'low';
+export type AcsicMembershipStatus = 'Member' | 'Observer';
 
-export interface DemoSource {
+export interface SourceReference {
   id: string;
   title: string;
-  sourceType: '示範一手來源' | '示範二手來源';
+  documentType: 'official_webpage' | 'official_document' | 'official_report' | 'official_index';
   publisher: string;
   url: string;
+  documentDate: string | null;
+  year: number | null;
+  section: string;
   accessedDate: string;
-  note: string;
+  official: true;
 }
 
 export interface Institution {
   id: string;
-  demo: true;
-  institutionName: string;
-  countryName: string;
+  countryCode: string;
+  countryNameZhTw: string;
+  countryNameEn: string;
+  institutionNameZhTw: string;
+  institutionNameEn: string;
+  institutionAbbreviation: string;
   institutionType: string;
-  tags: string[];
+  establishedYear: number | null;
+  supervisingAuthority: string | null;
+  legalBasis: string | null;
   serviceTargets: string[];
-  guaranteeMeasures: string[];
-  guaranteeCoverage: string;
+  guaranteePrograms: string[];
+  guaranteeCoverage: string | null;
   fundingSources: string[];
-  riskSharing: string;
-  governanceModel: string;
-  agricultureMeasures: string[];
+  riskSharingModel: string | null;
+  governanceStructure: string | null;
+  policyTools: string[];
+  specialMeasures: string[];
+  agricultureRelatedMeasures: string[];
   youthFarmerMeasures: string[];
+  acsicMembershipStatus: AcsicMembershipStatus;
+  officialWebsite: string;
+  sourceReferences: SourceReference[];
+  documentDate: string | null;
+  lastVerifiedDate: string;
   verificationStatus: VerificationStatus;
   confidenceLevel: ConfidenceLevel;
-  updatedAt: string;
-  facts: string[];
-  inferences: string[];
-  pending: string[];
-  sources: DemoSource[];
+  tags: string[];
+  notes: string;
+  verifiedFacts: string[];
+  analysisInferences: string[];
+  pendingItems: string[];
 }
 
 export interface InstitutionFilters {

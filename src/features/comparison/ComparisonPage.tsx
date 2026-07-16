@@ -1,17 +1,17 @@
 import { useMemo, useState } from 'react';
-import { DemoBadge, PageHeader } from '../../components/Layout';
+import { PageHeader, ResearchBadge } from '../../components/Layout';
 import { institutions } from '../../data/institutions';
-import type { Institution } from '../../types';
 import {
+  COMPARISON_LIMITATION,
   comparisonCsv,
   comparisonFields,
   comparisonJson,
   comparisonMarkdown,
+  displayValue,
 } from '../../utils/core';
 
 function download(filename: string, content: string, type: string) {
-  const blob = new Blob([content], { type: `${type};charset=utf-8` });
-  const url = URL.createObjectURL(blob);
+  const url = URL.createObjectURL(new Blob([content], { type: `${type};charset=utf-8` }));
   const anchor = document.createElement('a');
   anchor.href = url;
   anchor.download = filename;
@@ -19,20 +19,13 @@ function download(filename: string, content: string, type: string) {
   URL.revokeObjectURL(url);
 }
 
-function valueText(value: Institution[keyof Institution]) {
-  if (Array.isArray(value)) return value.length ? value.join('、') : '不適用或尚無資料';
-  return String(value);
-}
-
 export function ComparisonPage() {
-  const [selectedIds, setSelectedIds] = useState<string[]>(
-    institutions.slice(0, 2).map((item) => item.id),
-  );
+  const [selectedIds, setSelectedIds] = useState(institutions.slice(0, 2).map((item) => item.id));
   const selected = useMemo(
     () => institutions.filter((item) => selectedIds.includes(item.id)),
     [selectedIds],
   );
-  const toggle = (id: string) => {
+  const toggle = (id: string) =>
     setSelectedIds((current) =>
       current.includes(id)
         ? current.filter((item) => item !== id)
@@ -40,14 +33,15 @@ export function ComparisonPage() {
           ? [...current, id]
           : current,
     );
-  };
-
   return (
     <section className="section-shell page-section">
-      <PageHeader title="跨機構比較" intro="選擇二至四筆完全虛構的資料，以相同欄位檢視制度差異。" />
+      <PageHeader
+        title="跨機構比較"
+        intro="選擇二至四個真實機構，以一致欄位檢視差異，並同步保留來源、日期與查證狀態。"
+      />
       <div className="comparison-picker">
         <div className="section-heading-row">
-          <h2>選擇示範資料</h2>
+          <h2>選擇機構</h2>
           <span>{selected.length} / 4 筆</span>
         </div>
         <div className="selector-grid">
@@ -60,43 +54,54 @@ export function ComparisonPage() {
                 onChange={() => toggle(record.id)}
               />
               <span>
-                <DemoBadge />
-                <strong>{record.institutionName}</strong>
-                <small>{record.countryName}</small>
+                <ResearchBadge />
+                <strong>{record.institutionNameZhTw}</strong>
+                <small>
+                  {record.countryNameZhTw}｜{record.institutionAbbreviation}
+                </small>
               </span>
             </label>
           ))}
         </div>
       </div>
-
       {selected.length < 2 ? (
         <div className="state-message" role="status">
           <h2>請至少選擇兩筆資料</h2>
-          <p>比較表最多可同時呈現四筆 DEMO 示範資料。</p>
+          <p>比較表最多同時呈現四個機構。</p>
         </div>
       ) : (
         <section className="comparison-result" aria-labelledby="comparison-title">
           <div className="section-heading-row">
-            <h2 id="comparison-title">DEMO 比較表</h2>
+            <h2 id="comparison-title">公開資料比較表</h2>
             <div className="button-row export-buttons">
               <button
                 className="button secondary"
                 onClick={() =>
-                  download('demo-comparison.md', comparisonMarkdown(selected), 'text/markdown')
+                  download(
+                    'institution-comparison.md',
+                    comparisonMarkdown(selected),
+                    'text/markdown',
+                  )
                 }
               >
                 匯出 Markdown
               </button>
               <button
                 className="button secondary"
-                onClick={() => download('demo-comparison.csv', comparisonCsv(selected), 'text/csv')}
+                onClick={() =>
+                  download('institution-comparison.csv', comparisonCsv(selected), 'text/csv')
+                }
               >
                 匯出 CSV
               </button>
               <button
                 className="button secondary"
                 onClick={() =>
-                  download('demo-comparison.json', comparisonJson(selected), 'application/json')
+                  download(
+                    'institution-comparison.json',
+                    comparisonJson(selected),
+                    'application/json',
+                  )
                 }
               >
                 匯出 JSON
@@ -104,16 +109,17 @@ export function ComparisonPage() {
             </div>
           </div>
           <p className="table-note">
-            <DemoBadge /> 匯出內容會保留 DEMO 與非官方聲明。
+            <strong>比較限制：</strong>
+            {COMPARISON_LIMITATION}
           </p>
           <div className="table-scroll" tabIndex={0} aria-label="跨機構比較表，可水平捲動">
             <table>
               <thead>
                 <tr>
                   <th scope="col">比較項目</th>
-                  {selected.map((record) => (
-                    <th scope="col" key={record.id}>
-                      {record.institutionName}
+                  {selected.map((r) => (
+                    <th scope="col" key={r.id}>
+                      {r.institutionNameZhTw}
                     </th>
                   ))}
                 </tr>
@@ -122,11 +128,28 @@ export function ComparisonPage() {
                 {comparisonFields.map(([key, label]) => (
                   <tr key={String(key)}>
                     <th scope="row">{label}</th>
-                    {selected.map((record) => (
-                      <td key={record.id}>{valueText(record[key])}</td>
+                    {selected.map((r) => (
+                      <td key={r.id}>{displayValue(r[key])}</td>
                     ))}
                   </tr>
                 ))}
+                <tr>
+                  <th scope="row">來源與編號</th>
+                  {selected.map((r) => (
+                    <td key={r.id}>
+                      {r.sourceReferences.map((s, i) => (
+                        <div key={s.id}>
+                          [{i + 1}]{' '}
+                          <a href={s.url} target="_blank" rel="noreferrer">
+                            {s.title}
+                          </a>
+                          <br />
+                          <small>查閱：{s.accessedDate}</small>
+                        </div>
+                      ))}
+                    </td>
+                  ))}
+                </tr>
               </tbody>
             </table>
           </div>

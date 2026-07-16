@@ -21,6 +21,13 @@ const patterns = [
   ['Local user path', /\/Users\/[A-Za-z0-9._-]+\//], // secret-scan:allow
   ['Taiwan ID', /\b[A-Z][12]\d{8}\b/], // secret-scan:allow
 ];
+const forbiddenProductionTerms = [
+  '東嶼國',
+  '北辰中小企業',
+  '海岳綠色',
+  '雲原鄉村',
+  'DEMO 示範資料',
+];
 
 async function walk(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -37,6 +44,11 @@ async function walk(directory) {
       findings.push(`${relative}: 環境檔不得提交`);
     if (/\.(png|jpe?g|gif|webp|ico|woff2?)$/i.test(entry.name)) continue;
     const content = await readFile(fullPath, 'utf8');
+    if (!relative.startsWith('tests/') && relative !== 'scripts/secret-scan.mjs') {
+      for (const term of forbiddenProductionTerms) {
+        if (content.includes(term)) findings.push(`${relative}: 禁止的舊版內容「${term}」`);
+      }
+    }
     content.split(/\r?\n/).forEach((line, index) => {
       if (line.includes('secret-scan:allow')) return;
       for (const [label, pattern] of patterns) {

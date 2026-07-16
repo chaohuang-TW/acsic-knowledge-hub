@@ -1,58 +1,28 @@
-# ACGF Strategy OS｜公開展示版
+# ACGF Strategy OS｜國際信用保證公開資料研究版
 
-國際信用保證知識工作台的獨立公開展示網站，示範結構化資料、來源治理、跨機構比較與報告範本工作流程。
+以九個真實信用保證及政策金融機構的官方公開資料，展示結構化來源治理、搜尋篩選、跨機構比較與規則式報告工作流程。
 
-> 本網站為個人 AI 知識管理與介面設計實驗，並非任何政府機關、基金會或國際組織的官方網站。展示資料不構成政策、金融或法律建議。
+> 本網站為個人研究與 AI 知識管理實驗，並非任何政府機關、基金會、ACSIC 或國際組織的官方網站。內容僅供研究參考，正式引用及決策前應回到原始來源查證。
 
-## 公開版與私人版差異
+## 資料與安全邊界
 
-- 公開版只使用完全虛構的國家、機構、制度、數字與 `.invalid` 示範來源。
-- 公開版不讀取、複製、連接或同步任何私人核心系統。
-- 公開版沒有後端、登入、資料庫、追蹤、廣告或需要 API Key 的功能。
-- 缺漏資料維持待查證，不自動補造正式制度內容。
+- 僅使用信用保證機構及政府機關可公開查閱的官方網頁與文件。
+- 不讀取、複製、連接或同步私人核心系統、內部文件、個案資料或未公開數據。
+- 缺漏欄位維持 `null`、`待查證` 或「官方資料未揭露」，不由 AI 推測補造。
+- 不保存未附資料日期及來源的動態制度數字。
+- 網站沒有後端、登入、資料庫、追蹤、廣告或 API Key。
 
-## 安裝與開發
+## 本機開發與驗證
 
 需要 Node.js 22 與 pnpm 11。
 
 ```bash
 pnpm install
 pnpm dev
-```
-
-本機開發網址由 Vite 顯示。正式建置的 base 固定為 `/acgf-strategy-os-demo/`。
-
-## 測試與建置
-
-```bash
-pnpm format:check
-pnpm lint
-pnpm typecheck
-pnpm test
-pnpm build
+pnpm check
 pnpm test:e2e
-pnpm secret:scan
 ```
 
-## GitHub Pages 部署
+正式建置的 Vite base 固定為 `/acgf-strategy-os-demo/`。Pages 使用 GitHub Actions 部署至 `https://chaohuang-tw.github.io/acgf-strategy-os-demo/`。
 
-1. CI 在 `main` 與 Pull Request 執行格式、lint、型別、單元、建置、E2E 與秘密資訊掃描。
-2. `deploy-pages.yml` 只在 CI 成功且來源分支為 `main` 時執行。
-3. 部署使用 GitHub 官方 Pages Actions，不使用自訂網域，不建立 CNAME。
-4. Repository 的 Pages Source 必須設定為 GitHub Actions。
-
-預定網址：`https://chaohuang-tw.github.io/acgf-strategy-os-demo/`
-
-## DEMO 資料規則
-
-- 每筆紀錄都有 `demo: true` 與畫面 DEMO 標籤。
-- 不使用真實國家、真實機構或官方 Logo。
-- 不把虛構數字套用於真實制度。
-- 示範來源使用 `.invalid` 保留網域。
-- 事實、推論與待查證內容分開呈現。
-
-## 安全提醒
-
-GitHub Pages 是公開資訊，任何知道網址的人都可能存取。`noindex` 與 robots.txt 只是不鼓勵一般搜尋引擎索引，不是安全措施、權限控制或保密機制。
-
-詳細規則請閱讀 [SECURITY.md](SECURITY.md)、[內容規則](docs/CONTENT_RULES.md)與[發布檢查表](docs/PUBLICATION_CHECKLIST.md)。
+每筆紀錄保存官方名稱、國別、機構類型、制度欄位、ACSIC 身分、查證狀態、來源網址與查閱日期。詳見 [來源方法論](docs/SOURCE_METHODOLOGY.md)、[資料變更紀錄](docs/DATA_CHANGELOG.md)與[內容規則](docs/CONTENT_RULES.md)。
