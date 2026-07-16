@@ -1,3 +1,16 @@
-# 實作摘要
+# Implementation Plan
 
-保留 React、TypeScript、Vite、Hash 路由、響應式設計、搜尋篩選、比較匯出、五種報告、Vitest、Playwright、CI 及 Pages。資料層升級為九筆官方公開資料，新增來源索引與來源查證測試。
+## Current release
+
+- Rebrand the independent research site as ACSIC Knowledge Hub.
+- Add language-prefixed Hash routes for English and Traditional Chinese.
+- Preserve search, filters, comparison, report exports, source governance, Vitest, Playwright, CI and GitHub Pages.
+- Refactor institution data for multilingual names, summaries, types, translation status and source language.
+- Create the future information architecture without invented country, system or event content.
+- Keep ACGF only as one Observer record in the member institution dataset.
+
+## Next release
+
+- Validate the complete ACSIC membership master list with official evidence.
+- Add missing institution records at profile Level 1 before deeper system analysis.
+- Migrate the repository and Pages base to `acsic-knowledge-hub` in a dedicated URL migration.

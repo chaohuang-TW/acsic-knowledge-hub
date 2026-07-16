@@ -1,153 +1,243 @@
 import { useMemo, useState } from 'react';
 import { PageHeader, ResearchBadge } from '../../components/Layout';
 import { institutions } from '../../data/institutions';
-import type { Institution, InstitutionFilters } from '../../types';
-import {
-  confidenceLabels,
-  defaultFilters,
-  displayValue,
-  filterInstitutions,
-  verificationLabels,
-} from '../../utils/core';
+import { useLocale } from '../../i18n';
+import type { Institution } from '../../types';
+import { displayValue } from '../../utils/core';
 
-function unique(values: string[]) {
-  return [...new Set(values)].sort((a, b) => a.localeCompare(b, 'zh-Hant-TW'));
-}
-
-function ListValue({ values }: { values: string[] }) {
-  return <span>{displayValue(values)}</span>;
-}
-
-function SelectFilter({
-  id,
-  label,
-  value,
-  options,
-  onChange,
-}: {
-  id: string;
-  label: string;
-  value: string;
-  options: Array<[string, string]>;
-  onChange: (value: string) => void;
-}) {
-  return (
-    <label htmlFor={id}>
-      <span>{label}</span>
-      <select id={id} value={value} onChange={(event) => onChange(event.target.value)}>
-        {options.map(([optionValue, optionLabel]) => (
-          <option key={optionValue} value={optionValue}>
-            {optionLabel}
-          </option>
-        ))}
-      </select>
-    </label>
-  );
-}
+const ui = {
+  en: {
+    title: 'Member Institutions',
+    intro:
+      'Bilingual research profiles with official names, source provenance, verification status and visible data gaps.',
+    states: 'Interface state preview',
+    normal: 'Data',
+    empty: 'Empty',
+    error: 'Error',
+    search: 'Search',
+    placeholder: 'Search institution, country, abbreviation or summary',
+    country: 'Country',
+    type: 'Institution type',
+    verification: 'Verification',
+    all: 'All',
+    verified: 'Verified',
+    partial: 'Partially verified',
+    pending: 'Pending verification',
+    agriculture: 'Agriculture measures',
+    youth: 'Young farmer measures',
+    any: 'Any',
+    yes: 'Available',
+    no: 'Not recorded',
+    clear: 'Clear filters',
+    results: 'official institution records',
+    noResults: 'No matching results',
+    noResultsText:
+      'Adjust the search or filters. The system does not generate replacement records.',
+    emptyTitle: 'No public records',
+    emptyText: 'This preview confirms that the interface explains an empty dataset clearly.',
+    errorTitle: 'Public data could not be loaded',
+    errorText: 'This is an error-state preview. No content is sent to an external service.',
+    return: 'Return to data',
+    load: 'Load data',
+    details: 'View profile',
+    close: 'Close profile',
+    service: 'Service targets',
+    tools: 'Policy tools',
+    verifiedDate: 'Last verified',
+    confidence: 'Confidence',
+    high: 'High',
+    medium: 'Medium',
+    low: 'Low',
+    officialName: 'Official English name',
+    translatedName: 'Traditional Chinese name',
+    translation: 'Name translation status',
+    summary: 'Summary',
+    established: 'Established',
+    authority: 'Supervising authority',
+    legal: 'Legal basis',
+    programs: 'Guarantee programs or operations',
+    funding: 'Funding sources',
+    governance: 'Governance',
+    membership: 'ACSIC status',
+    website: 'Official website',
+    facts: 'Verified facts',
+    analysis: 'Analysis or inference',
+    pendingItems: 'Pending research',
+    sources: 'Official sources',
+    publisher: 'Publisher',
+    originalLanguage: 'Original language',
+    documentDate: 'Document date',
+    accessed: 'Accessed',
+    section: 'Section',
+    missing: 'Not stated in the official source',
+    official: 'official',
+    research_translation: 'research translation',
+    pendingTranslation: 'pending',
+    noInference: 'None. The system does not add inference automatically.',
+    noItems: 'None recorded.',
+  },
+  'zh-TW': {
+    title: '會員機構',
+    intro: '以雙語研究檔案保存官方名稱、來源脈絡、查證狀態與清楚可見的資料缺口。',
+    states: '介面狀態預覽',
+    normal: '正常資料',
+    empty: '空資料',
+    error: '載入錯誤',
+    search: '關鍵字搜尋',
+    placeholder: '搜尋機構、國家、簡稱或摘要',
+    country: '國家',
+    type: '機構類型',
+    verification: '查證狀態',
+    all: '全部',
+    verified: '已查證',
+    partial: '部分查證',
+    pending: '待查證',
+    agriculture: '農業措施',
+    youth: '青年農民措施',
+    any: '全部',
+    yes: '有',
+    no: '無',
+    clear: '清除篩選',
+    results: '筆官方機構紀錄',
+    noResults: '沒有符合條件的結果',
+    noResultsText: '請調整搜尋或篩選，系統不會產生內容填補結果。',
+    emptyTitle: '目前沒有公開資料',
+    emptyText: '這是空資料狀態，用於確認無資料時仍有清楚說明。',
+    errorTitle: '公開資料載入失敗',
+    errorText: '這是錯誤狀態預覽，內容不會傳送至外部服務。',
+    return: '返回正常資料',
+    load: '載入公開資料',
+    details: '檢視機構檔案',
+    close: '關閉機構檔案',
+    service: '服務對象',
+    tools: '政策工具',
+    verifiedDate: '最後查證',
+    confidence: '資料可信度',
+    high: '高',
+    medium: '中',
+    low: '低',
+    officialName: '官方英文名稱',
+    translatedName: '繁體中文名稱',
+    translation: '名稱翻譯狀態',
+    summary: '摘要',
+    established: '設立年份',
+    authority: '主管或監督關係',
+    legal: '法源',
+    programs: '保證方案或業務',
+    funding: '資金來源',
+    governance: '治理架構',
+    membership: 'ACSIC 身分',
+    website: '官方網站',
+    facts: '已查證事實',
+    analysis: '分析或推論',
+    pendingItems: '待查證事項',
+    sources: '官方來源',
+    publisher: '發布者',
+    originalLanguage: '原始語言',
+    documentDate: '文件日期',
+    accessed: '查閱日期',
+    section: '章節',
+    missing: '官方資料未揭露',
+    official: '官方',
+    research_translation: '研究翻譯',
+    pendingTranslation: '待處理',
+    noInference: '無，系統不自動補入推論。',
+    noItems: '目前未記錄。',
+  },
+} as const;
 
 function InstitutionDetail({ record, onClose }: { record: Institution; onClose: () => void }) {
-  const details: Array<[string, Institution[keyof Institution]]> = [
-    ['英文名稱', record.institutionNameEn],
-    ['簡稱', record.institutionAbbreviation],
-    ['設立年份', record.establishedYear],
-    ['主管或監督關係', record.supervisingAuthority],
-    ['法源', record.legalBasis],
-    ['服務對象', record.serviceTargets],
-    ['保證方案／業務', record.guaranteePrograms],
-    ['保證範圍／成數', record.guaranteeCoverage],
-    ['資金來源', record.fundingSources],
-    ['風險分擔', record.riskSharingModel],
-    ['治理架構', record.governanceStructure],
-    ['政策工具', record.policyTools],
-    ['特別措施', record.specialMeasures],
-    ['農業相關措施', record.agricultureRelatedMeasures],
-    ['青年農民措施', record.youthFarmerMeasures],
-    ['ACSIC 身分', record.acsicMembershipStatus],
+  const { locale } = useLocale();
+  const c = ui[locale];
+  const translation =
+    record.nameTranslationStatus === 'pending'
+      ? c.pendingTranslation
+      : c[record.nameTranslationStatus];
+  const details: Array<[string, Institution[keyof Institution] | string]> = [
+    [c.officialName, record.name.en],
+    [c.translatedName, record.name['zh-TW']],
+    [c.translation, translation],
+    [c.summary, record.summary[locale]],
+    [c.established, record.establishedYear],
+    [c.authority, record.supervisingAuthority],
+    [c.legal, record.legalBasis],
+    [c.service, record.serviceTargets],
+    [c.programs, record.guaranteePrograms],
+    [c.funding, record.fundingSources],
+    [c.governance, record.governanceStructure],
+    [c.membership, record.acsicMembershipStatus],
+    [c.website, record.officialWebsite],
   ];
+  const list = (items: string[], empty: string) => (
+    <ul>{items.length ? items.map((item) => <li key={item}>{item}</li>) : <li>{empty}</li>}</ul>
+  );
   return (
     <section className="detail-panel" aria-labelledby="detail-title">
       <div className="detail-heading">
         <div>
           <ResearchBadge />
-          <h2 id="detail-title">{record.institutionNameZhTw}</h2>
+          <h2 id="detail-title">{record.name[locale]}</h2>
           <p>
-            {record.countryNameZhTw}｜{record.institutionType}
+            {locale === 'en' ? record.countryNameEn : record.countryNameZhTw} |{' '}
+            {record.type[locale]}
           </p>
         </div>
         <button className="button secondary" onClick={onClose}>
-          關閉詳細資料
+          {c.close}
         </button>
       </div>
       <div className="detail-grid">
         {details.map(([label, value]) => (
           <section key={label}>
             <h3>{label}</h3>
-            <p>{displayValue(value)}</p>
+            <p>{displayValue(value as Institution[keyof Institution], locale)}</p>
           </section>
         ))}
       </div>
       <div className="evidence-grid">
         <section>
-          <h3>已查證事實</h3>
-          <ul>
-            {record.verifiedFacts.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
+          <h3>{c.facts}</h3>
+          {list(record.verifiedFacts, c.noItems)}
         </section>
         <section>
-          <h3>分析／推論</h3>
-          <ul>
-            {record.analysisInferences.length ? (
-              record.analysisInferences.map((item) => <li key={item}>{item}</li>)
-            ) : (
-              <li>無；不自動補入推論。</li>
-            )}
-          </ul>
+          <h3>{c.analysis}</h3>
+          {list(record.analysisInferences, c.noInference)}
         </section>
         <section>
-          <h3>待查證事項</h3>
-          <ul>
-            {record.pendingItems.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
+          <h3>{c.pendingItems}</h3>
+          {list(record.pendingItems, c.noItems)}
         </section>
       </div>
       <section className="sources-block">
-        <h3>官方來源</h3>
+        <h3>{c.sources}</h3>
         {record.sourceReferences.map((source, index) => (
           <dl key={source.id}>
             <div>
-              <dt>來源編號</dt>
+              <dt>#</dt>
               <dd>{index + 1}</dd>
             </div>
             <div>
-              <dt>標題</dt>
-              <dd>{source.title}</dd>
-            </div>
-            <div>
-              <dt>文件類型</dt>
-              <dd>{source.documentType}</dd>
-            </div>
-            <div>
-              <dt>發布者</dt>
+              <dt>{c.publisher}</dt>
               <dd>{source.publisher}</dd>
             </div>
             <div>
-              <dt>文件日期</dt>
-              <dd>{source.documentDate ?? '官方資料未揭露'}</dd>
+              <dt>{c.originalLanguage}</dt>
+              <dd>{source.originalLanguage}</dd>
             </div>
             <div>
-              <dt>章節</dt>
+              <dt>{c.documentDate}</dt>
+              <dd>{source.documentDate ?? c.missing}</dd>
+            </div>
+            <div>
+              <dt>{c.section}</dt>
               <dd>{source.section}</dd>
             </div>
             <div>
-              <dt>查閱日期</dt>
+              <dt>{c.accessed}</dt>
               <dd>{source.accessedDate}</dd>
             </div>
             <div>
-              <dt>網址</dt>
+              <dt>URL</dt>
               <dd>
                 <a href={source.url} target="_blank" rel="noreferrer">
                   {source.url}
@@ -162,33 +252,73 @@ function InstitutionDetail({ record, onClose }: { record: Institution; onClose: 
 }
 
 export function InstitutionsPage() {
-  const [filters, setFilters] = useState<InstitutionFilters>(defaultFilters);
+  const { locale } = useLocale();
+  const c = ui[locale];
+  const [query, setQuery] = useState('');
+  const [country, setCountry] = useState('all');
+  const [type, setType] = useState('all');
+  const [verification, setVerification] = useState('all');
+  const [agriculture, setAgriculture] = useState('any');
+  const [youth, setYouth] = useState('any');
   const [selected, setSelected] = useState<Institution | null>(null);
   const [viewState, setViewState] = useState<'normal' | 'empty' | 'error'>('normal');
   const filtered = useMemo(
-    () => (viewState === 'normal' ? filterInstitutions(institutions, filters) : []),
-    [filters, viewState],
+    () =>
+      viewState === 'normal'
+        ? institutions.filter((record) => {
+            const text = [
+              record.name.en,
+              record.name['zh-TW'],
+              record.summary.en,
+              record.summary['zh-TW'],
+              record.institutionAbbreviation,
+              record.countryNameEn,
+              record.countryNameZhTw,
+            ]
+              .join(' ')
+              .toLocaleLowerCase();
+            const boolFilter = (value: string, count: number) =>
+              value === 'any' || (value === 'yes' ? count > 0 : count === 0);
+            return (
+              (!query || text.includes(query.toLocaleLowerCase())) &&
+              (country === 'all' || record.countryCode === country) &&
+              (type === 'all' || record.institutionType === type) &&
+              (verification === 'all' || record.verificationStatus === verification) &&
+              boolFilter(agriculture, record.agricultureRelatedMeasures.length) &&
+              boolFilter(youth, record.youthFarmerMeasures.length)
+            );
+          })
+        : [],
+    [agriculture, country, query, type, verification, viewState, youth],
   );
-  const setFilter = <K extends keyof InstitutionFilters>(key: K, value: InstitutionFilters[K]) =>
-    setFilters((current) => ({ ...current, [key]: value }));
-  const countries = unique(institutions.map((item) => item.countryNameZhTw));
-  const types = unique(institutions.map((item) => item.institutionType));
-  const tags = unique(institutions.flatMap((item) => item.tags));
-
+  const clear = () => {
+    setQuery('');
+    setCountry('all');
+    setType('all');
+    setVerification('all');
+    setAgriculture('any');
+    setYouth('any');
+  };
+  const countries = [
+    ...new Map(
+      institutions.map((record) => [
+        record.countryCode,
+        locale === 'en' ? record.countryNameEn : record.countryNameZhTw,
+      ]),
+    ).entries(),
+  ];
+  const types = [...new Set(institutions.map((record) => record.institutionType))];
   return (
     <section className="section-shell page-section">
-      <PageHeader
-        title="公開資料研究庫"
-        intro="以一致欄位整理九個真實信用保證及政策金融機構，保留官方來源、查證狀態與資料缺口。"
-      />
-      <section className="state-demo" aria-label="介面狀態預覽">
-        <span>介面狀態預覽</span>
+      <PageHeader title={c.title} intro={c.intro} />
+      <section className="state-demo" aria-label={c.states}>
+        <span>{c.states}</span>
         <div className="segmented-control">
           {(
             [
-              ['normal', '正常資料'],
-              ['empty', '空資料'],
-              ['error', '載入錯誤'],
+              ['normal', c.normal],
+              ['empty', c.empty],
+              ['error', c.error],
             ] as const
           ).map(([value, label]) => (
             <button
@@ -202,111 +332,113 @@ export function InstitutionsPage() {
         </div>
       </section>
       <form className="filter-panel" onSubmit={(event) => event.preventDefault()}>
-        <label className="search-field" htmlFor="institution-search">
-          <span>關鍵字搜尋</span>
+        <label className="search-field">
+          <span>{c.search}</span>
           <input
-            id="institution-search"
+            aria-label={c.search}
             type="search"
-            value={filters.query}
-            placeholder="搜尋機構、國家、簡稱、標籤或服務對象"
-            onChange={(event) => setFilter('query', event.target.value)}
+            value={query}
+            placeholder={c.placeholder}
+            onChange={(event) => setQuery(event.target.value)}
           />
         </label>
-        <SelectFilter
-          id="country"
-          label="國家"
-          value={filters.country}
-          options={['全部', ...countries].map((v) => [v, v])}
-          onChange={(v) => setFilter('country', v)}
-        />
-        <SelectFilter
-          id="type"
-          label="機構類型"
-          value={filters.type}
-          options={['全部', ...types].map((v) => [v, v])}
-          onChange={(v) => setFilter('type', v)}
-        />
-        <SelectFilter
-          id="tag"
-          label="標籤"
-          value={filters.tag}
-          options={['全部', ...tags].map((v) => [v, v])}
-          onChange={(v) => setFilter('tag', v)}
-        />
-        <SelectFilter
-          id="verification"
-          label="查證狀態"
-          value={filters.verification}
-          options={[
-            ['全部', '全部'],
-            ['verified', '已查證'],
-            ['partially_verified', '部分查證'],
-            ['pending_verification', '待查證'],
-          ]}
-          onChange={(v) => setFilter('verification', v)}
-        />
-        <SelectFilter
-          id="agriculture"
-          label="農業措施"
-          value={filters.agriculture}
-          options={['全部', '有', '無'].map((v) => [v, v])}
-          onChange={(v) => setFilter('agriculture', v)}
-        />
-        <SelectFilter
-          id="youth"
-          label="青年農民措施"
-          value={filters.youth}
-          options={['全部', '有', '無'].map((v) => [v, v])}
-          onChange={(v) => setFilter('youth', v)}
-        />
-        <label htmlFor="sort">
-          <span>排序</span>
+        <label>
+          <span>{c.country}</span>
           <select
-            id="sort"
-            value={filters.sort}
-            onChange={(e) => setFilter('sort', e.target.value as InstitutionFilters['sort'])}
+            aria-label={c.country}
+            value={country}
+            onChange={(event) => setCountry(event.target.value)}
           >
-            <option value="newest">最近查證優先</option>
-            <option value="oldest">較早查證優先</option>
-            <option value="name">機構名稱排序</option>
+            <option value="all">{c.all}</option>
+            {countries.map(([code, label]) => (
+              <option key={code} value={code}>
+                {label}
+              </option>
+            ))}
           </select>
         </label>
-        <button
-          type="button"
-          className="button secondary"
-          onClick={() => setFilters(defaultFilters)}
-        >
-          清除篩選
+        <label>
+          <span>{c.type}</span>
+          <select
+            aria-label={c.type}
+            value={type}
+            onChange={(event) => setType(event.target.value)}
+          >
+            <option value="all">{c.all}</option>
+            {types.map((value) => (
+              <option key={value}>{value}</option>
+            ))}
+          </select>
+        </label>
+        <label>
+          <span>{c.verification}</span>
+          <select
+            aria-label={c.verification}
+            value={verification}
+            onChange={(event) => setVerification(event.target.value)}
+          >
+            <option value="all">{c.all}</option>
+            <option value="verified">{c.verified}</option>
+            <option value="partially_verified">{c.partial}</option>
+            <option value="pending_verification">{c.pending}</option>
+          </select>
+        </label>
+        <label>
+          <span>{c.agriculture}</span>
+          <select
+            aria-label={c.agriculture}
+            value={agriculture}
+            onChange={(event) => setAgriculture(event.target.value)}
+          >
+            <option value="any">{c.any}</option>
+            <option value="yes">{c.yes}</option>
+            <option value="no">{c.no}</option>
+          </select>
+        </label>
+        <label>
+          <span>{c.youth}</span>
+          <select
+            aria-label={c.youth}
+            value={youth}
+            onChange={(event) => setYouth(event.target.value)}
+          >
+            <option value="any">{c.any}</option>
+            <option value="yes">{c.yes}</option>
+            <option value="no">{c.no}</option>
+          </select>
+        </label>
+        <button type="button" className="button secondary" onClick={clear}>
+          {c.clear}
         </button>
       </form>
       {viewState === 'error' ? (
-        <div className="state-message" role="alert">
-          <h2>公開資料載入失敗</h2>
-          <p>這是錯誤狀態預覽；靜態網站不會把錯誤內容傳送至外部服務。</p>
+        <div className="state-message error-state" role="alert">
+          <h2>{c.errorTitle}</h2>
+          <p>{c.errorText}</p>
           <button className="button secondary" onClick={() => setViewState('normal')}>
-            返回正常資料
+            {c.return}
           </button>
         </div>
       ) : viewState === 'empty' ? (
         <div className="state-message">
-          <h2>目前沒有公開資料</h2>
-          <p>這是空資料狀態，用於確認無資料時仍有清楚說明。</p>
+          <h2>{c.emptyTitle}</h2>
+          <p>{c.emptyText}</p>
           <button className="button secondary" onClick={() => setViewState('normal')}>
-            載入公開資料
+            {c.load}
           </button>
         </div>
       ) : filtered.length === 0 ? (
         <div className="state-message">
-          <h2>沒有符合條件的結果</h2>
-          <p>請調整搜尋或篩選；系統不會產生內容填補結果。</p>
-          <button className="button secondary" onClick={() => setFilters(defaultFilters)}>
-            清除篩選
+          <h2>{c.noResults}</h2>
+          <p>{c.noResultsText}</p>
+          <button className="button secondary" onClick={clear}>
+            {c.clear}
           </button>
         </div>
       ) : (
         <>
           <div className="result-summary" aria-live="polite">
-            顯示 {filtered.length} 筆官方公開資料紀錄
+            {filtered.length} {c.results}
           </div>
           <div className="institution-list">
             {filtered.map((record) => (
@@ -314,37 +446,44 @@ export function InstitutionsPage() {
                 <div className="record-title">
                   <div>
                     <ResearchBadge />
-                    <h2>{record.institutionNameZhTw}</h2>
-                    <small>{record.institutionNameEn}</small>
+                    <h2>{record.name[locale]}</h2>
+                    <small>{record.name.en}</small>
                   </div>
                   <span className={`status status-${record.confidenceLevel}`}>
-                    {verificationLabels[record.verificationStatus]}
+                    {record.verificationStatus === 'verified'
+                      ? c.verified
+                      : record.verificationStatus === 'partially_verified'
+                        ? c.partial
+                        : c.pending}
                   </span>
                 </div>
                 <p>
-                  {record.countryNameZhTw}｜{record.institutionType}｜ACSIC{' '}
-                  {record.acsicMembershipStatus}
+                  {locale === 'en' ? record.countryNameEn : record.countryNameZhTw} |{' '}
+                  {record.type[locale]} | ACSIC {record.acsicMembershipStatus}
                 </p>
+                <p>{record.summary[locale]}</p>
                 <dl className="record-summary">
                   <div>
-                    <dt>服務對象</dt>
-                    <dd>
-                      <ListValue values={record.serviceTargets} />
-                    </dd>
+                    <dt>{c.service}</dt>
+                    <dd>{displayValue(record.serviceTargets, locale)}</dd>
                   </div>
                   <div>
-                    <dt>政策工具</dt>
-                    <dd>
-                      <ListValue values={record.policyTools} />
-                    </dd>
+                    <dt>{c.tools}</dt>
+                    <dd>{displayValue(record.policyTools, locale)}</dd>
                   </div>
                   <div>
-                    <dt>最後查證</dt>
+                    <dt>{c.verifiedDate}</dt>
                     <dd>{record.lastVerifiedDate}</dd>
                   </div>
                   <div>
-                    <dt>資料可信度</dt>
-                    <dd>{confidenceLabels[record.confidenceLevel]}</dd>
+                    <dt>{c.confidence}</dt>
+                    <dd>
+                      {record.confidenceLevel === 'high'
+                        ? c.high
+                        : record.confidenceLevel === 'medium'
+                          ? c.medium
+                          : c.low}
+                    </dd>
                   </div>
                 </dl>
                 <div className="record-footer">
@@ -354,7 +493,7 @@ export function InstitutionsPage() {
                     ))}
                   </div>
                   <button className="button secondary" onClick={() => setSelected(record)}>
-                    檢視詳細資料
+                    {c.details}
                   </button>
                 </div>
               </article>

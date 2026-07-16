@@ -34,7 +34,8 @@
         "year": null,
         "section": "基金概要、理念、沿革、宗旨",
         "accessedDate": "2026-07-16",
-        "official": true
+        "official": true,
+        "originalLanguage": "zh-TW"
       },
       {
         "id": "acsic-members-acgf",
@@ -44,9 +45,10 @@
         "url": "https://www.smeg.org.tw/en/basic/?node=10082",
         "documentDate": null,
         "year": null,
-        "section": "Observer — Taiwan — Agricultural Credit Guarantee Fund",
+        "section": "Observer - Taiwan - Agricultural Credit Guarantee Fund",
         "accessedDate": "2026-07-16",
-        "official": true
+        "official": true,
+        "originalLanguage": "en"
       }
     ],
     "documentDate": null,
@@ -64,7 +66,20 @@
     "pendingItems": [
       "各保證方案之現行成數、上限與費率須依最新官方規章逐項查證。",
       "青年農民專屬措施尚待官方文件確認。"
-    ]
+    ],
+    "name": {
+      "en": "Agricultural Credit Guarantee Fund",
+      "zh-TW": "財團法人農業信用保證基金"
+    },
+    "summary": {
+      "en": "An agricultural credit guarantee institution supporting farmers, fishers and agricultural businesses with insufficient collateral.",
+      "zh-TW": "協助擔保能力不足之農漁民與農漁業者取得農業經營資金的農業信用保證機構。"
+    },
+    "nameTranslationStatus": "official",
+    "type": {
+      "en": "Agricultural credit guarantee institution",
+      "zh-TW": "農業信用保證機構"
+    }
   },
   {
     "id": "tw-tsmeg",
@@ -101,7 +116,8 @@
         "year": null,
         "section": "Objectives, Establishment, Sources of Funds",
         "accessedDate": "2026-07-16",
-        "official": true
+        "official": true,
+        "originalLanguage": "en"
       },
       {
         "id": "acsic-members-tsmeg",
@@ -111,9 +127,10 @@
         "url": "https://www.smeg.org.tw/en/basic/?node=10082",
         "documentDate": null,
         "year": null,
-        "section": "Member — Taiwan — TSMEG",
+        "section": "Member - Taiwan - TSMEG",
         "accessedDate": "2026-07-16",
-        "official": true
+        "official": true,
+        "originalLanguage": "en"
       }
     ],
     "documentDate": null,
@@ -128,7 +145,20 @@
       "ACSIC 身分為 Member。"
     ],
     "analysisInferences": [],
-    "pendingItems": ["監督機關、法源、治理及現行風險分擔條件待官方制度文件補證。"]
+    "pendingItems": ["監督機關、法源、治理及現行風險分擔條件待官方制度文件補證。"],
+    "name": {
+      "en": "Small and Medium Enterprise Credit Guarantee Fund of Taiwan",
+      "zh-TW": "財團法人中小企業信用保證基金"
+    },
+    "summary": {
+      "en": "A credit guarantee fund that helps viable Taiwanese SMEs with insufficient collateral access finance.",
+      "zh-TW": "協助營運正常但擔保品不足的臺灣中小企業取得融資之信用保證基金。"
+    },
+    "nameTranslationStatus": "official",
+    "type": {
+      "en": "SME credit guarantee institution",
+      "zh-TW": "中小企業信用保證機構"
+    }
   },
   {
     "id": "kh-cgcc",
@@ -174,7 +204,8 @@
         "year": null,
         "section": "CGCC Story, Organization, Board of Directors",
         "accessedDate": "2026-07-16",
-        "official": true
+        "official": true,
+        "originalLanguage": "en"
       },
       {
         "id": "acsic-members-cgcc",
@@ -184,9 +215,10 @@
         "url": "https://www.smeg.org.tw/en/basic/?node=10082",
         "documentDate": null,
         "year": null,
-        "section": "Member — Cambodia — CGCC",
+        "section": "Member - Cambodia - CGCC",
         "accessedDate": "2026-07-16",
-        "official": true
+        "official": true,
+        "originalLanguage": "en"
       }
     ],
     "documentDate": null,
@@ -204,7 +236,20 @@
     "pendingItems": [
       "各方案資金來源與風險分擔條件待個別方案文件查證。",
       "青年農民專屬措施尚未確認。"
-    ]
+    ],
+    "name": {
+      "en": "Credit Guarantee Corporation of Cambodia",
+      "zh-TW": "柬埔寨信用保證公司"
+    },
+    "summary": {
+      "en": "A state-owned credit guarantee institution supporting businesses, SMEs and priority sectors in Cambodia.",
+      "zh-TW": "支援柬埔寨企業、中小企業及政策優先部門取得融資的國營信用保證機構。"
+    },
+    "nameTranslationStatus": "research_translation",
+    "type": {
+      "en": "State-owned credit guarantee institution",
+      "zh-TW": "國營信用保證機構"
+    }
   },
   {
     "id": "in-cgtmse",
@@ -241,7 +286,8 @@
         "year": null,
         "section": "Introduction, Credit Guarantee Schemes",
         "accessedDate": "2026-07-16",
-        "official": true
+        "official": true,
+        "originalLanguage": "en"
       },
       {
         "id": "acsic-members-cgtmse",
@@ -251,9 +297,10 @@
         "url": "https://www.smeg.org.tw/en/basic/?node=10082",
         "documentDate": null,
         "year": null,
-        "section": "Member — India — CGTMSE",
+        "section": "Member - India - CGTMSE",
         "accessedDate": "2026-07-16",
-        "official": true
+        "official": true,
+        "originalLanguage": "en"
       }
     ],
     "documentDate": null,
@@ -268,7 +315,20 @@
       "ACSIC 身分為 Member。"
     ],
     "analysisInferences": [],
-    "pendingItems": ["設立年份、法源、資金來源與現行方案條件待官方制度文件補證。"]
+    "pendingItems": ["設立年份、法源、資金來源與現行方案條件待官方制度文件補證。"],
+    "name": {
+      "en": "Credit Guarantee Fund Trust for Micro and Small Enterprises",
+      "zh-TW": "微型與小型企業信用保證基金信託"
+    },
+    "summary": {
+      "en": "A trust operating credit guarantee schemes for micro and small enterprises in India.",
+      "zh-TW": "為印度微型與小型企業辦理信用保證制度的信託型機構。"
+    },
+    "nameTranslationStatus": "research_translation",
+    "type": {
+      "en": "Credit guarantee trust",
+      "zh-TW": "信用保證信託"
+    }
   },
   {
     "id": "jp-jfc",
@@ -307,7 +367,8 @@
         "year": null,
         "section": "About JFC",
         "accessedDate": "2026-07-16",
-        "official": true
+        "official": true,
+        "originalLanguage": "en"
       },
       {
         "id": "acsic-members-jfc",
@@ -317,9 +378,10 @@
         "url": "https://www.smeg.org.tw/en/basic/?node=10082",
         "documentDate": null,
         "year": null,
-        "section": "Member — Japan — JFC",
+        "section": "Member - Japan - JFC",
         "accessedDate": "2026-07-16",
-        "official": true
+        "official": true,
+        "originalLanguage": "en"
       }
     ],
     "documentDate": null,
@@ -334,7 +396,20 @@
       "ACSIC 身分為 Member。"
     ],
     "analysisInferences": ["與專營信用保證機構比較時，應先控制機構功能範圍差異。"],
-    "pendingItems": ["信用保險制度之法源、資金與風險分擔細節待官方文件補證。"]
+    "pendingItems": ["信用保險制度之法源、資金與風險分擔細節待官方文件補證。"],
+    "name": {
+      "en": "Japan Finance Corporation",
+      "zh-TW": "日本政策金融公庫"
+    },
+    "summary": {
+      "en": "A government-owned policy finance institution providing finance and credit insurance across multiple sectors in Japan.",
+      "zh-TW": "提供政策融資與信用保險，服務日本多元產業的政府政策金融機構。"
+    },
+    "nameTranslationStatus": "research_translation",
+    "type": {
+      "en": "Government policy finance institution",
+      "zh-TW": "政府政策金融機構"
+    }
   },
   {
     "id": "jp-jfg",
@@ -371,7 +446,8 @@
         "year": null,
         "section": "About JFG",
         "accessedDate": "2026-07-16",
-        "official": true
+        "official": true,
+        "originalLanguage": "en"
       },
       {
         "id": "acsic-members-jfg",
@@ -381,9 +457,10 @@
         "url": "https://www.smeg.org.tw/en/basic/?node=10082",
         "documentDate": null,
         "year": null,
-        "section": "Member — Japan — JFG",
+        "section": "Member - Japan - JFG",
         "accessedDate": "2026-07-16",
-        "official": true
+        "official": true,
+        "originalLanguage": "en"
       }
     ],
     "documentDate": null,
@@ -398,7 +475,20 @@
       "ACSIC 身分為 Member。"
     ],
     "analysisInferences": ["跨國比較時應把聯合組織與直接承作保證的機構分開解讀。"],
-    "pendingItems": ["個別保證方案由各信用保證協會及相關制度文件另行查證。"]
+    "pendingItems": ["個別保證方案由各信用保證協會及相關制度文件另行查證。"],
+    "name": {
+      "en": "Japan Federation of Credit Guarantee Corporations",
+      "zh-TW": "日本全國信用保證協會聯合會"
+    },
+    "summary": {
+      "en": "The national federation supporting Japan’s network of 51 Credit Guarantee Corporations.",
+      "zh-TW": "支援日本 51 家信用保證協會體系運作的全國性聯合組織。"
+    },
+    "nameTranslationStatus": "research_translation",
+    "type": {
+      "en": "Federation of credit guarantee institutions",
+      "zh-TW": "信用保證機構聯合組織"
+    }
   },
   {
     "id": "kr-kodit",
@@ -435,7 +525,8 @@
         "year": null,
         "section": "History",
         "accessedDate": "2026-07-16",
-        "official": true
+        "official": true,
+        "originalLanguage": "en"
       },
       {
         "id": "acsic-members-kodit",
@@ -445,9 +536,10 @@
         "url": "https://www.smeg.org.tw/en/basic/?node=10082",
         "documentDate": null,
         "year": null,
-        "section": "Member — Korea — KODIT",
+        "section": "Member - Korea - KODIT",
         "accessedDate": "2026-07-16",
-        "official": true
+        "official": true,
+        "originalLanguage": "en"
       }
     ],
     "documentDate": null,
@@ -462,7 +554,20 @@
       "ACSIC 身分為 Member。"
     ],
     "analysisInferences": [],
-    "pendingItems": ["監督機關、資金來源、治理與現行方案條件待最新官方報告補證。"]
+    "pendingItems": ["監督機關、資金來源、治理與現行方案條件待最新官方報告補證。"],
+    "name": {
+      "en": "Korea Credit Guarantee Fund",
+      "zh-TW": "韓國信用保證基金"
+    },
+    "summary": {
+      "en": "A policy credit guarantee institution supporting SMEs and start-ups in the Republic of Korea.",
+      "zh-TW": "支援韓國中小企業與新創企業的政策性信用保證機構。"
+    },
+    "nameTranslationStatus": "research_translation",
+    "type": {
+      "en": "Policy credit guarantee institution",
+      "zh-TW": "政策性信用保證機構"
+    }
   },
   {
     "id": "my-cgcmb",
@@ -498,7 +603,7 @@
     "sourceReferences": [
       {
         "id": "cgcmb-overview",
-        "title": "About CGC — Overview",
+        "title": "About CGC - Overview",
         "documentType": "official_webpage",
         "publisher": "Credit Guarantee Corporation Malaysia Berhad",
         "url": "https://www.cgc.com.my/en-us/about/overview/",
@@ -506,7 +611,8 @@
         "year": null,
         "section": "About CGC",
         "accessedDate": "2026-07-16",
-        "official": true
+        "official": true,
+        "originalLanguage": "en"
       },
       {
         "id": "acsic-members-cgcmb",
@@ -516,9 +622,10 @@
         "url": "https://www.smeg.org.tw/en/basic/?node=10082",
         "documentDate": null,
         "year": null,
-        "section": "Member — Malaysia — CGCMB",
+        "section": "Member - Malaysia - CGCMB",
         "accessedDate": "2026-07-16",
-        "official": true
+        "official": true,
+        "originalLanguage": "en"
       }
     ],
     "documentDate": null,
@@ -536,7 +643,20 @@
     "pendingItems": [
       "法源、資金來源、風險分擔與方案條件待官方整合報告補證。",
       "青年創業方案是否適用青年農民待查證。"
-    ]
+    ],
+    "name": {
+      "en": "Credit Guarantee Corporation Malaysia Berhad",
+      "zh-TW": "馬來西亞信用保證機構"
+    },
+    "summary": {
+      "en": "A Malaysian credit guarantee corporation focused on financing access for underserved MSMEs.",
+      "zh-TW": "以改善未充分獲得金融服務之中小微企業融資可及性為核心的馬來西亞信用保證公司。"
+    },
+    "nameTranslationStatus": "research_translation",
+    "type": {
+      "en": "Credit guarantee corporation",
+      "zh-TW": "信用保證公司"
+    }
   },
   {
     "id": "ph-philguarantee",
@@ -577,7 +697,8 @@
         "year": null,
         "section": "About Us; Programs navigation",
         "accessedDate": "2026-07-16",
-        "official": true
+        "official": true,
+        "originalLanguage": "en"
       },
       {
         "id": "acsic-members-philguarantee",
@@ -587,9 +708,10 @@
         "url": "https://www.smeg.org.tw/en/basic/?node=10082",
         "documentDate": null,
         "year": null,
-        "section": "Member — Philippines — PHILGUARANTEE",
+        "section": "Member - Philippines - PHILGUARANTEE",
         "accessedDate": "2026-07-16",
-        "official": true
+        "official": true,
+        "originalLanguage": "en"
       }
     ],
     "documentDate": null,
@@ -607,6 +729,19 @@
     "pendingItems": [
       "各農業保證方案之適用對象、資金與風險分擔條件待官方方案文件補證。",
       "青年農民專屬措施尚未確認。"
-    ]
+    ],
+    "name": {
+      "en": "Philippine Guarantee Corporation",
+      "zh-TW": "菲律賓保證公司"
+    },
+    "summary": {
+      "en": "A government-owned guarantee corporation serving priority, housing, agriculture and enterprise sectors in the Philippines.",
+      "zh-TW": "服務菲律賓優先部門、住宅、農業與企業融資的政府持有保證公司。"
+    },
+    "nameTranslationStatus": "research_translation",
+    "type": {
+      "en": "Government-owned guarantee corporation",
+      "zh-TW": "政府持有及控制之保證公司"
+    }
   }
 ]

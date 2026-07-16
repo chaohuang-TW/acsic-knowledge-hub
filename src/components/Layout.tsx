@@ -1,20 +1,18 @@
 import type { ReactNode } from 'react';
-import { DISCLAIMER, RESEARCH_LABEL } from '../utils/core';
+import { useLocale } from '../i18n';
+import { routePath, type PageId } from '../routing';
 
-const navigation = [
-  ['/', '首頁'],
-  ['/concept', '系統概念'],
-  ['/institutions', '公開資料研究庫'],
-  ['/compare', '跨機構比較'],
-  ['/reports', '報告範本'],
-  ['/sources', '資料來源'],
-  ['/governance', '資料治理'],
-  ['/about', '關於本研究'],
-  ['/disclaimer', '免責聲明'],
-] as const;
+const navigation: Array<[PageId, keyof ReturnType<typeof useLocale>['t']['nav']]> = [
+  ['overview', 'overview'],
+  ['members', 'members'],
+  ['systems', 'systems'],
+  ['practices', 'practices'],
+  ['resources', 'resources'],
+];
 
 export function ResearchBadge() {
-  return <span className="demo-badge">{RESEARCH_LABEL}</span>;
+  const { t } = useLocale();
+  return <span className="demo-badge">{t.researchBadge}</span>;
 }
 
 export function PageHeader({ title, intro }: { title: string; intro: string }) {
@@ -27,45 +25,72 @@ export function PageHeader({ title, intro }: { title: string; intro: string }) {
   );
 }
 
-export function Layout({ route, children }: { route: string; children: ReactNode }) {
+export function Layout({ page, children }: { page: PageId; children: ReactNode }) {
+  const { locale, setLocale, t } = useLocale();
   return (
     <>
       <a className="skip-link" href="#main-content">
-        跳至主要內容
+        {t.skip}
       </a>
       <div className="disclaimer-strip" role="note">
-        <strong>非官方研究網站</strong>
-        <span>{DISCLAIMER}</span>
+        <strong>{t.unofficial}</strong>
+        <span>{t.disclaimer}</span>
       </div>
       <header className="site-header">
-        <a className="brand" href="#/" aria-label="ACGF Strategy OS 國際信用保證公開資料研究版首頁">
+        <a
+          className="brand"
+          href={`#${routePath(locale, 'home')}`}
+          aria-label={`${t.brand} ${t.fullName}`}
+        >
           <span className="brand-mark" aria-hidden="true">
-            AC
+            AK
           </span>
           <span>
-            <strong>ACGF Strategy OS</strong>
-            <small>國際信用保證公開資料研究版</small>
+            <strong>{t.brand}</strong>
+            <small>{t.fullName}</small>
           </span>
         </a>
-        <nav aria-label="主要導覽">
-          {navigation.map(([path, label]) => (
-            <a key={path} href={`#${path}`} aria-current={route === path ? 'page' : undefined}>
-              {label}
+        <nav aria-label={locale === 'en' ? 'Primary navigation' : '主要導覽'}>
+          {navigation.map(([target, key]) => (
+            <a
+              key={target}
+              href={`#${routePath(locale, target)}`}
+              aria-current={page === target ? 'page' : undefined}
+            >
+              {t.nav[key]}
             </a>
           ))}
         </nav>
+        <label className="language-picker">
+          <span>{t.language}</span>
+          <select
+            aria-label={t.language}
+            value={locale}
+            onChange={(event) => setLocale(event.target.value as 'en' | 'zh-TW')}
+          >
+            <option value="en">English</option>
+            <option value="zh-TW">繁體中文</option>
+          </select>
+        </label>
       </header>
       <main id="main-content" tabIndex={-1}>
         {children}
       </main>
       <footer className="site-footer">
         <div>
-          <strong>ACGF Strategy OS｜國際信用保證公開資料研究版</strong>
-          <p>{DISCLAIMER}</p>
+          <strong>{t.fullName}</strong>
+          <p>{t.disclaimer}</p>
         </div>
-        <div>
-          <p>資料僅取自可公開查閱的官方來源。</p>
-          <p>缺漏欄位維持待查證，不由系統推測補填。</p>
+        <div className="footer-links">
+          <a href={`#${routePath(locale, 'governance')}`}>
+            {locale === 'en' ? 'Data governance' : '資料治理'}
+          </a>
+          <a href={`#${routePath(locale, 'about')}`}>{locale === 'en' ? 'About' : '關於平台'}</a>
+          <a href={`#${routePath(locale, 'disclaimer')}`}>
+            {locale === 'en' ? 'Disclaimer' : '免責聲明'}
+          </a>
+          <p>{t.footerData}</p>
+          <p>{t.footerMissing}</p>
         </div>
       </footer>
     </>

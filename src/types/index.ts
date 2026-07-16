@@ -1,6 +1,9 @@
 export type VerificationStatus = 'verified' | 'partially_verified' | 'pending_verification';
 export type ConfidenceLevel = 'high' | 'medium' | 'low';
 export type AcsicMembershipStatus = 'Member' | 'Observer';
+export type Locale = 'en' | 'zh-TW';
+export type TranslationStatus = 'official' | 'research_translation' | 'pending';
+export type LocalizedText = Record<Locale, string>;
 
 export interface SourceReference {
   id: string;
@@ -12,6 +15,7 @@ export interface SourceReference {
   year: number | null;
   section: string;
   accessedDate: string;
+  originalLanguage: string;
   official: true;
 }
 
@@ -22,8 +26,12 @@ export interface Institution {
   countryNameEn: string;
   institutionNameZhTw: string;
   institutionNameEn: string;
+  name: LocalizedText;
+  summary: LocalizedText;
+  nameTranslationStatus: TranslationStatus;
   institutionAbbreviation: string;
   institutionType: string;
+  type: LocalizedText;
   establishedYear: number | null;
   supervisingAuthority: string | null;
   legalBasis: string | null;

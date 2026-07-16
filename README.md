@@ -1,28 +1,64 @@
-# ACGF Strategy OS｜國際信用保證公開資料研究版
+# ACSIC Knowledge Hub
 
-以九個真實信用保證及政策金融機構的官方公開資料，展示結構化來源治理、搜尋篩選、跨機構比較與規則式報告工作流程。
+**ACSIC Member Institutions Knowledge Hub**<br>
+**亞洲地區信用補充機構聯盟會員知識平台**
 
-> 本網站為個人研究與 AI 知識管理實驗，並非任何政府機關、基金會、ACSIC 或國際組織的官方網站。內容僅供研究參考，正式引用及決策前應回到原始來源查證。
+Connecting Asia’s Credit Guarantee Knowledge<br>
+串聯亞洲信用保證機構、制度與實務知識
 
-## 資料與安全邊界
+An independent bilingual public-data research platform for ACSIC member institutions.<br>
+以 ACSIC 會員機構為範圍的獨立雙語公開資料研究平台。
 
-- 僅使用信用保證機構及政府機關可公開查閱的官方網頁與文件。
-- 不讀取、複製、連接或同步私人核心系統、內部文件、個案資料或未公開數據。
-- 缺漏欄位維持 `null`、`待查證` 或「官方資料未揭露」，不由 AI 推測補造。
-- 不保存未附資料日期及來源的動態制度數字。
-- 網站沒有後端、登入、資料庫、追蹤、廣告或 API Key。
+> This is not an official ACSIC website. 本網站不是 ACSIC 官方網站。
 
-## 本機開發與驗證
+## Languages and routes
 
-需要 Node.js 22 與 pnpm 11。
+- English: `/#/en/`
+- Traditional Chinese: `/#/zh-TW/`
+- English is the international default. A Traditional Chinese browser preference is detected on first visit.
+- The language selector stores the last explicit choice in browser local storage.
+- No machine-translation service or external translation API is required at runtime.
+
+## Information architecture
+
+- ACSIC Overview
+- Member Institutions
+- Credit Guarantee Systems
+- Knowledge & Practices
+- Events & Resources
+
+Comparison, reports, source governance and downloads remain available as research tools. Empty future sections use explicit bilingual states and do not contain invented institutions or systems.
+
+## Multilingual data contract
+
+Institution records are centralized in `src/data/institutions.json`. The contract preserves:
+
+- `name.en`: official English name, verbatim
+- `name.zh-TW`: official or research Traditional Chinese name
+- `summary.en` and `summary.zh-TW`
+- `nameTranslationStatus`: `official`, `research_translation`, or `pending`
+- `sourceReferences[].originalLanguage`
+- verification status, source dates, evidence, analysis and pending research as separate fields
+
+See [Translation Guide](docs/TRANSLATION_GUIDE.md) and [Source Methodology](docs/SOURCE_METHODOLOGY.md).
+
+## Development
 
 ```bash
-pnpm install
+pnpm install --frozen-lockfile
 pnpm dev
 pnpm check
 pnpm test:e2e
 ```
 
-正式建置的 Vite base 固定為 `/acgf-strategy-os-demo/`。Pages 使用 GitHub Actions 部署至 `https://chaohuang-tw.github.io/acgf-strategy-os-demo/`。
+The current GitHub Pages base remains `/acgf-strategy-os-demo/` while repository renaming is evaluated. See [Repository Rename Assessment](docs/REPOSITORY_RENAME_ASSESSMENT.md).
 
-每筆紀錄保存官方名稱、國別、機構類型、制度欄位、ACSIC 身分、查證狀態、來源網址與查閱日期。詳見 [來源方法論](docs/SOURCE_METHODOLOGY.md)、[資料變更紀錄](docs/DATA_CHANGELOG.md)與[內容規則](docs/CONTENT_RULES.md)。
+Current public URL: `https://chaohuang-tw.github.io/acgf-strategy-os-demo/`
+
+## Research boundaries
+
+- Publicly accessible official sources only.
+- No private repository, internal document, personal data or case data is used.
+- Unknown fields remain `null`, empty or explicitly pending.
+- Institution mandates and data dates differ; comparisons do not rank systems.
+- `noindex` and `robots.txt` discourage indexing but are not access controls.

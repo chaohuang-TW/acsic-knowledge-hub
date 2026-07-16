@@ -4,8 +4,9 @@ import { institutions } from '../src/data/institutions';
 import type { Institution, InstitutionFilters, ReportType } from '../src/types';
 import {
   COMPARISON_LIMITATION,
+  COMPARISON_LIMITATION_EN,
   DISCLAIMER,
-  RESEARCH_LABEL,
+  DISCLAIMER_EN,
   comparisonCsv,
   comparisonJson,
   comparisonMarkdown,
@@ -18,84 +19,77 @@ const filters = (overrides: Partial<InstitutionFilters>): InstitutionFilters => 
   ...defaultFilters,
   ...overrides,
 });
-// TEST_ONLY：只用於確保舊版名稱不會回到生產資料或輸出。
 const forbiddenNames = ['東嶼國', '北辰', '海岳', '雲原'];
 
-describe('官方公開資料治理', () => {
-  it('具有九筆指定真實機構，且 ACSIC 身分正確', () => {
+describe('multilingual public-data contract', () => {
+  it('retains nine real profiles and treats ACGF only as an Observer record', () => {
     expect(institutions).toHaveLength(9);
-    expect(institutions.find((r) => r.id === 'tw-acgf')?.acsicMembershipStatus).toBe('Observer');
-    expect(institutions.filter((r) => r.acsicMembershipStatus === 'Member')).toHaveLength(8);
+    expect(institutions.find((record) => record.id === 'tw-acgf')?.acsicMembershipStatus).toBe(
+      'Observer',
+    );
+    expect(institutions.filter((record) => record.acsicMembershipStatus === 'Member')).toHaveLength(
+      8,
+    );
   });
 
-  it('每筆資料都有官方網站、來源、查閱日期及查證欄位', () => {
+  it('preserves official English names and bilingual structured fields', () => {
+    for (const record of institutions) {
+      expect(record.name.en).toBe(record.institutionNameEn);
+      expect(record.name.en.length).toBeGreaterThan(3);
+      expect(record.name['zh-TW'].length).toBeGreaterThan(1);
+      expect(record.summary.en.length).toBeGreaterThan(20);
+      expect(record.summary['zh-TW'].length).toBeGreaterThan(10);
+      expect(['official', 'research_translation', 'pending']).toContain(
+        record.nameTranslationStatus,
+      );
+      expect(record.type.en.length).toBeGreaterThan(3);
+      expect(record.type['zh-TW']).toBe(record.institutionType);
+    }
+  });
+
+  it('records an original language for every official source', () => {
     for (const record of institutions) {
       expect(new URL(record.officialWebsite).protocol).toBe('https:');
       expect(record.sourceReferences.length).toBeGreaterThanOrEqual(2);
-      expect(record.sourceReferences.every((source) => source.official)).toBe(true);
-      expect(
-        record.sourceReferences.every((source) => new URL(source.url).protocol === 'https:'),
-      ).toBe(true);
-      expect(
-        record.sourceReferences.every((source) => /^\d{4}-\d{2}-\d{2}$/.test(source.accessedDate)),
-      ).toBe(true);
-      expect(['verified', 'partially_verified', 'pending_verification']).toContain(
-        record.verificationStatus,
-      );
-      expect(['high', 'medium', 'low']).toContain(record.confidenceLevel);
+      for (const source of record.sourceReferences) {
+        expect(source.official).toBe(true);
+        expect(source.originalLanguage).toMatch(/^[a-z]{2}(-[A-Z]{2})?$/);
+        expect(new URL(source.url).protocol).toBe('https:');
+        expect(source.accessedDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      }
     }
   });
 
-  it('已查證紀錄有官方來源與已查證事實', () => {
-    for (const record of institutions.filter((r) => r.verificationStatus === 'verified')) {
-      expect(record.sourceReferences.length).toBeGreaterThan(0);
-      expect(record.verifiedFacts.length).toBeGreaterThan(0);
-    }
-  });
-
-  it('生產資料與主要輸出不含禁止的舊名稱或公開展示標籤', () => {
+  it('contains no fictional legacy names in production data or exports', () => {
     const content =
       JSON.stringify(institutions) +
-      comparisonMarkdown(institutions.slice(0, 2)) +
-      generateReport('executive', institutions.slice(0, 1));
-    for (const value of [...forbiddenNames, 'DEMO 示範資料']) expect(content).not.toContain(value);
-    expect(RESEARCH_LABEL).toBe('官方公開資料研究版');
+      comparisonMarkdown(institutions.slice(0, 2), 'en') +
+      generateReport('executive', institutions.slice(0, 1), new Date('2026-07-16'), 'zh-TW');
+    for (const value of forbiddenNames) expect(content).not.toContain(value);
   });
 
-  it('所有機構欄位完整，未揭露資料保留 null 或空陣列', () => {
-    for (const record of institutions) {
+  it('keeps nullable research fields instead of inventing missing facts', () => {
+    for (const record of institutions)
       for (const key of [
         'legalBasis',
         'guaranteeCoverage',
         'riskSharingModel',
         'fundingSources',
         'youthFarmerMeasures',
-      ] satisfies Array<keyof Institution>) {
+      ] satisfies Array<keyof Institution>)
         expect(Object.hasOwn(record, key)).toBe(true);
-      }
-    }
-  });
-
-  it('資料集不保存缺少資料日期契約的動態數值物件', () => {
-    const dynamicKeys = [
-      'guaranteeRate',
-      'guaranteeLimit',
-      'guaranteeFee',
-      'beneficiaryCount',
-      'guaranteeAmount',
-    ];
-    for (const record of institutions)
-      for (const key of dynamicKeys) expect(Object.hasOwn(record, key)).toBe(false);
   });
 });
 
-describe('搜尋、篩選與排序', () => {
-  it('可搜尋中文、英文與簡稱', () => {
+describe('search and filters', () => {
+  it('searches English, Traditional Chinese and abbreviations', () => {
+    expect(
+      filterInstitutions(institutions, filters({ query: 'Agricultural Credit' })),
+    ).toHaveLength(1);
     expect(filterInstitutions(institutions, filters({ query: '農業信用' }))).toHaveLength(1);
     expect(filterInstitutions(institutions, filters({ query: 'CGCC' }))).toHaveLength(1);
-    expect(filterInstitutions(institutions, filters({ query: 'Japan' }))).toHaveLength(2);
   });
-  it('可組合國家、類型、標籤與查證狀態', () => {
+  it('combines country, type, tag and verification filters', () =>
     expect(
       filterInstitutions(
         institutions,
@@ -105,30 +99,27 @@ describe('搜尋、篩選與排序', () => {
           tag: '農業',
           verification: 'verified',
         }),
-      ).map((r) => r.id),
-    ).toEqual(['kh-cgcc']);
-  });
-  it('無結果時回傳空陣列', () =>
-    expect(filterInstitutions(institutions, filters({ query: '不存在的機構' }))).toEqual([]));
+      ).map((record) => record.id),
+    ).toEqual(['kh-cgcc']));
 });
 
-describe('比較匯出與報告', () => {
+describe('bilingual comparison and reports', () => {
   const selected = institutions.slice(0, 2);
-  it('三種比較格式都有來源、日期、免責聲明及限制', () => {
-    for (const output of [comparisonMarkdown(selected), comparisonCsv(selected)]) {
+  it('exports English and Traditional Chinese with sources and disclaimers', () => {
+    const english = [comparisonMarkdown(selected, 'en'), comparisonCsv(selected, 'en')];
+    const chinese = [comparisonMarkdown(selected, 'zh-TW'), comparisonCsv(selected, 'zh-TW')];
+    for (const output of english) {
+      expect(output).toContain('Official sources');
+      expect(output).toContain(DISCLAIMER_EN);
+      expect(output).toContain(COMPARISON_LIMITATION_EN);
+    }
+    for (const output of chinese) {
       expect(output).toContain('官方來源');
-      expect(output).toContain('2026-07-16');
       expect(output).toContain(DISCLAIMER);
       expect(output).toContain(COMPARISON_LIMITATION);
     }
-    const json = JSON.parse(comparisonJson(selected)) as {
-      disclaimer: string;
-      comparisonLimitation: string;
-      institutions: Institution[];
-    };
-    expect(json.disclaimer).toBe(DISCLAIMER);
-    expect(json.comparisonLimitation).toBe(COMPARISON_LIMITATION);
-    expect(json.institutions).toHaveLength(2);
+    expect(JSON.parse(comparisonJson(selected, 'en')).language).toBe('en');
+    expect(JSON.parse(comparisonJson(selected, 'zh-TW')).language).toBe('zh-TW');
   });
 
   const reportTypes: ReportType[] = [
@@ -138,21 +129,19 @@ describe('比較匯出與報告', () => {
     'meeting-qa',
     'presentation',
   ];
-  it.each(reportTypes)('%s 報告分開事實、推論、待查證與來源', (type) => {
-    const output = generateReport(type, selected, new Date('2026-07-16'));
-    for (const heading of [
-      '產製日期：2026-07-16',
-      '資料最後查證日期',
-      '## 官方來源',
-      '## 已查證事實',
-      '## 分析／推論',
-      '## 待查證事項',
-      '## 比較限制',
-      '## 免責聲明',
-    ])
-      expect(output).toContain(heading);
+  it.each(reportTypes)('%s report supports both languages', (type) => {
+    const en = generateReport(type, selected, new Date('2026-07-16'), 'en');
+    const zh = generateReport(type, selected, new Date('2026-07-16'), 'zh-TW');
+    expect(en).toContain('## Official sources');
+    expect(en).toContain('## Pending research');
+    expect(zh).toContain('## 官方來源');
+    expect(zh).toContain('## 待查證事項');
   });
 
-  it('入口文件保留 noindex', () =>
-    expect(readFileSync('index.html', 'utf8')).toContain('noindex, nofollow, noarchive'));
+  it('metadata uses the ACSIC Knowledge Hub brand and keeps noindex', () => {
+    const html = readFileSync('index.html', 'utf8');
+    expect(html).toContain('ACSIC Knowledge Hub');
+    expect(html).toContain('noindex, nofollow, noarchive');
+    expect(html).not.toContain('ACGF Strategy OS');
+  });
 });

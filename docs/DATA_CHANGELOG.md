@@ -1,5 +1,12 @@
 # 資料變更紀錄
 
+## 2026-07-16 - ACSIC Knowledge Hub 雙語基礎
+
+- 品牌由 ACGF 中心展示改為服務 ACSIC 會員機構的獨立雙語知識平台。
+- 既有九筆真實機構保留，ACGF 只作為 Observer 機構之一。
+- 加入 `name.en`、`name.zh-TW`、雙語摘要、雙語類型、名稱翻譯狀態與來源原始語言。
+- 本輪不大量新增制度細節，也不為新資訊架構捏造占位資料。
+
 ## 2026-07-16
 
 - 建立九筆真實機構官方公開資料：ACGF、Taiwan SMEG、CGCC、CGTMSE、JFC、JFG、KODIT、CGC Malaysia 及 PHILGUARANTEE。
