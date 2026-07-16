@@ -2,28 +2,29 @@
 
 ## Status
 
-Migration is paused before the repository rename. The connected GitHub App can read and write repository contents and reports `admin` permission, but its available actions do not include repository rename or repository settings update. Per the migration requirements, no alternative repository was created and no path setting was changed while the old repository remains live.
+Repository rename completed on 2026-07-16 through the authenticated GitHub Settings interface. GitHub and the connected GitHub App both read the repository as `chaohuang-TW/acsic-knowledge-hub`; visibility remains Public, the default branch remains `main`, and repository history was preserved. The production path migration changes the Pages base to `/acsic-knowledge-hub/` without a CNAME or personal-site root deployment.
 
 ## Pre-migration state
 
-| Item                     | Verified state                                                                 |
-| ------------------------ | ------------------------------------------------------------------------------ |
-| Migration date           | 2026-07-16                                                                     |
-| Old repository           | `chaohuang-TW/acgf-strategy-os-demo`                                           |
-| Target repository        | `chaohuang-TW/acsic-knowledge-hub`                                             |
-| Old Pages URL            | `https://chaohuang-tw.github.io/acgf-strategy-os-demo/`                        |
-| Target Pages URL         | `https://chaohuang-tw.github.io/acsic-knowledge-hub/`                          |
-| Visibility               | Public                                                                         |
-| Default branch           | `main`                                                                         |
-| Remote latest commit     | `a4e3f88f146755d5b45b0270ff1b4fb4f76ba46c`                                     |
-| Local reference commit   | `595b70d`                                                                      |
-| Local worktree           | Clean before this report was added                                             |
-| Current Vite base        | `/acgf-strategy-os-demo/`                                                      |
-| CNAME                    | Absent                                                                         |
-| Pages source             | GitHub Actions through `.github/workflows/deploy-pages.yml`                    |
-| Target-name availability | `chaohuang-TW/acsic-knowledge-hub` returned GitHub API 404 and was not present |
+| Item                       | Verified state                                                                 |
+| -------------------------- | ------------------------------------------------------------------------------ |
+| Migration date             | 2026-07-16                                                                     |
+| Old repository             | `chaohuang-TW/acgf-strategy-os-demo`                                           |
+| Target repository          | `chaohuang-TW/acsic-knowledge-hub`                                             |
+| Old Pages URL              | `https://chaohuang-tw.github.io/acgf-strategy-os-demo/`                        |
+| Target Pages URL           | `https://chaohuang-tw.github.io/acsic-knowledge-hub/`                          |
+| Visibility                 | Public                                                                         |
+| Default branch             | `main`                                                                         |
+| Rename-time remote commit  | `d4f743e520eed3389c285718e66d3b749c50d124`                                     |
+| Local pre-migration commit | `4136eca`                                                                      |
+| Local worktree             | Clean before this report was added                                             |
+| Pre-migration Vite base    | `/acgf-strategy-os-demo/`                                                      |
+| Migrated Vite base         | `/acsic-knowledge-hub/`                                                        |
+| CNAME                      | Absent                                                                         |
+| Pages source               | GitHub Actions through `.github/workflows/deploy-pages.yml`                    |
+| Target-name availability   | `chaohuang-TW/acsic-knowledge-hub` returned GitHub API 404 and was not present |
 
-The local and remote commit SHAs differ because the previous release was published through the GitHub connector, but the deployed content was read back and verified from the remote repository.
+The local and remote commit SHAs differ because releases are published through the GitHub connector instead of the unavailable local HTTPS credential path. Published content is read back from the remote repository after each release.
 
 ## Last successful deployment evidence
 
@@ -32,25 +33,21 @@ The local and remote commit SHAs differ because the previous release was publish
 - English route opened successfully at `https://chaohuang-tw.github.io/acgf-strategy-os-demo/#/en/`.
 - Traditional Chinese route opened successfully at `https://chaohuang-tw.github.io/acgf-strategy-os-demo/#/zh-TW/`.
 
-## Connector capability result
+## Rename execution
 
-The repository metadata reports `admin`, `maintain`, `push`, `pull` and `triage` permissions. However, the installed GitHub connector exposes no callable action for:
+The repository metadata reports `admin`, `maintain`, `push`, `pull` and `triage` permissions. The installed GitHub connector did not expose repository rename or repository settings actions, so the explicit user-authorized rename was completed in the authenticated GitHub Settings interface. The post-rename readback confirmed:
 
-- renaming a repository;
-- updating repository description, website or topics;
-- changing GitHub Pages repository settings.
+- repository full name: `chaohuang-TW/acsic-knowledge-hub`;
+- visibility: Public;
+- default branch: `main`;
+- rename-time latest commit: `d4f743e520eed3389c285718e66d3b749c50d124`;
+- existing repository ID and history preserved.
 
-The content and Git-data actions must not be used to simulate a repository rename. Browser or local credential workarounds were intentionally not used.
-
-## Single required manual action
-
-Open `https://github.com/chaohuang-TW/acgf-strategy-os-demo/settings`, change **Repository name** from `acgf-strategy-os-demo` to `acsic-knowledge-hub`, and confirm **Rename**.
-
-Do not create a new repository. After the rename is complete, return to this task so the connector can re-read `chaohuang-TW/acsic-knowledge-hub` and continue the prepared migration.
+No new repository was created to simulate the rename, no force push was used, and no unrelated history was overwritten.
 
 ## Prepared path-change matrix
 
-After the manual rename is confirmed, update the following in one migration commit:
+The following changes are included in the post-rename migration release:
 
 | Location                               | Required change                                                                                                              |
 | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
@@ -93,9 +90,8 @@ If the old Pages URL does not redirect after the new site is healthy, create a s
 
 ## Known limitations
 
-- Repository rename and Repository About settings cannot be executed by the installed connector action surface.
-- Old Pages URL behavior cannot be measured until after the manual rename.
-- No production path file was modified before the rename, so the existing site remains operational.
+- Repository About settings are outside the installed connector action surface and require authenticated GitHub UI changes if they need adjustment.
+- GitHub repository redirects and GitHub Pages project-path behavior are separate; the old Pages URL must be measured after the new deployment rather than assumed to redirect.
 
 ## Recovery
 

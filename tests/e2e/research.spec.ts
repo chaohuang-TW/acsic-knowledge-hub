@@ -5,7 +5,7 @@ test('international default opens the English route and shows an unofficial stat
 }) => {
   await page.addInitScript(() => localStorage.clear());
   await page.goto('./');
-  await expect(page).toHaveURL(/acgf-strategy-os-demo\/#\/en\/$/);
+  await expect(page).toHaveURL(/acsic-knowledge-hub\/#\/en\/$/);
   await expect(
     page.getByRole('heading', { name: 'Credit guarantee knowledge, connected across Asia' }),
   ).toBeVisible();

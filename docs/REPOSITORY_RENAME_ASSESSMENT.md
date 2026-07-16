@@ -2,11 +2,11 @@
 
 ## 2026-07-16 execution status
 
-The target name is available and the current repository is Public on `main`. The connected GitHub App reports repository admin permission, but the installed connector action surface has no repository rename or repository settings mutation. Migration is paused before changing the Pages base so the live old-path site remains healthy. See `docs/REPOSITORY_MIGRATION_REPORT.md` for the verified state, single manual rename action and prepared migration matrix.
+The repository rename is complete. The repository is now `chaohuang-TW/acsic-knowledge-hub`, remains Public, and retains `main` as its default branch. The Pages base, local validation URLs and documentation were migrated together after the rename. See `docs/REPOSITORY_MIGRATION_REPORT.md` for the execution evidence and old-URL handling.
 
 ## Proposed change
 
-Rename `chaohuang-TW/acgf-strategy-os-demo` to `chaohuang-TW/acsic-knowledge-hub` after the bilingual release is stable.
+Rename `chaohuang-TW/acgf-strategy-os-demo` to `chaohuang-TW/acsic-knowledge-hub` after the bilingual release is stable. This change was completed on 2026-07-16.
 
 ## Impact
 
@@ -20,7 +20,7 @@ Rename `chaohuang-TW/acgf-strategy-os-demo` to `chaohuang-TW/acsic-knowledge-hub
 
 ## Decision for this release
 
-Do not rename the repository in the same change that introduces the bilingual routing contract. Keeping the current repository and Pages base isolates routing defects from URL migration risk and preserves the working public site during validation.
+The bilingual routing contract was released and validated before the independent repository migration. The rename was then completed separately, followed by the Pages base update and deployment validation.
 
 ## Recommended migration sequence
 

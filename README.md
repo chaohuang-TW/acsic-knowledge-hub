@@ -51,9 +51,11 @@ pnpm check
 pnpm test:e2e
 ```
 
-The current GitHub Pages base remains `/acgf-strategy-os-demo/` while repository renaming is evaluated. See [Repository Rename Assessment](docs/REPOSITORY_RENAME_ASSESSMENT.md).
+Repository: `https://github.com/chaohuang-TW/acsic-knowledge-hub`
 
-Current public URL: `https://chaohuang-tw.github.io/acgf-strategy-os-demo/`
+Current public URL: `https://chaohuang-tw.github.io/acsic-knowledge-hub/`
+
+The repository was renamed from `acgf-strategy-os-demo` on 2026-07-16. See [Repository Migration Report](docs/REPOSITORY_MIGRATION_REPORT.md) for migration and old-URL handling details.
 
 ## Research boundaries
 

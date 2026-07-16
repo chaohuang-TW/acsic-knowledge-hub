@@ -144,4 +144,14 @@ describe('bilingual comparison and reports', () => {
     expect(html).toContain('noindex, nofollow, noarchive');
     expect(html).not.toContain('ACGF Strategy OS');
   });
+
+  it('uses only the renamed GitHub Pages base in production path configuration', () => {
+    const viteConfig = readFileSync('vite.config.ts', 'utf8');
+    const fallback = readFileSync('public/404.html', 'utf8');
+    const playwrightConfig = readFileSync('playwright.config.ts', 'utf8');
+    for (const content of [viteConfig, fallback, playwrightConfig]) {
+      expect(content).toContain('/acsic-knowledge-hub/');
+      expect(content).not.toContain('/acgf-strategy-os-demo/');
+    }
+  });
 });

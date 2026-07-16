@@ -11,6 +11,6 @@
 - 功能包含搜尋、篩選、排序、詳細頁、比較、三格式匯出、五類報告及資料來源頁。
 - 不連接私人核心資料，不建立後端、追蹤、自訂網域或 CNAME。
 
-正式網站：`https://chaohuang-tw.github.io/acgf-strategy-os-demo/`
+正式網站：`https://chaohuang-tw.github.io/acsic-knowledge-hub/`
 
-雙語路由：`/#/en/`、`/#/zh-TW/`。Repository 更名另依 `docs/REPOSITORY_RENAME_ASSESSMENT.md` 分階段執行。
+雙語路由：`/#/en/`、`/#/zh-TW/`。Repository 已於 2026-07-16 更名為 `chaohuang-TW/acsic-knowledge-hub`；遷移證據與舊網址處理記錄於 `docs/REPOSITORY_MIGRATION_REPORT.md`。

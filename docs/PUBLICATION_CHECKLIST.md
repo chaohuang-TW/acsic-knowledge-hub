@@ -13,3 +13,7 @@
 - [x] 格式、lint、型別、單元、建置及 E2E 通過。
 - [x] Pages 英文與繁體中文子路徑、下載與桌面／手機版通過。
 - [x] `noindex`、`robots.txt` 保留，未建立 CNAME。
+- [x] Repository 已更名為 `chaohuang-TW/acsic-knowledge-hub`，visibility 維持 Public，預設分支維持 `main`。
+- [x] Vite、Playwright 與 404 fallback 均使用 `/acsic-knowledge-hub/`，操作設定不再使用舊 Pages base。
+- [x] 文件中的正式網站改為 `https://chaohuang-tw.github.io/acsic-knowledge-hub/`。
+- [x] GitHub Pages 仍由 Actions 部署，未建立 CNAME，未部署至個人首頁根目錄。
