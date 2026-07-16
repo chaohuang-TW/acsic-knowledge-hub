@@ -8,6 +8,9 @@
 - 已查證事實、分析／推論與待查證事項必須分開。
 - 動態數字必須保存資料日期、來源與最後查證日期。
 - 來源集中於 `src/data/institutions.json`，頁面不得散落資料常數。
+- 現行會員以 2026 CGTMSE ACSIC 名冊為主；Taiwan SMEG 名冊只作交叉查核及 Observer 證據，`node=31` 不得作為現行名冊。
+- 會員身分、官方網站與機構事實分開查證；每個已填 Level 2 事實必須有 `fieldEvidence`。
+- Level 2 依 `institutionRoleCategory` 計算，不適用欄位不得列為缺漏；Level 3 必須具定義、單位、日期及來源。
 - 保留 React、TypeScript、Vite、Hash 路由、Pages 子路徑與既有視覺系統。
 - 不建立 CNAME、自訂網域、追蹤碼、後端、登入、廣告或 API Key。
 - 不觸碰 `chaohuang-TW.github.io` 或私人 `acgf-strategy-os`。

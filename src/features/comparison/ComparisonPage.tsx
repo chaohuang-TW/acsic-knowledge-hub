@@ -62,6 +62,7 @@ export function ComparisonPage() {
     () => institutions.filter((item) => selectedIds.includes(item.id)),
     [selectedIds],
   );
+  const mixedRoles = new Set(selected.map((item) => item.institutionRoleCategory)).size > 1;
   const toggle = (id: string) =>
     setSelectedIds((current) =>
       current.includes(id)
@@ -161,6 +162,16 @@ export function ComparisonPage() {
             <strong>{c.limit}</strong>
             {locale === 'en' ? COMPARISON_LIMITATION_EN : COMPARISON_LIMITATION}
           </p>
+          {mixedRoles && (
+            <div className="state-message" role="note">
+              <h3>{locale === 'en' ? 'Comparability warning' : '比較限制提醒'}</h3>
+              <p>
+                {locale === 'en'
+                  ? 'The selected institutions have different legal and operational roles. Non-applicable fields must not be used to rank institutional performance.'
+                  : '所選機構具有不同法律與業務型態；不適用欄位不得用來評定機構績效或制度優劣。'}
+              </p>
+            </div>
+          )}
           <div className="table-scroll" tabIndex={0} aria-label={c.table}>
             <table>
               <thead>

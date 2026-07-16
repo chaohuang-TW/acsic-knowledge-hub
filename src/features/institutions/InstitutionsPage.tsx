@@ -16,18 +16,18 @@ const ui = {
     error: 'Error',
     search: 'Search',
     placeholder: 'Search institution, country, abbreviation or summary',
-    country: 'Country',
+    country: 'Countries / Economies',
     type: 'Institution type',
     verification: 'Verification',
     all: 'All',
     verified: 'Verified',
     partial: 'Partially verified',
     pending: 'Pending verification',
-    agriculture: 'Agriculture measures',
-    youth: 'Young farmer measures',
+    agriculture: 'ACSIC status',
+    youth: 'Profile level',
     any: 'Any',
-    yes: 'Available',
-    no: 'Not recorded',
+    yes: 'Member',
+    no: 'Observer',
     clear: 'Clear filters',
     results: 'official institution records',
     noResults: 'No matching results',
@@ -75,6 +75,11 @@ const ui = {
     pendingTranslation: 'pending',
     noInference: 'None. The system does not add inference automatically.',
     noItems: 'None recorded.',
+    completeness: 'Completeness',
+    missingFields: 'Missing fields',
+    nextPriority: 'Next research priority',
+    fieldEvidence: 'Field-level evidence',
+    roleCategory: 'Role category',
   },
   'zh-TW': {
     title: '會員機構',
@@ -85,18 +90,18 @@ const ui = {
     error: '載入錯誤',
     search: '關鍵字搜尋',
     placeholder: '搜尋機構、國家、簡稱或摘要',
-    country: '國家',
+    country: '國家／經濟體',
     type: '機構類型',
     verification: '查證狀態',
     all: '全部',
     verified: '已查證',
     partial: '部分查證',
     pending: '待查證',
-    agriculture: '農業措施',
-    youth: '青年農民措施',
+    agriculture: 'ACSIC 身分',
+    youth: '資料層級',
     any: '全部',
-    yes: '有',
-    no: '無',
+    yes: '正式會員',
+    no: '觀察員',
     clear: '清除篩選',
     results: '筆官方機構紀錄',
     noResults: '沒有符合條件的結果',
@@ -143,6 +148,11 @@ const ui = {
     pendingTranslation: '待處理',
     noInference: '無，系統不自動補入推論。',
     noItems: '目前未記錄。',
+    completeness: '完整度',
+    missingFields: '缺漏欄位',
+    nextPriority: '下一步研究優先事項',
+    fieldEvidence: '欄位級證據',
+    roleCategory: '機構類型代碼',
   },
 } as const;
 
@@ -167,6 +177,10 @@ function InstitutionDetail({ record, onClose }: { record: Institution; onClose: 
     [c.governance, record.governanceStructure],
     [c.membership, record.acsicMembershipStatus],
     [c.website, record.officialWebsite],
+    [c.roleCategory, record.institutionRoleCategory],
+    [c.completeness, `Level 1 ${record.level1Completion}% / Level 2 ${record.level2Completion}%`],
+    [c.missingFields, record.missingFields],
+    [c.nextPriority, record.nextResearchPriority[locale]],
   ];
   const list = (items: string[], empty: string) => (
     <ul>{items.length ? items.map((item) => <li key={item}>{item}</li>) : <li>{empty}</li>}</ul>
@@ -195,6 +209,16 @@ function InstitutionDetail({ record, onClose }: { record: Institution; onClose: 
         ))}
       </div>
       <div className="evidence-grid">
+        <section>
+          <h3>{c.fieldEvidence}</h3>
+          <ul>
+            {Object.entries(record.fieldEvidence).map(([field, sourceIds]) => (
+              <li key={field}>
+                {field}: {sourceIds.join(', ')}
+              </li>
+            ))}
+          </ul>
+        </section>
         <section>
           <h3>{c.facts}</h3>
           {list(record.verifiedFacts, c.noItems)}
@@ -274,18 +298,18 @@ export function InstitutionsPage() {
               record.institutionAbbreviation,
               record.countryNameEn,
               record.countryNameZhTw,
+              ...record.name.aliases,
             ]
               .join(' ')
               .toLocaleLowerCase();
-            const boolFilter = (value: string, count: number) =>
-              value === 'any' || (value === 'yes' ? count > 0 : count === 0);
             return (
               (!query || text.includes(query.toLocaleLowerCase())) &&
               (country === 'all' || record.countryCode === country) &&
               (type === 'all' || record.institutionType === type) &&
               (verification === 'all' || record.verificationStatus === verification) &&
-              boolFilter(agriculture, record.agricultureRelatedMeasures.length) &&
-              boolFilter(youth, record.youthFarmerMeasures.length)
+              (agriculture === 'any' ||
+                record.acsicMembershipStatus === (agriculture === 'yes' ? 'member' : 'observer')) &&
+              (youth === 'any' || record.profileCompletenessLevel === Number(youth))
             );
           })
         : [],
@@ -403,8 +427,9 @@ export function InstitutionsPage() {
             onChange={(event) => setYouth(event.target.value)}
           >
             <option value="any">{c.any}</option>
-            <option value="yes">{c.yes}</option>
-            <option value="no">{c.no}</option>
+            <option value="1">Level 1</option>
+            <option value="2">Level 2</option>
+            <option value="3">Level 3</option>
           </select>
         </label>
         <button type="button" className="button secondary" onClick={clear}>
@@ -459,7 +484,8 @@ export function InstitutionsPage() {
                 </div>
                 <p>
                   {locale === 'en' ? record.countryNameEn : record.countryNameZhTw} |{' '}
-                  {record.type[locale]} | ACSIC {record.acsicMembershipStatus}
+                  {record.type[locale]} | ACSIC{' '}
+                  {record.acsicMembershipStatus === 'member' ? 'Member' : 'Observer'}
                 </p>
                 <p>{record.summary[locale]}</p>
                 <dl className="record-summary">
@@ -484,6 +510,16 @@ export function InstitutionsPage() {
                           ? c.medium
                           : c.low}
                     </dd>
+                  </div>
+                  <div>
+                    <dt>{c.completeness}</dt>
+                    <dd>
+                      Level 1 {record.level1Completion}% / Level 2 {record.level2Completion}%
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>{c.missingFields}</dt>
+                    <dd>{record.missingFields.length}</dd>
                   </div>
                 </dl>
                 <div className="record-footer">

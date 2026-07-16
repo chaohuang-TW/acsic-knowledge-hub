@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { PageHeader, ResearchBadge } from '../components/Layout';
-import { institutions } from '../data/institutions';
+import { institutions, membershipStats } from '../data/institutions';
 import { useLocale } from '../i18n';
 import { routePath } from '../routing';
 
@@ -275,10 +275,47 @@ export function HomePage() {
         </div>
       </section>
       <section className="section-shell outcomes-section">
+        <h2>{locale === 'en' ? 'Membership Coverage' : '會員涵蓋情形'}</h2>
+        <div className="problem-grid coverage-grid">
+          {[
+            [locale === 'en' ? 'Formal Members' : '正式會員', membershipStats.formalMembers],
+            [locale === 'en' ? 'Observer' : '觀察員', membershipStats.observers],
+            [
+              locale === 'en' ? 'Countries / Economies' : '國家／經濟體',
+              membershipStats.countriesEconomies,
+            ],
+            [
+              locale === 'en' ? 'Institutions Covered' : '涵蓋機構',
+              membershipStats.institutionsCovered,
+            ],
+            [locale === 'en' ? 'Level 1 Complete' : 'Level 1 完成', membershipStats.level1Complete],
+            [locale === 'en' ? 'Level 2 Complete' : 'Level 2 完成', membershipStats.level2Complete],
+            [
+              locale === 'en' ? 'Level 2 Partial' : 'Level 2 部分完成',
+              membershipStats.level2Partial,
+            ],
+            [locale === 'en' ? 'Official sources' : '官方來源', membershipStats.sources],
+          ].map(([label, value]) => (
+            <article key={label}>
+              <strong className="coverage-number">{value}</strong>
+              <p>{label}</p>
+            </article>
+          ))}
+        </div>
+        <p>
+          {locale === 'en' ? 'Last membership verification' : '名冊最後查核日'}:{' '}
+          {membershipStats.lastMembershipVerificationDate}
+        </p>
         <h2>{c.currentTitle}</h2>
         <div className="outcome-layout">
           <ol className="numbered-list">
-            {c.current.map((item) => (
+            {[
+              locale === 'en' ? '21 institution profiles' : '21 筆機構檔案',
+              locale === 'en'
+                ? `${membershipStats.sources} official source records`
+                : `${membershipStats.sources} 筆官方來源紀錄`,
+              locale === 'en' ? 'English and Traditional Chinese interface' : '英文與繁體中文介面',
+            ].map((item) => (
               <li key={item}>
                 <strong>{item}</strong>
               </li>

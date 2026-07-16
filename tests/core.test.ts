@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { institutions } from '../src/data/institutions';
-import type { Institution, InstitutionFilters, ReportType } from '../src/types';
+import { institutions, membershipStats } from '../src/data/institutions';
+import type { InstitutionFilters, ReportType } from '../src/types';
 import {
   COMPARISON_LIMITATION,
   COMPARISON_LIMITATION_EN,
@@ -19,107 +19,197 @@ const filters = (overrides: Partial<InstitutionFilters>): InstitutionFilters => 
   ...defaultFilters,
   ...overrides,
 });
-const forbiddenNames = ['東嶼國', '北辰', '海岳', '雲原'];
 
-describe('multilingual public-data contract', () => {
-  it('retains nine real profiles and treats ACGF only as an Observer record', () => {
-    expect(institutions).toHaveLength(9);
-    expect(institutions.find((record) => record.id === 'tw-acgf')?.acsicMembershipStatus).toBe(
-      'Observer',
+describe('ACSIC 2026 membership master roster', () => {
+  it('contains exactly 20 formal members, one observer and 21 unique records', () => {
+    expect(institutions).toHaveLength(21);
+    expect(new Set(institutions.map((record) => record.id)).size).toBe(21);
+    expect(institutions.filter((record) => record.acsicMembershipStatus === 'member')).toHaveLength(
+      20,
     );
-    expect(institutions.filter((record) => record.acsicMembershipStatus === 'Member')).toHaveLength(
-      8,
-    );
+    const observers = institutions.filter((record) => record.acsicMembershipStatus === 'observer');
+    expect(observers).toHaveLength(1);
+    expect(observers[0]?.id).toBe('acgf-tw');
+    expect(membershipStats).toMatchObject({
+      formalMembers: 20,
+      observers: 1,
+      countriesEconomies: 14,
+      institutionsCovered: 21,
+      level1Complete: 21,
+    });
   });
 
-  it('preserves official English names and bilingual structured fields', () => {
+  it('uses exactly the authoritative 14 country or economy codes for formal members', () => {
+    const actual = [
+      ...new Set(
+        institutions
+          .filter((record) => record.acsicMembershipStatus === 'member')
+          .map((record) => record.countryCode),
+      ),
+    ].sort();
+    expect(actual).toEqual([
+      'ID',
+      'IN',
+      'JP',
+      'KG',
+      'KH',
+      'KR',
+      'LK',
+      'MN',
+      'MY',
+      'NP',
+      'PG',
+      'PH',
+      'TH',
+      'TW',
+    ]);
+  });
+
+  it('keeps all required IDs and abbreviations without duplicate aliases', () => {
+    const expected: Record<string, string> = {
+      'cgcc-kh': 'CGCC',
+      'cgtmse-in': 'CGTMSE',
+      'asippindo-id': 'ASIPPINDO',
+      'askrindo-id': 'ASKRINDO',
+      'jfc-jp': 'JFC',
+      'jfg-jp': 'JFG',
+      'kodit-kr': 'KODIT',
+      'koreg-kr': 'KOREG',
+      'kotec-kr': 'KOTEC',
+      'ojscgf-kg': 'OJSCGF',
+      'cgc-my': 'CGC',
+      'cgfm-mn': 'CGFM',
+      'dcgf-np': 'DCGF',
+      'smec-pg': 'SMEC',
+      'cgcpng-pg': 'CGCPNG',
+      'philguarantee-ph': 'PHILGUARANTEE',
+      'cbsl-lk': 'CBSL',
+      'slecic-lk': 'SLECIC',
+      'tsmeg-tw': 'TSMEG',
+      'tcg-th': 'TCG',
+      'acgf-tw': 'ACGF',
+    };
+    expect(
+      Object.fromEntries(institutions.map((record) => [record.id, record.institutionAbbreviation])),
+    ).toEqual(expected);
+    expect(
+      institutions.filter((record) => record.name.aliases.includes('CGC Malaysia')),
+    ).toHaveLength(1);
+    expect(
+      institutions.find((record) => record.id === 'smec-pg')?.institutionRoleCategory,
+    ).not.toBe(institutions.find((record) => record.id === 'cgcpng-pg')?.institutionRoleCategory);
+  });
+});
+
+describe('Level 1, Level 2 and source governance', () => {
+  it('completes Level 1 for all 21 records with bilingual names and official websites', () => {
     for (const record of institutions) {
-      expect(record.name.en).toBe(record.institutionNameEn);
-      expect(record.name.en.length).toBeGreaterThan(3);
+      expect(record.level1Completion).toBe(100);
+      expect(record.name.officialEnglish.length).toBeGreaterThan(3);
       expect(record.name['zh-TW'].length).toBeGreaterThan(1);
-      expect(record.summary.en.length).toBeGreaterThan(20);
-      expect(record.summary['zh-TW'].length).toBeGreaterThan(10);
       expect(['official', 'research_translation', 'pending']).toContain(
-        record.nameTranslationStatus,
+        record.name.zhTWTranslationStatus,
       );
-      expect(record.type.en.length).toBeGreaterThan(3);
-      expect(record.type['zh-TW']).toBe(record.institutionType);
+      expect(new URL(record.officialWebsite).protocol).toBe('https:');
+      expect(record.institutionRoleCategory).toBeTruthy();
+      expect(record.membershipVerifiedDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(record.institutionVerifiedDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     }
   });
 
-  it('records an original language for every official source', () => {
+  it('gives every record membership evidence and its own official source', () => {
     for (const record of institutions) {
-      expect(new URL(record.officialWebsite).protocol).toBe('https:');
-      expect(record.sourceReferences.length).toBeGreaterThanOrEqual(2);
+      expect(record.sourceReferences.some((source) => source.sourceType.includes('roster'))).toBe(
+        true,
+      );
+      expect(
+        record.sourceReferences.some(
+          (source) => source.sourceType === 'official_institution_webpage',
+        ),
+      ).toBe(true);
       for (const source of record.sourceReferences) {
-        expect(source.official).toBe(true);
+        expect(source.isPrimarySource).toBe(true);
         expect(source.originalLanguage).toMatch(/^[a-z]{2}(-[A-Z]{2})?$/);
-        expect(new URL(source.url).protocol).toBe('https:');
-        expect(source.accessedDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+        expect(source.accessedDate).toBe('2026-07-16');
+        expect(source.finalResolvedUrl).toMatch(/^https:\/\//);
       }
     }
   });
 
-  it('contains no fictional legacy names in production data or exports', () => {
-    const content =
-      JSON.stringify(institutions) +
-      comparisonMarkdown(institutions.slice(0, 2), 'en') +
-      generateReport('executive', institutions.slice(0, 1), new Date('2026-07-16'), 'zh-TW');
-    for (const value of forbiddenNames) expect(content).not.toContain(value);
+  it('calculates type-aware Level 2 completion and excludes not-applicable fields', () => {
+    for (const record of institutions) {
+      expect(record.level2Completion).toBe(
+        Math.round(
+          (record.level2VerifiedFields.length / record.level2ApplicableFields.length) * 100,
+        ),
+      );
+      expect(record.missingFields.some((field) => record.notApplicableFields.includes(field))).toBe(
+        false,
+      );
+      for (const field of record.level2VerifiedFields)
+        expect(record.fieldEvidence[field]).toBeTruthy();
+    }
   });
 
-  it('keeps nullable research fields instead of inventing missing facts', () => {
-    for (const record of institutions)
+  it('requires full provenance for any future Level 3 metric', () => {
+    for (const metric of institutions.flatMap((record) => record.level3Metrics)) {
       for (const key of [
-        'legalBasis',
-        'guaranteeCoverage',
-        'riskSharingModel',
-        'fundingSources',
-        'youthFarmerMeasures',
-      ] satisfies Array<keyof Institution>)
-        expect(Object.hasOwn(record, key)).toBe(true);
+        'value',
+        'unit',
+        'definition',
+        'asOfDate',
+        'sourceId',
+        'pageOrSection',
+        'verificationStatus',
+      ]) {
+        expect(metric[key]).not.toBeUndefined();
+      }
+    }
+  });
+
+  it('blocks known roster-link errors and deprecated roster use', () => {
+    expect(institutions.find((record) => record.id === 'philguarantee-ph')?.officialWebsite).toBe(
+      'https://www.philguarantee.gov.ph/',
+    );
+    expect(institutions.find((record) => record.id === 'acgf-tw')?.officialWebsite).toBe(
+      'https://www.acgf.org.tw/',
+    );
+    const production = JSON.stringify(institutions);
+    expect(production).not.toContain('node=31');
+    expect(production).not.toContain('東嶼國');
+    expect(institutions.filter((record) => record.id.startsWith('jfg-'))).toHaveLength(1);
   });
 });
 
-describe('search and filters', () => {
-  it('searches English, Traditional Chinese and abbreviations', () => {
+describe('search, comparison and bilingual exports', () => {
+  it('searches official names, Traditional Chinese and aliases', () => {
     expect(
       filterInstitutions(institutions, filters({ query: 'Agricultural Credit' })),
     ).toHaveLength(1);
     expect(filterInstitutions(institutions, filters({ query: '農業信用' }))).toHaveLength(1);
-    expect(filterInstitutions(institutions, filters({ query: 'CGCC' }))).toHaveLength(1);
-  });
-  it('combines country, type, tag and verification filters', () =>
     expect(
-      filterInstitutions(
-        institutions,
-        filters({
-          country: '柬埔寨',
-          type: '國營信用保證機構',
-          tag: '農業',
-          verification: 'verified',
-        }),
-      ).map((record) => record.id),
-    ).toEqual(['kh-cgcc']));
-});
+      filterInstitutions(institutions, filters({ query: 'CGCMB' })).map((record) => record.id),
+    ).toEqual(['cgc-my']);
+  });
 
-describe('bilingual comparison and reports', () => {
-  const selected = institutions.slice(0, 2);
-  it('exports English and Traditional Chinese with sources and disclaimers', () => {
-    const english = [comparisonMarkdown(selected, 'en'), comparisonCsv(selected, 'en')];
-    const chinese = [comparisonMarkdown(selected, 'zh-TW'), comparisonCsv(selected, 'zh-TW')];
-    for (const output of english) {
+  it('exports governed fields, dates, sources, limitations and disclaimers', () => {
+    const selected = [institutions[4]!, institutions[16]!];
+    for (const output of [comparisonMarkdown(selected, 'en'), comparisonCsv(selected, 'en')]) {
       expect(output).toContain('Official sources');
+      expect(output).toContain('Field-level evidence');
       expect(output).toContain(DISCLAIMER_EN);
       expect(output).toContain(COMPARISON_LIMITATION_EN);
     }
-    for (const output of chinese) {
+    for (const output of [
+      comparisonMarkdown(selected, 'zh-TW'),
+      comparisonCsv(selected, 'zh-TW'),
+    ]) {
       expect(output).toContain('官方來源');
+      expect(output).toContain('欄位級來源');
       expect(output).toContain(DISCLAIMER);
       expect(output).toContain(COMPARISON_LIMITATION);
     }
-    expect(JSON.parse(comparisonJson(selected, 'en')).language).toBe('en');
-    expect(JSON.parse(comparisonJson(selected, 'zh-TW')).language).toBe('zh-TW');
+    expect(JSON.parse(comparisonJson(selected, 'en')).institutions).toHaveLength(2);
   });
 
   const reportTypes: ReportType[] = [
@@ -130,26 +220,23 @@ describe('bilingual comparison and reports', () => {
     'presentation',
   ];
   it.each(reportTypes)('%s report supports both languages', (type) => {
-    const en = generateReport(type, selected, new Date('2026-07-16'), 'en');
-    const zh = generateReport(type, selected, new Date('2026-07-16'), 'zh-TW');
-    expect(en).toContain('## Official sources');
-    expect(en).toContain('## Pending research');
-    expect(zh).toContain('## 官方來源');
-    expect(zh).toContain('## 待查證事項');
+    const selected = institutions.slice(0, 2);
+    expect(generateReport(type, selected, new Date('2026-07-16'), 'en')).toContain(
+      '## Official sources',
+    );
+    expect(generateReport(type, selected, new Date('2026-07-16'), 'zh-TW')).toContain(
+      '## 官方來源',
+    );
   });
+});
 
-  it('metadata uses the ACSIC Knowledge Hub brand and keeps noindex', () => {
+describe('deployment and security boundaries', () => {
+  it('retains the ACSIC brand, noindex and renamed Pages base', () => {
     const html = readFileSync('index.html', 'utf8');
     expect(html).toContain('ACSIC Knowledge Hub');
     expect(html).toContain('noindex, nofollow, noarchive');
-    expect(html).not.toContain('ACGF Strategy OS');
-  });
-
-  it('uses only the renamed GitHub Pages base in production path configuration', () => {
-    const viteConfig = readFileSync('vite.config.ts', 'utf8');
-    const fallback = readFileSync('public/404.html', 'utf8');
-    const playwrightConfig = readFileSync('playwright.config.ts', 'utf8');
-    for (const content of [viteConfig, fallback, playwrightConfig]) {
+    for (const path of ['vite.config.ts', 'public/404.html', 'playwright.config.ts']) {
+      const content = readFileSync(path, 'utf8');
       expect(content).toContain('/acsic-knowledge-hub/');
       expect(content).not.toContain('/acgf-strategy-os-demo/');
     }

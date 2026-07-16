@@ -49,6 +49,7 @@ export function filterInstitutions(records: Institution[], filters: InstitutionF
         record.countryNameEn,
         record.institutionType,
         record.acsicMembershipStatus,
+        ...record.name.aliases,
         ...record.tags,
         ...record.serviceTargets,
       ]
@@ -81,8 +82,10 @@ export function filterInstitutions(records: Institution[], filters: InstitutionF
 
 const fieldKeys: Array<keyof Institution> = [
   'institutionNameEn',
+  'institutionNameZhTw',
+  'nameTranslationStatus',
   'institutionAbbreviation',
-  'institutionType',
+  'institutionRoleCategory',
   'establishedYear',
   'supervisingAuthority',
   'legalBasis',
@@ -100,12 +103,18 @@ const fieldKeys: Array<keyof Institution> = [
   'lastVerifiedDate',
   'verificationStatus',
   'confidenceLevel',
+  'level1Completion',
+  'level2Completion',
+  'missingFields',
+  'fieldEvidence',
 ];
 const fieldLabels = {
   en: [
     'Official English name',
+    'Traditional Chinese name',
+    'Chinese translation status',
     'Abbreviation',
-    'Institution type',
+    'Role category',
     'Established',
     'Supervising authority',
     'Legal basis',
@@ -123,9 +132,15 @@ const fieldLabels = {
     'Last verified',
     'Verification status',
     'Confidence',
+    'Level 1 completion',
+    'Level 2 completion',
+    'Missing fields',
+    'Field-level evidence',
   ],
   'zh-TW': [
     '官方英文名稱',
+    '繁體中文名稱',
+    '中文翻譯狀態',
     '簡稱',
     '機構類型',
     '設立年份',
@@ -145,6 +160,10 @@ const fieldLabels = {
     '最後查證日期',
     '查證狀態',
     '可信度',
+    'Level 1 完整度',
+    'Level 2 完整度',
+    '缺漏欄位',
+    '欄位級來源',
   ],
 } as const;
 

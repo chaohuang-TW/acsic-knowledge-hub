@@ -33,12 +33,28 @@ Comparison, reports, source governance and downloads remain available as researc
 
 Institution records are centralized in `src/data/institutions.json`. The contract preserves:
 
-- `name.en`: official English name, verbatim
+- `name.officialEnglish`: official English name, verbatim
 - `name.zh-TW`: official or research Traditional Chinese name
+- `name.zhTWTranslationStatus`: `official`, `research_translation`, or `pending`
+- `name.aliases`: identity-resolution aliases that never create duplicate institutions
 - `summary.en` and `summary.zh-TW`
-- `nameTranslationStatus`: `official`, `research_translation`, or `pending`
 - `sourceReferences[].originalLanguage`
-- verification status, source dates, evidence, analysis and pending research as separate fields
+- `fieldEvidence`: source IDs for each populated Level 2 fact
+- role-aware `level2ApplicableFields`, `level2VerifiedFields`, `missingFields` and `notApplicableFields`
+
+## Current production coverage
+
+- Formal members: 20
+- Observer: 1 (ACGF)
+- Countries / economies: 14
+- Institutions: 21
+- Level 1: 21/21
+- Level 2 complete: 7; partial: 14
+- Level 3: no metric is published unless its definition, unit, date and source are complete
+
+See [Member Coverage](docs/ACSIC_MEMBER_COVERAGE.md), [Membership Methodology](docs/ACSIC_MEMBERSHIP_METHODOLOGY.md) and [Institution Type Methodology](docs/INSTITUTION_TYPE_METHODOLOGY.md).
+
+The latest transport-level checks are recorded in [Official URL Validation](docs/SOURCE_URL_VALIDATION.md).
 
 See [Translation Guide](docs/TRANSLATION_GUIDE.md) and [Source Methodology](docs/SOURCE_METHODOLOGY.md).
 

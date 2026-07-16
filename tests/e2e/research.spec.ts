@@ -52,8 +52,10 @@ test('member search, empty and error states and source-language details are bili
   page,
 }) => {
   await page.goto('./#/en/members');
+  await expect(page.getByText('21 official institution records')).toBeVisible();
   await page.getByLabel('Search').fill('ACGF');
   await expect(page.getByText('1 official institution records')).toBeVisible();
+  await expect(page.getByText('ACSIC Observer')).toBeVisible();
   await page.getByLabel('Search').fill('not-a-real-institution');
   await expect(page.getByRole('heading', { name: 'No matching results' })).toBeVisible();
   await page.getByRole('button', { name: 'Clear filters' }).last().click();
@@ -65,6 +67,42 @@ test('member search, empty and error states and source-language details are bili
   await page.getByRole('button', { name: 'View profile' }).first().click();
   await expect(page.getByRole('heading', { name: 'Official sources' })).toBeVisible();
   await expect(page.getByText('Original language').first()).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Field-level evidence' })).toBeVisible();
+});
+
+test('all 21 records render in both languages and language switching preserves the open profile', async ({
+  page,
+}) => {
+  await page.goto('./#/en/members');
+  await expect(page.locator('.institution-list article')).toHaveCount(21);
+  await page.getByLabel('Search').fill('KOTEC');
+  await page.getByRole('button', { name: 'View profile' }).click();
+  await expect(
+    page
+      .locator('.detail-panel')
+      .getByRole('heading', { name: 'Korea Technology Finance Corporation' }),
+  ).toBeVisible();
+  await page.getByLabel('Language').selectOption('zh-TW');
+  await expect(page).toHaveURL(/#\/zh-TW\/members$/);
+  await expect(
+    page.locator('.detail-panel').getByRole('heading', { name: '韓國技術保證基金' }),
+  ).toBeVisible();
+});
+
+test('membership, country and type filters use the complete production roster', async ({
+  page,
+}) => {
+  await page.goto('./#/en/members');
+  await page.getByLabel('ACSIC status').selectOption('no');
+  await expect(page.locator('.institution-list article')).toHaveCount(1);
+  await expect(
+    page
+      .locator('.institution-list article')
+      .getByRole('heading', { name: 'Agricultural Credit Guarantee Fund' }),
+  ).toBeVisible();
+  await page.getByRole('button', { name: 'Clear filters' }).first().click();
+  await page.getByLabel('Countries / Economies').selectOption('KR');
+  await expect(page.locator('.institution-list article')).toHaveCount(3);
 });
 
 test('comparison exports English and Traditional Chinese branded filenames', async ({ page }) => {
