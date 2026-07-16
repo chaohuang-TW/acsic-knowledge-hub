@@ -1,4 +1,5 @@
 export type VerificationStatus = 'verified' | 'partially_verified' | 'pending_verification';
+export type Level2Status = 'complete' | 'partial' | 'insufficient' | 'not_assessed';
 export type ConfidenceLevel = 'high' | 'medium' | 'low';
 export type AcsicMembershipStatus = 'member' | 'observer';
 export type Locale = 'en' | 'zh-TW';
@@ -18,13 +19,24 @@ export type InstitutionRoleCategory =
   | 'export_credit_insurer_and_guarantor'
   | 'agricultural_credit_guarantee_fund';
 
+export type SourceType =
+  | 'official_membership_roster'
+  | 'official_institution_profile'
+  | 'official_law_or_regulation'
+  | 'official_annual_report'
+  | 'official_scheme_document'
+  | 'official_governance_document'
+  | 'official_government_source'
+  | 'official_press_release'
+  | 'official_strategy_document';
+
 export interface SourceReference {
   sourceId: string;
-  institutionId: string | null;
+  institutionIds: string[];
   title: string;
   publisher: string;
-  sourceType: string;
-  sourceContextYear?: number | null;
+  sourceType: SourceType;
+  tier: 'tier_1' | 'tier_2';
   url: string;
   finalResolvedUrl: string;
   originalLanguage: string;
@@ -32,25 +44,66 @@ export interface SourceReference {
   documentDate: string | null;
   accessedDate: string;
   pageOrSection: string;
-  isPrimarySource: true;
   accessStatus: 'accessible' | 'redirected' | 'temporarily_unavailable' | 'archived';
   stalenessWarning: boolean;
+  isPrimarySource: boolean;
   notes: LocalizedText;
-  id: string;
-  documentType: 'official_webpage' | 'official_document' | 'official_report' | 'official_index';
-  year: number | null;
-  section: string;
-  official: true;
+}
+
+export interface FieldEvidence {
+  evidenceId: string;
+  sourceId: string;
+  pageOrSection: string;
+  evidenceSummary: LocalizedText;
+  evidenceType:
+    | 'direct_official_statement'
+    | 'official_document_summary'
+    | 'official_legal_text'
+    | 'official_statistical_table'
+    | 'research_translation_of_official_source';
+  verifiedDate: string;
+}
+
+export interface NotApplicableField {
+  field: string;
+  reason: LocalizedText;
+  basis: 'role_methodology' | 'official_source';
+  sourceIds: string[];
+  reviewedDate: string;
+}
+
+export interface VerifiedClaim {
+  claimId: string;
+  statement: LocalizedText;
+  fieldKeys: string[];
+  sourceEvidenceIds: string[];
+  verifiedDate: string;
+}
+
+export interface NativeName {
+  value: string | null;
+  language: string | null;
+  status: 'official' | 'pending';
+  sourceId: string | null;
 }
 
 export interface InstitutionName {
   en: string;
   officialEnglish: string;
-  native: string | null;
-  nativeLanguage: string | null;
+  nativeName: NativeName;
   'zh-TW': string;
   zhTWTranslationStatus: TranslationStatus;
   aliases: string[];
+}
+
+export interface ConfidenceFactors {
+  tier1SourceCount: number;
+  sourceTypeCount: number;
+  evidenceCoverage: number;
+  hasStaleSource: boolean;
+  hasUnavailableCriticalSource: boolean;
+  unresolvedConflictCount: number;
+  bilingualCoverage: number;
 }
 
 export interface Institution {
@@ -65,40 +118,46 @@ export interface Institution {
   institutionRoleCategory: InstitutionRoleCategory;
   officialWebsite: string;
   establishedYear: number | null;
-  legalBasis: string | null;
-  ownershipOrLegalStatus: string | null;
-  supervisingAuthority: string | null;
+  legalBasis: LocalizedText | null;
+  ownershipOrLegalStatus: LocalizedText | null;
+  supervisingOrOversightAuthority: LocalizedText | null;
   mandate: LocalizedText;
-  serviceTargets: string[];
-  majorFunctions: string[];
-  governanceType: string | null;
-  fundingOrCapitalBasis: string | null;
-  geographicScope: string | null;
-  officialPublications: string[];
+  serviceTargets: LocalizedText[];
+  majorFunctions: LocalizedText[];
+  governanceType: LocalizedText | null;
+  fundingOrCapitalBasis: LocalizedText | null;
+  geographicScope: LocalizedText | null;
+  officialPublications: LocalizedText[];
   acsicRoleNotes: LocalizedText;
-  typeSpecificProfile: Record<string, string | string[] | null>;
+  typeSpecificProfile: Record<string, LocalizedText | LocalizedText[] | null>;
+  sourceIds: string[];
   sourceReferences: SourceReference[];
-  fieldEvidence: Record<string, string[]>;
+  fieldEvidence: Record<string, FieldEvidence[]>;
   profileCompletenessLevel: 1 | 2 | 3;
   level1Completion: number;
+  level2Status: Level2Status;
   level2Completion: number;
+  level2RequiredFields: string[];
   level2ApplicableFields: string[];
   level2VerifiedFields: string[];
   missingFields: string[];
-  notApplicableFields: string[];
+  notApplicableFields: NotApplicableField[];
   nextResearchPriority: LocalizedText;
   membershipVerifiedDate: string;
   institutionVerifiedDate: string;
   lastVerifiedDate: string;
   verificationStatus: VerificationStatus;
+  confidenceScore: number;
   confidenceLevel: ConfidenceLevel;
+  confidenceRationale: LocalizedText;
+  confidenceFactors: ConfidenceFactors;
   originalLanguages: string[];
   level3Metrics: Array<Record<string, string | number>>;
   tags: string[];
-  verifiedFacts: string[];
-  analysisInferences: string[];
-  pendingItems: string[];
-  // Compatibility view used by existing comparison/report components.
+  verifiedFacts: VerifiedClaim[];
+  analysisInferences: LocalizedText[];
+  pendingItems: LocalizedText[];
+  unresolvedConflicts: LocalizedText[];
   countryNameEn: string;
   countryNameZhTw: string;
   institutionNameEn: string;
@@ -106,17 +165,17 @@ export interface Institution {
   nameTranslationStatus: TranslationStatus;
   institutionType: string;
   type: LocalizedText;
-  guaranteePrograms: string[];
-  guaranteeCoverage: string | null;
-  fundingSources: string[];
-  riskSharingModel: string | null;
-  governanceStructure: string | null;
-  policyTools: string[];
-  specialMeasures: string[];
-  agricultureRelatedMeasures: string[];
-  youthFarmerMeasures: string[];
+  guaranteePrograms: LocalizedText[];
+  guaranteeCoverage: LocalizedText | null;
+  fundingSources: LocalizedText[];
+  riskSharingModel: LocalizedText | null;
+  governanceStructure: LocalizedText | null;
+  policyTools: LocalizedText[];
+  specialMeasures: LocalizedText[];
+  agricultureRelatedMeasures: LocalizedText[];
+  youthFarmerMeasures: LocalizedText[];
   documentDate: string | null;
-  notes: string;
+  notes: LocalizedText;
 }
 
 export interface InstitutionFilters {

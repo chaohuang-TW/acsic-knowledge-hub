@@ -1,0 +1,91 @@
+{
+  "version": "2026-07-16-v1",
+  "common": [
+    "establishedYear",
+    "legalBasis",
+    "ownershipOrLegalStatus",
+    "supervisingOrOversightAuthority",
+    "mandate",
+    "serviceTargets",
+    "majorFunctions",
+    "governanceType",
+    "fundingOrCapitalBasis",
+    "geographicScope",
+    "officialPublications",
+    "acsicRoleNotes"
+  ],
+  "roles": {
+    "credit_guarantee_corporation": [
+      "guaranteeDeliveryModel",
+      "participatingFinancialInstitutions",
+      "targetBorrowers",
+      "mainGuaranteeCategories",
+      "fundingSources",
+      "riskSharingOverview"
+    ],
+    "credit_guarantee_fund": [
+      "guaranteeDeliveryModel",
+      "participatingFinancialInstitutions",
+      "targetBorrowers",
+      "mainGuaranteeCategories",
+      "fundingSources",
+      "riskSharingOverview"
+    ],
+    "guarantee_association": [
+      "memberComposition",
+      "coordinationRole",
+      "sharedServices",
+      "policyRepresentation",
+      "trainingOrCapacityBuildingRole"
+    ],
+    "guarantee_federation": [
+      "memberComposition",
+      "coordinationRole",
+      "sharedServices",
+      "policyRepresentation",
+      "trainingOrCapacityBuildingRole"
+    ],
+    "policy_finance_institution": [
+      "policyFinanceRole",
+      "creditInsuranceOrGuaranteeRole",
+      "businessUnits",
+      "relationshipWithPrivateFinancialInstitutions"
+    ],
+    "technology_finance_guarantee_institution": [
+      "technologyAppraisalRole",
+      "guaranteeRole",
+      "investmentRole",
+      "technologyTransferRole"
+    ],
+    "deposit_and_credit_guarantee_fund": [
+      "depositGuaranteeRole",
+      "creditGuaranteeRole",
+      "coveredInstitutions",
+      "governanceOfDualMandate"
+    ],
+    "central_bank": [
+      "centralBankMandate",
+      "creditGuaranteeSchemeRole",
+      "refinanceOrGovernmentSchemeRole",
+      "responsibleUnit"
+    ],
+    "sme_development_agency": [
+      "SMEDevelopmentMandate",
+      "financialAccessRole",
+      "trainingAndCapacityBuilding",
+      "relationshipWithGuaranteeSchemes"
+    ],
+    "export_credit_insurer_and_guarantor": [
+      "exportCreditInsuranceRole",
+      "bankGuaranteeRole",
+      "exporterSupport",
+      "legalMandate"
+    ],
+    "agricultural_credit_guarantee_fund": [
+      "agricultureSpecificMandate",
+      "eligibleAgriculturalSectors",
+      "partnerFinancialInstitutions",
+      "agriculturalPolicyRole"
+    ]
+  }
+}

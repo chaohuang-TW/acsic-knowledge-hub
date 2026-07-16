@@ -14,4 +14,4 @@ ACSIC members are not modelled as identical guarantee funds. `institutionRoleCat
 | Export credit insurer and guarantor      | export insurance, bank guarantees, exporter support and legal mandate                                                        |
 | Agricultural credit guarantee fund       | agriculture-specific mandate, eligible sectors, partner finance and policy role                                              |
 
-`level2ApplicableFields` is selected by role. `notApplicableFields` never counts as missing. Cross-role comparison shows a comparability warning and cannot be used to rank institutional performance.
+The common denominator and every role matrix are versioned in `src/data/level2-standard.json`. A record cannot choose a smaller field set. `notApplicableFields` excludes a field only when it records a bilingual reason, basis, supporting sources and review date; otherwise an unverified applicable field remains missing. Cross-role comparison shows a comparability warning and cannot be used to rank institutional performance.
