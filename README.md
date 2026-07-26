@@ -42,15 +42,11 @@ Institution records are centralized in `src/data/institutions.json`. The contrac
 - `fieldEvidence`: source IDs for each populated Level 2 fact
 - role-aware `level2ApplicableFields`, `level2VerifiedFields`, `missingFields` and `notApplicableFields`
 
-## Current production coverage
+## Coverage methodology
 
-- Formal members: 20
-- Observer: 1 (ACGF)
-- Countries / economies: 14
-- Institutions: 21
-- Level 1: 21/21
-- Level 2 complete: 7; partial: 14
-- Level 3: no metric is published unless its definition, unit, date and source are complete
+The governed coverage block below is generated from production data. Membership, Level 1,
+strict Level 2, Level 3, source, evidence, bilingual-content and native-name statistics must
+not be maintained manually elsewhere in this README.
 
 See [Member Coverage](docs/ACSIC_MEMBER_COVERAGE.md), [Membership Methodology](docs/ACSIC_MEMBERSHIP_METHODOLOGY.md) and [Institution Type Methodology](docs/INSTITUTION_TYPE_METHODOLOGY.md).
 
