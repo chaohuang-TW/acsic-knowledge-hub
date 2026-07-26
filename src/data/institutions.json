@@ -250,7 +250,8 @@
       "jfc-jp-profile",
       "jfc-guide-2024",
       "jfc-japanese-profile",
-      "jfc-governance"
+      "jfc-governance",
+      "jfc-operational-performance-2025"
     ],
     "verifiedFieldKeys": [
       "establishedYear",
@@ -1089,7 +1090,12 @@
     },
     "supervisingOrOversightAuthority": null,
     "profileSourceId": "tsmeg-tw-profile",
-    "sourceIds": ["acsic-2026-member-roster", "tsmeg-tw-profile"],
+    "sourceIds": [
+      "acsic-2026-member-roster",
+      "tsmeg-tw-profile",
+      "tsmeg-annual-report-2025",
+      "tsmeg-performance-2025"
+    ],
     "verifiedFieldKeys": [
       "establishedYear",
       "ownershipOrLegalStatus",

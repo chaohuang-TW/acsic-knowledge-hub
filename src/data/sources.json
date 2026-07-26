@@ -977,5 +977,71 @@
       "en": "Official approved budget supporting the funding and capital basis.",
       "zh-TW": "官方核定預算，用以支持資金與資本基礎。"
     }
+  },
+  {
+    "sourceId": "jfc-operational-performance-2025",
+    "institutionIds": ["jfc-jp"],
+    "title": "JFC 2025 Operational Performances",
+    "publisher": "Japan Finance Corporation",
+    "sourceType": "official_annual_report",
+    "tier": "tier_1",
+    "url": "https://www.jfc.go.jp/n/english/report/pdf/jfc2025e_6.pdf",
+    "finalResolvedUrl": "https://www.jfc.go.jp/n/english/report/pdf/jfc2025e_6.pdf",
+    "originalLanguage": "en",
+    "publicationDate": "2025-09-25",
+    "documentDate": "2025-03-31",
+    "accessedDate": "2026-07-26",
+    "pageOrSection": "Printed p. 79; PDF page index 12; II. Credit Insurance Programs",
+    "accessStatus": "accessible",
+    "stalenessWarning": false,
+    "isPrimarySource": true,
+    "notes": {
+      "en": "Official operational-performance report. Pilot use is limited to the Small Business Credit Insurance table and excludes JFC direct lending.",
+      "zh-TW": "官方營運績效報告；試辦僅使用中小企業信用保險表，排除 JFC 直接融資。"
+    }
+  },
+  {
+    "sourceId": "tsmeg-annual-report-2025",
+    "institutionIds": ["tsmeg-tw"],
+    "title": "民國114年－財團法人中小企業信用保證基金年報",
+    "publisher": "財團法人中小企業信用保證基金",
+    "sourceType": "official_annual_report",
+    "tier": "tier_1",
+    "url": "https://www.smeg.org.tw/basic/?code=node4892&func=node&join=4892&mode=download&path=5rCR5ZyLMTE05bm0LeiyoeWcmOazleS6uuS4reWwj%282BS8gealreS%282FoeeUqOS%282FneitieWfuumHkeW5tOWgsV8yNjA0MDcwMjUyMDI%283D.pdf",
+    "finalResolvedUrl": "https://www.smeg.org.tw/basic/?code=node4892&func=node&join=4892&mode=download&path=5rCR5ZyLMTE05bm0LeiyoeWcmOazleS6uuS4reWwj%282BS8gealreS%282FoeeUqOS%282FneitieWfuumHkeW5tOWgsV8yNjA0MDcwMjUyMDI%283D.pdf",
+    "originalLanguage": "zh-TW",
+    "publicationDate": "2026-03-30",
+    "documentDate": "2025-12-31",
+    "accessedDate": "2026-07-26",
+    "pageOrSection": "Preface; printed pp. 3, 6, 8–9; PDF page indexes 2, 4, 7, 9–10",
+    "accessStatus": "accessible",
+    "stalenessWarning": false,
+    "isPrimarySource": true,
+    "notes": {
+      "en": "Official annual report supporting beneficiary population, year-end balance, contributed capital and the derived named-institution count.",
+      "zh-TW": "官方年報，用以支持受益對象、年末保證餘額、捐助資本及具名機構衍生計數。"
+    }
+  },
+  {
+    "sourceId": "tsmeg-performance-2025",
+    "institutionIds": ["tsmeg-tw"],
+    "title": "保證績效",
+    "publisher": "財團法人中小企業信用保證基金",
+    "sourceType": "official_government_source",
+    "tier": "tier_1",
+    "url": "https://www.smeg.org.tw/basic/?node=10063",
+    "finalResolvedUrl": "https://www.smeg.org.tw/basic/?node=10063",
+    "originalLanguage": "zh-TW",
+    "publicationDate": null,
+    "documentDate": "2025-12-31",
+    "accessedDate": "2026-07-26",
+    "pageOrSection": "保證績效 > 114年",
+    "accessStatus": "accessible",
+    "stalenessWarning": false,
+    "isPrimarySource": true,
+    "notes": {
+      "en": "Official performance table reporting complete CY2025 guarantee cases, guarantee amount and outstanding balance separately from supported financing.",
+      "zh-TW": "官方績效表，將 2025 完整年度承保件數、金額與保證餘額和協助取得融資數值分開揭露。"
+    }
   }
 ]

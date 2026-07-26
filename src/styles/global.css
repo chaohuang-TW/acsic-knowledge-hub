@@ -992,6 +992,168 @@ tbody th {
   font-weight: 500;
 }
 
+.pilot-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.8rem;
+  margin: 1.5rem 0;
+}
+.pilot-summary div {
+  display: grid;
+  gap: 0.25rem;
+  padding: 1.2rem;
+  border: 1px solid var(--line);
+  border-radius: 0.9rem;
+  background: var(--surface);
+}
+.pilot-summary strong {
+  font-size: 2rem;
+}
+.pilot-summary span,
+.pilot-record-grid small {
+  color: var(--muted);
+}
+.pilot-toolbar {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.8fr) minmax(220px, 1.2fr) auto;
+  gap: 0.8rem;
+  align-items: end;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.9rem;
+  background: var(--surface);
+}
+.pilot-toolbar label {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 750;
+}
+.pilot-toolbar select {
+  min-height: 2.75rem;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 0.65rem;
+  color: var(--text);
+  background: var(--bg);
+}
+.pilot-records {
+  display: grid;
+  gap: 1rem;
+}
+.pilot-record-card {
+  padding: clamp(1.2rem, 3vw, 2rem);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: var(--surface);
+}
+.pilot-record-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin: 1.4rem 0;
+}
+.pilot-record-grid div {
+  padding: 0.8rem;
+  border-left: 3px solid var(--line);
+  background: var(--surface-strong);
+}
+.pilot-record-grid dt {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+.pilot-record-grid dd {
+  margin: 0.25rem 0 0;
+  overflow-wrap: anywhere;
+}
+.pilot-record-grid small {
+  display: block;
+  margin-top: 0.35rem;
+}
+.reported-number {
+  font-size: 1.08rem;
+  font-weight: 800;
+}
+.data-status {
+  display: inline-flex;
+  width: fit-content;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--text);
+  background: var(--surface-strong);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+.provenance-viewer {
+  margin-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+.provenance-viewer summary {
+  padding: 1rem 0;
+  color: var(--accent-strong);
+  cursor: pointer;
+  font-weight: 800;
+}
+.provenance-viewer ol {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+  counter-reset: provenance;
+}
+.provenance-viewer li {
+  position: relative;
+  min-width: 0;
+  padding: 0.9rem;
+  border-top: 3px solid var(--accent);
+  background: var(--surface-strong);
+  counter-increment: provenance;
+}
+.provenance-viewer li + li {
+  border-left: 1px solid var(--line);
+}
+.provenance-viewer li::before {
+  content: counter(provenance, decimal-leading-zero);
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+.provenance-viewer li strong,
+.provenance-viewer li span {
+  display: block;
+}
+.provenance-viewer li span {
+  margin-top: 0.3rem;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.derived-note,
+.comparison-guard {
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.8rem;
+  background: var(--accent-soft);
+}
+.comparison-guard,
+.readiness-section {
+  margin-top: 3rem;
+}
+.comparison-guard li,
+.readiness-section > p {
+  color: var(--muted);
+}
+.readiness-section table {
+  min-width: 1180px;
+}
+
 @media (max-width: 1080px) {
   .site-header {
     align-items: flex-start;
@@ -1010,6 +1172,15 @@ tbody th {
     min-height: auto;
   }
   .filter-panel {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .pilot-toolbar {
+    grid-template-columns: 1fr 1fr;
+  }
+  .pilot-toolbar .button-row {
+    grid-column: 1 / -1;
+  }
+  .provenance-viewer ol {
     grid-template-columns: repeat(3, 1fr);
   }
 }
@@ -1059,8 +1230,23 @@ tbody th {
     grid-template-columns: 1fr;
   }
   .metric-list,
-  .indicator-detail dl {
+  .indicator-detail dl,
+  .pilot-summary,
+  .pilot-record-grid {
     grid-template-columns: 1fr;
+  }
+  .pilot-toolbar {
+    grid-template-columns: 1fr;
+  }
+  .pilot-toolbar .button-row {
+    grid-column: auto;
+  }
+  .provenance-viewer ol {
+    grid-template-columns: 1fr;
+  }
+  .provenance-viewer li + li {
+    border-left: 0;
+    border-top: 1px solid var(--line);
   }
   .problem-grid article:last-child {
     grid-column: auto;

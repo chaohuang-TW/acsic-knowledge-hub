@@ -8,7 +8,7 @@
 - 首頁與未來資訊架構已雙語化；尚無官方資料的制度及活動頁使用明確空狀態。
 - 比較與報告可獨立選擇英文或繁體中文輸出，下載檔名採 ACSIC Knowledge Hub 品牌。
 - 每筆至少具有一個機構官方來源與會員名冊來源，並以 `fieldEvidence` 連結已填 Level 2 事實。
-- Level 1 完成 21／21；依單一版本化共通與機構角色別標準計算，嚴格 Level 2 為 4 筆完整、16 筆部分完成、1 筆證據不足。本輪仍未納入任何正式 Level 3 數值。
+- Level 1 完成 21／21；依單一版本化共通與機構角色別標準計算，嚴格 Level 2 為 4 筆完整、16 筆部分完成、1 筆證據不足。Level 3 Pilot v1 納入 12 筆完成查證的正式試辦紀錄，僅涵蓋 JFC、ACGF 與 TSMEG。
 - ASKRINDO 官方公司簡介標示暫時無法存取；ASIPPINDO 官方歷史頁標示過時警示。
 - 功能包含搜尋、篩選、排序、詳細頁、比較、三格式匯出、五類報告及資料來源頁。
 - 不連接私人核心資料，不建立後端、追蹤、自訂網域或 CNAME。
@@ -29,8 +29,8 @@
 ## Calibrated production result
 
 - Membership remains 20 formal members plus 1 observer across 14 countries/economies.
-- Strict Level 2: 4 complete, 16 partial and 1 insufficient. Level 3 reliable metrics remain 0.
-- 64 source-reference relationships resolve to 45 unique official sources and 222 field-evidence objects.
+- Strict Level 2: 4 complete, 16 partial and 1 insufficient. Verified Level 3 pilot records: 12.
+- 67 source-reference relationships resolve to 48 unique official sources and 222 field-evidence objects.
 - Governed user-visible data content has 100% English/Traditional-Chinese coverage; 11 official native-language names are confirmed.
 - Confidence distribution: high 4, medium 16, low 1.
 

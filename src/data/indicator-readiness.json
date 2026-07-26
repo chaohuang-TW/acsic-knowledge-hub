@@ -1,0 +1,338 @@
+[
+  {
+    "institutionId": "jfc-jp",
+    "indicatorId": "new_guarantee_volume",
+    "status": "ready",
+    "verificationOutcome": "verified_with_limitation",
+    "officialSourceAvailable": true,
+    "definitionCompatible": true,
+    "periodAvailable": true,
+    "productionEligible": true,
+    "reason": {
+      "en": "The SME credit-insurance table reports FY2024 insurance acceptance separately from JFC lending; the insurance recognition basis is retained as a limitation.",
+      "zh-TW": "中小企業信用保險表將 FY2024 保險承作額與 JFC 融資分開揭露；保留保險承作認列基礎的限制。"
+    },
+    "sourceIds": ["jfc-operational-performance-2025"],
+    "reviewedDate": "2026-07-26"
+  },
+  {
+    "institutionId": "jfc-jp",
+    "indicatorId": "outstanding_guarantee_balance",
+    "status": "ready",
+    "verificationOutcome": "verified_with_limitation",
+    "officialSourceAvailable": true,
+    "definitionCompatible": true,
+    "periodAvailable": true,
+    "productionEligible": true,
+    "reason": {
+      "en": "The SME credit-insurance table separately reports insurance outstanding at 31 March 2025; it is a credit-insurance liability rather than a direct guarantee.",
+      "zh-TW": "中小企業信用保險表分別揭露 2025 年 3 月 31 日保險餘額；其為信用保險責任而非直接保證。"
+    },
+    "sourceIds": ["jfc-operational-performance-2025"],
+    "reviewedDate": "2026-07-26"
+  },
+  {
+    "institutionId": "jfc-jp",
+    "indicatorId": "number_of_guarantees",
+    "status": "not_ready",
+    "verificationOutcome": "not_disclosed",
+    "officialSourceAvailable": true,
+    "definitionCompatible": false,
+    "periodAvailable": false,
+    "productionEligible": false,
+    "reason": {
+      "en": "The reviewed SME credit-insurance table reports amounts but not a separate count of insurance acceptances; JFC loan counts are out of scope.",
+      "zh-TW": "已查閱的中小企業信用保險表只揭露金額，未分別揭露保險承作件數；JFC 貸款件數不在本試辦範圍。"
+    },
+    "sourceIds": ["jfc-operational-performance-2025"],
+    "reviewedDate": "2026-07-26"
+  },
+  {
+    "institutionId": "jfc-jp",
+    "indicatorId": "beneficiary_enterprises",
+    "status": "definition_mismatch",
+    "verificationOutcome": "definition_mismatch",
+    "officialSourceAvailable": true,
+    "definitionCompatible": false,
+    "periodAvailable": true,
+    "productionEligible": false,
+    "reason": {
+      "en": "Published borrower counts cover JFC direct-loan programmes and cannot stand in for distinct SME credit-insurance beneficiaries.",
+      "zh-TW": "官方借款人數涵蓋 JFC 直接融資方案，不得代替中小企業信用保險的不重複受益對象數。"
+    },
+    "sourceIds": ["jfc-operational-performance-2025"],
+    "reviewedDate": "2026-07-26"
+  },
+  {
+    "institutionId": "jfc-jp",
+    "indicatorId": "guarantee_coverage_ratio",
+    "status": "scheme_specific",
+    "verificationOutcome": "scheme_specific",
+    "officialSourceAvailable": true,
+    "definitionCompatible": false,
+    "periodAvailable": true,
+    "productionEligible": false,
+    "reason": {
+      "en": "Coverage and insurance terms vary by programme; no institution-wide SME credit-insurance percentage is published as a single value.",
+      "zh-TW": "保險承保條件依方案而異，未以單一數值公布全機構中小企業信用保險成數。"
+    },
+    "sourceIds": ["jfc-operational-performance-2025"],
+    "reviewedDate": "2026-07-26"
+  },
+  {
+    "institutionId": "jfc-jp",
+    "indicatorId": "partner_financial_institutions",
+    "status": "definition_mismatch",
+    "verificationOutcome": "definition_mismatch",
+    "officialSourceAvailable": true,
+    "definitionCompatible": false,
+    "periodAvailable": false,
+    "productionEligible": false,
+    "reason": {
+      "en": "The credit-insurance operating counterparties are Credit Guarantee Corporations, not a disclosed count of partner financial institutions under the pilot definition.",
+      "zh-TW": "信用保險業務對象為信用保證協會，並非本試辦定義下已公布數量的合作金融機構。"
+    },
+    "sourceIds": ["jfc-operational-performance-2025"],
+    "reviewedDate": "2026-07-26"
+  },
+  {
+    "institutionId": "jfc-jp",
+    "indicatorId": "capital_or_fund_size",
+    "status": "partially_ready",
+    "verificationOutcome": "definition_mismatch",
+    "officialSourceAvailable": true,
+    "definitionCompatible": false,
+    "periodAvailable": true,
+    "productionEligible": false,
+    "reason": {
+      "en": "JFC financial statements disclose whole-corporation and account values, but the reviewed source does not provide a directly compatible SME credit-insurance fund-size concept.",
+      "zh-TW": "JFC 財務報表揭露全公司與帳戶數值，但已查閱來源未提供可直接對映的中小企業信用保險基金規模概念。"
+    },
+    "sourceIds": ["jfc-operational-performance-2025"],
+    "reviewedDate": "2026-07-26"
+  },
+  {
+    "institutionId": "acgf-tw",
+    "indicatorId": "new_guarantee_volume",
+    "status": "ready",
+    "verificationOutcome": "verified",
+    "officialSourceAvailable": true,
+    "definitionCompatible": true,
+    "periodAvailable": true,
+    "productionEligible": true,
+    "reason": {
+      "en": "Annual-report table 5-1 separately reports CY2024 guarantee amount, guaranteed-loan amount and guarantee balance.",
+      "zh-TW": "年報表 5-1 分別揭露 2024 年保證金額、保證貸款金額與保證餘額。"
+    },
+    "sourceIds": ["acgf-annual-report-2024"],
+    "reviewedDate": "2026-07-26"
+  },
+  {
+    "institutionId": "acgf-tw",
+    "indicatorId": "outstanding_guarantee_balance",
+    "status": "ready",
+    "verificationOutcome": "verified",
+    "officialSourceAvailable": true,
+    "definitionCompatible": true,
+    "periodAvailable": true,
+    "productionEligible": true,
+    "reason": {
+      "en": "Annual-report table 5-1 reports guarantee balance at the end of CY2024 separately from annual guarantee amount.",
+      "zh-TW": "年報表 5-1 將 2024 年底保證餘額與當年保證金額分開揭露。"
+    },
+    "sourceIds": ["acgf-annual-report-2024"],
+    "reviewedDate": "2026-07-26"
+  },
+  {
+    "institutionId": "acgf-tw",
+    "indicatorId": "number_of_guarantees",
+    "status": "ready",
+    "verificationOutcome": "verified",
+    "officialSourceAvailable": true,
+    "definitionCompatible": true,
+    "periodAvailable": true,
+    "productionEligible": true,
+    "reason": {
+      "en": "Annual-report table 5-1 reports 19,638 guarantee cases for CY2024.",
+      "zh-TW": "年報表 5-1 揭露 2024 年保證件數 19,638 件。"
+    },
+    "sourceIds": ["acgf-annual-report-2024"],
+    "reviewedDate": "2026-07-26"
+  },
+  {
+    "institutionId": "acgf-tw",
+    "indicatorId": "beneficiary_enterprises",
+    "status": "not_ready",
+    "verificationOutcome": "not_disclosed",
+    "officialSourceAvailable": true,
+    "definitionCompatible": false,
+    "periodAvailable": false,
+    "productionEligible": false,
+    "reason": {
+      "en": "The public annual report reports guarantee cases but does not disclose a deduplicated annual beneficiary population.",
+      "zh-TW": "公開年報揭露保證件數，但未揭露年度不重複受益對象數。"
+    },
+    "sourceIds": ["acgf-annual-report-2024"],
+    "reviewedDate": "2026-07-26"
+  },
+  {
+    "institutionId": "acgf-tw",
+    "indicatorId": "guarantee_coverage_ratio",
+    "status": "scheme_specific",
+    "verificationOutcome": "scheme_specific",
+    "officialSourceAvailable": true,
+    "definitionCompatible": false,
+    "periodAvailable": true,
+    "productionEligible": false,
+    "reason": {
+      "en": "The annual report states different maxima for policy, general and special borrower programmes, so no institution-wide rate is produced.",
+      "zh-TW": "年報對政策性、一般與特定借款人方案揭露不同最高成數，因此不建立全機構單一成數。"
+    },
+    "sourceIds": ["acgf-annual-report-2024"],
+    "reviewedDate": "2026-07-26"
+  },
+  {
+    "institutionId": "acgf-tw",
+    "indicatorId": "partner_financial_institutions",
+    "status": "partially_ready",
+    "verificationOutcome": "requires_manual_review",
+    "officialSourceAvailable": true,
+    "definitionCompatible": true,
+    "periodAvailable": true,
+    "productionEligible": false,
+    "reason": {
+      "en": "The annual report names banks but groups all farmers' and fishers' association credit departments, preventing a reproducible legal-entity total.",
+      "zh-TW": "年報列出銀行名稱，但將所有農漁會信用部合併表述，無法重現法人總數。"
+    },
+    "sourceIds": ["acgf-annual-report-2024"],
+    "reviewedDate": "2026-07-26"
+  },
+  {
+    "institutionId": "acgf-tw",
+    "indicatorId": "capital_or_fund_size",
+    "status": "ready",
+    "verificationOutcome": "verified_with_limitation",
+    "officialSourceAvailable": true,
+    "definitionCompatible": true,
+    "periodAvailable": true,
+    "productionEligible": true,
+    "reason": {
+      "en": "The annual report directly totals cumulative government and contracted-financial-institution contributions; the value is contributed capital, not net assets.",
+      "zh-TW": "年報直接合計政府與簽約金融機構累計捐助款；此數值為捐助資本而非淨資產。"
+    },
+    "sourceIds": ["acgf-annual-report-2024"],
+    "reviewedDate": "2026-07-26"
+  },
+  {
+    "institutionId": "tsmeg-tw",
+    "indicatorId": "new_guarantee_volume",
+    "status": "ready",
+    "verificationOutcome": "verified",
+    "officialSourceAvailable": true,
+    "definitionCompatible": true,
+    "periodAvailable": true,
+    "productionEligible": true,
+    "reason": {
+      "en": "The official performance table directly reports the CY2025 amount of guarantees provided, separately from supported financing.",
+      "zh-TW": "官方保證績效表直接揭露 2025 年承保金額，並與協助取得融資金額分開。"
+    },
+    "sourceIds": ["tsmeg-performance-2025"],
+    "reviewedDate": "2026-07-26"
+  },
+  {
+    "institutionId": "tsmeg-tw",
+    "indicatorId": "outstanding_guarantee_balance",
+    "status": "ready",
+    "verificationOutcome": "verified",
+    "officialSourceAvailable": true,
+    "definitionCompatible": true,
+    "periodAvailable": true,
+    "productionEligible": true,
+    "reason": {
+      "en": "The annual report's programme table gives the exact year-end guarantee balance separately from supported-credit balance.",
+      "zh-TW": "年報項目表提供精確年末保證餘額，並與協助取得融資餘額分開。"
+    },
+    "sourceIds": ["tsmeg-annual-report-2025"],
+    "reviewedDate": "2026-07-26"
+  },
+  {
+    "institutionId": "tsmeg-tw",
+    "indicatorId": "number_of_guarantees",
+    "status": "ready",
+    "verificationOutcome": "verified",
+    "officialSourceAvailable": true,
+    "definitionCompatible": true,
+    "periodAvailable": true,
+    "productionEligible": true,
+    "reason": {
+      "en": "The official performance table directly reports 371,159 guarantee cases for CY2025.",
+      "zh-TW": "官方保證績效表直接揭露 2025 年承保件數 371,159 件。"
+    },
+    "sourceIds": ["tsmeg-performance-2025"],
+    "reviewedDate": "2026-07-26"
+  },
+  {
+    "institutionId": "tsmeg-tw",
+    "indicatorId": "beneficiary_enterprises",
+    "status": "ready",
+    "verificationOutcome": "verified_with_limitation",
+    "officialSourceAvailable": true,
+    "definitionCompatible": true,
+    "periodAvailable": true,
+    "productionEligible": true,
+    "reason": {
+      "en": "The annual-report preface reports enterprises assisted during CY2025; the source does not document the deduplication method.",
+      "zh-TW": "年報序言揭露 2025 年協助企業戶數，但來源未說明去重方法。"
+    },
+    "sourceIds": ["tsmeg-annual-report-2025"],
+    "reviewedDate": "2026-07-26"
+  },
+  {
+    "institutionId": "tsmeg-tw",
+    "indicatorId": "guarantee_coverage_ratio",
+    "status": "scheme_specific",
+    "verificationOutcome": "scheme_specific",
+    "officialSourceAvailable": true,
+    "definitionCompatible": false,
+    "periodAvailable": true,
+    "productionEligible": false,
+    "reason": {
+      "en": "Indirect, portfolio, direct and special programmes use different coverage rates; no synthetic institution-wide rate is permitted.",
+      "zh-TW": "間接、批次、直接與專案保證採不同成數，不得合成全機構單一成數。"
+    },
+    "sourceIds": ["tsmeg-annual-report-2025"],
+    "reviewedDate": "2026-07-26"
+  },
+  {
+    "institutionId": "tsmeg-tw",
+    "indicatorId": "partner_financial_institutions",
+    "status": "ready",
+    "verificationOutcome": "verified_with_limitation",
+    "officialSourceAvailable": true,
+    "definitionCompatible": true,
+    "periodAvailable": true,
+    "productionEligible": true,
+    "reason": {
+      "en": "Forty-one named institutions with guarantee balances are counted from the official year-end table; the source does not publish this total directly.",
+      "zh-TW": "由官方年末保證餘額表計數 41 家具名機構；來源未直接公布此總數。"
+    },
+    "sourceIds": ["tsmeg-annual-report-2025"],
+    "reviewedDate": "2026-07-26"
+  },
+  {
+    "institutionId": "tsmeg-tw",
+    "indicatorId": "capital_or_fund_size",
+    "status": "ready",
+    "verificationOutcome": "verified_with_limitation",
+    "officialSourceAvailable": true,
+    "definitionCompatible": true,
+    "periodAvailable": true,
+    "productionEligible": true,
+    "reason": {
+      "en": "The annual report directly reports cumulative government and financial-institution contributions; this is contributed capital, not net assets or a guarantee reserve.",
+      "zh-TW": "年報直接揭露政府與金融機構累計捐助款；此為捐助資本，不是淨資產或保證準備。"
+    },
+    "sourceIds": ["tsmeg-annual-report-2025"],
+    "reviewedDate": "2026-07-26"
+  }
+]

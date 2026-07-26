@@ -10,4 +10,8 @@ The readiness assessment checks official annual reports, financial statements, g
 | KOTEC        | partially ready | Confirm recovery definitions and technology-appraisal boundary |
 | CGC Malaysia | partially ready | Obtain official claim and recovery definitions                 |
 
-Readiness authorizes no data publication. A pilot still requires a reviewed source map, indicator-by-indicator definition match, currency/time metadata and human verification.
+Institution-level readiness alone authorizes no data publication. Pilot v1 adds
+21 indicator-level decisions in
+`docs/LEVEL3_INDICATOR_READINESS_MATRIX.md`; only records that pass the source,
+definition, period, schema, comparability and manual-review gates enter
+production.

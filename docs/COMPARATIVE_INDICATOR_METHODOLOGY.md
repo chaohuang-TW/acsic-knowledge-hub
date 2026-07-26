@@ -14,4 +14,6 @@ Every definition records required metadata, numerator and denominator where rele
 - Do not aggregate unlike currencies, periods, portfolios or recognition points.
 - `institution_specific` and `low` comparability require narrative qualification.
 
-The framework is descriptive and never creates a ranking. Production values remain empty until a separately approved pilot.
+The framework is descriptive and never creates a ranking. The approved Level 3
+Pilot v1 publishes only verified records for JFC, ACGF and TSMEG. All other
+institutions remain outside the production dataset.

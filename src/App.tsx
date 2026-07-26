@@ -3,6 +3,7 @@ import { Layout } from './components/Layout';
 import { ComparisonPage } from './features/comparison/ComparisonPage';
 import { InstitutionsPage } from './features/institutions/InstitutionsPage';
 import { ReportsPage } from './features/reports/ReportsPage';
+import { DataPilotPage } from './features/data-pilot/DataPilotPage';
 import { browserLocale, copy, localeStorageKey, LocaleContext } from './i18n';
 import { routePath, type PageId } from './routing';
 import {
@@ -27,6 +28,7 @@ const pages: PageId[] = [
   'systems',
   'reference',
   'framework',
+  'data-pilot',
   'practices',
   'resources',
   'compare',
@@ -98,6 +100,7 @@ export default function App() {
         {state.page === 'systems' && <SystemsPage />}
         {state.page === 'reference' && <ReferenceInstitutionsPage />}
         {state.page === 'framework' && <ComparativeFrameworkPage />}
+        {state.page === 'data-pilot' && <DataPilotPage />}
         {state.page === 'practices' && <KnowledgePracticesPage />}
         {state.page === 'resources' && <ResourcesPage />}
         {state.page === 'compare' && <ComparisonPage />}

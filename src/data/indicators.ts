@@ -1,16 +1,32 @@
 import rawDictionary from './indicator-dictionary.json';
+import rawIndicatorReadiness from './indicator-readiness.json';
+import rawLevel3Pilot from './level3-pilot.json';
 import type {
   IndicatorCategory,
   IndicatorDefinition,
+  IndicatorReadinessRecord,
   Level3IndicatorRecord,
   Level3PilotReadiness,
+  PilotIndicatorId,
 } from '../types/indicators';
 
-export const indicatorDictionary = rawDictionary as IndicatorDefinition[];
+export const indicatorDictionaryVersion = rawDictionary.version;
+export const indicatorDictionaryTitle = `${rawDictionary.title} v${rawDictionary.version}`;
+export const indicatorDictionary = rawDictionary.indicators as IndicatorDefinition[];
 
 export const indicatorById = new Map(
   indicatorDictionary.map((indicator) => [indicator.indicatorId, indicator]),
 );
+
+export const pilotIndicatorIds: PilotIndicatorId[] = [
+  'new_guarantee_volume',
+  'outstanding_guarantee_balance',
+  'number_of_guarantees',
+  'beneficiary_enterprises',
+  'guarantee_coverage_ratio',
+  'partner_financial_institutions',
+  'capital_or_fund_size',
+];
 
 export const indicatorCategoryLabels: Record<IndicatorCategory, { en: string; 'zh-TW': string }> = {
   institutional_scale: { en: 'Institutional Scale', 'zh-TW': '機構規模' },
@@ -25,8 +41,8 @@ export const indicatorCategoryLabels: Record<IndicatorCategory, { en: string; 'z
   recovery_and_claims: { en: 'Recovery and Claims', 'zh-TW': '代償與追償' },
 };
 
-/** Production values intentionally remain empty until a separately approved pilot. */
-export const productionLevel3Values: Level3IndicatorRecord[] = [];
+export const productionLevel3Values = rawLevel3Pilot as unknown as Level3IndicatorRecord[];
+export const indicatorReadiness = rawIndicatorReadiness as unknown as IndicatorReadinessRecord[];
 
 export const level3PilotReadiness: Level3PilotReadiness[] = [
   {
@@ -140,6 +156,6 @@ export const forbiddenIndicatorComparisons = [
   ['cumulative_guarantee_volume', 'new_guarantee_volume'],
   ['outstanding_guarantee_balance', 'new_guarantee_volume'],
   ['claim_rate', 'default_npl_indicator'],
-  ['number_of_guarantees', 'number_of_beneficiary_enterprises'],
+  ['number_of_guarantees', 'beneficiary_enterprises'],
   ['guarantee_coverage_ratio', 'guarantee_ceiling'],
 ] as const;

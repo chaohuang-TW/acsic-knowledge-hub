@@ -4,6 +4,7 @@ import { coverageStats } from '../src/data/coverage';
 import {
   forbiddenIndicatorComparisons,
   indicatorDictionary,
+  indicatorDictionaryVersion,
   level3PilotReadiness,
   productionLevel3Values,
 } from '../src/data/indicators';
@@ -119,7 +120,9 @@ describe('comparative indicator dictionary', () => {
     ));
   it('records explicit forbidden comparisons', () =>
     expect(forbiddenIndicatorComparisons.length).toBeGreaterThanOrEqual(5));
-  it('keeps production Level 3 values empty', () => expect(productionLevel3Values).toEqual([]));
+  it('freezes dictionary version 1.0', () => expect(indicatorDictionaryVersion).toBe('1.0'));
+  it('publishes only the approved pilot records', () =>
+    expect(productionLevel3Values).toHaveLength(12));
 });
 
 describe('Level 3 pilot readiness and official sources', () => {
