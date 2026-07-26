@@ -34,11 +34,11 @@ Additional native-language and legal-source checks used in the calibration inclu
 
 Rechecked 2026-07-26:
 
-| Pilot source | Command-line result | Research validation |
-| --- | --- | --- |
-| JFC 2025 Operational Performances PDF | HTTP 200, `application/pdf` | Printed p. 79 / PDF index 12 inspected; SME Credit Insurance table verified |
-| ACGF 2024 Annual Report PDF | HTTP 200, `application/pdf` | Printed pp. 7 and 23 inspected; contribution and guarantee tables verified |
-| TSMEG Performance page | HTTP 403 from non-browser diagnostic | Official page remained browser-reader accessible; complete CY2025 table verified |
+| Pilot source                          | Command-line result                  | Research validation                                                                                  |
+| ------------------------------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| JFC 2025 Operational Performances PDF | HTTP 200, `application/pdf`          | Printed p. 79 / PDF index 12 inspected; SME Credit Insurance table verified                          |
+| ACGF 2024 Annual Report PDF           | HTTP 200, `application/pdf`          | Printed pp. 7 and 23 inspected; contribution and guarantee tables verified                           |
+| TSMEG Performance page                | HTTP 403 from non-browser diagnostic | Official page remained browser-reader accessible; complete CY2025 table verified                     |
 | TSMEG 2025 Annual Report page and PDF | HTTP 403 from non-browser diagnostic | Official 47-page PDF remained browser-reader accessible; preface and PDF indexes 4, 7, 9–10 verified |
 
 The TSMEG responses are bot-protection results, not substituted sources. The
