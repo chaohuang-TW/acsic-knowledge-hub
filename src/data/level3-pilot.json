@@ -1,0 +1,1018 @@
+[
+  {
+    "recordId": "jfc-fy2024-insurance-acceptance",
+    "institutionId": "jfc-jp",
+    "indicatorId": "new_guarantee_volume",
+    "indicatorDefinitionVersion": "1.0",
+    "reported": {
+      "label": "Amounts of insurance acceptance — Small Business Credit Insurance",
+      "value": 8309.6,
+      "unit": "billion yen",
+      "currency": "JPY",
+      "periodLabel": "FY2024",
+      "population": "Small Business Credit Insurance",
+      "definition": {
+        "en": "Insurance acceptances recognised under JFC's Small Business Credit Insurance programmes during FY2024.",
+        "zh-TW": "JFC 中小企業信用保險方案於 FY2024 認列的保險承作額。"
+      }
+    },
+    "normalized": {
+      "indicatorId": "new_guarantee_volume",
+      "value": 8309600,
+      "unit": "JPY million",
+      "currency": "JPY",
+      "method": "Multiply the reported billion-yen value by 1,000; preserve insurance acceptance as the recognition basis.",
+      "status": "definition_mapping",
+      "notes": {
+        "en": "Mapped to new guarantee volume with a warning because JFC reports credit-insurance acceptance, not a direct guarantee.",
+        "zh-TW": "因 JFC 揭露信用保險承作而非直接保證，對映至新增保證金額時保留警示。"
+      }
+    },
+    "period": {
+      "reportingPeriodType": "fiscal_year",
+      "fiscalYear": "FY2024",
+      "calendarYear": null,
+      "periodStart": "2024-04-01",
+      "periodEnd": "2025-03-31",
+      "asOfDate": null
+    },
+    "scheme": {
+      "schemeSpecific": true,
+      "schemeId": "jfc-small-business-credit-insurance",
+      "schemeName": {
+        "en": "Small Business Credit Insurance",
+        "zh-TW": "中小企業信用保險"
+      }
+    },
+    "source": {
+      "sourceId": "jfc-operational-performance-2025",
+      "pageOrSection": "Printed p. 79; PDF page index 12",
+      "tableOrFigure": "II. Credit Insurance Programs",
+      "pdfPageIndex": 12,
+      "publicationDate": "2025-09-25",
+      "verifiedDate": "2026-07-26"
+    },
+    "comparability": {
+      "status": "reference_only",
+      "level": "low",
+      "issues": {
+        "en": [
+          "Credit-insurance acceptance is not a direct guarantee.",
+          "FY2024 differs from the CY periods used by ACGF and TSMEG."
+        ],
+        "zh-TW": ["信用保險承作不等於直接保證。", "FY2024 與 ACGF、TSMEG 使用的曆年期間不同。"]
+      }
+    },
+    "verificationStatus": "verified_with_limitation",
+    "manualReviewStatus": "completed",
+    "gates": {
+      "researchVerified": true,
+      "schemaValidated": true,
+      "sourceValidated": true,
+      "comparabilityReviewed": true,
+      "manualReviewRequired": false
+    },
+    "derivation": {
+      "isDerived": false,
+      "derivationMethod": null,
+      "inputSourceIds": [],
+      "calculation": null,
+      "calculatedDate": null
+    },
+    "convertedValue": null,
+    "capitalConcept": null,
+    "institutionTypes": [],
+    "notes": {
+      "en": "Second-pass review confirmed that this record belongs to SME credit insurance and excludes JFC direct lending.",
+      "zh-TW": "第二次複核確認本筆屬中小企業信用保險，排除 JFC 直接融資。"
+    }
+  },
+  {
+    "recordId": "jfc-2025-insurance-outstanding",
+    "institutionId": "jfc-jp",
+    "indicatorId": "outstanding_guarantee_balance",
+    "indicatorDefinitionVersion": "1.0",
+    "reported": {
+      "label": "Outstanding amounts of insurance — Small Business Credit Insurance",
+      "value": 34525.9,
+      "unit": "billion yen",
+      "currency": "JPY",
+      "periodLabel": "As of 31 March 2025",
+      "population": "Small Business Credit Insurance",
+      "definition": {
+        "en": "Outstanding insurance obligations under JFC's Small Business Credit Insurance programmes at 31 March 2025.",
+        "zh-TW": "截至 2025 年 3 月 31 日 JFC 中小企業信用保險方案之保險責任餘額。"
+      }
+    },
+    "normalized": {
+      "indicatorId": "outstanding_guarantee_balance",
+      "value": 34525900,
+      "unit": "JPY million",
+      "currency": "JPY",
+      "method": "Multiply the reported billion-yen value by 1,000; retain the credit-insurance liability concept.",
+      "status": "definition_mapping",
+      "notes": {
+        "en": "Mapped as a stock value with a credit-insurance limitation.",
+        "zh-TW": "以存量資料對映，並保留信用保險口徑限制。"
+      }
+    },
+    "period": {
+      "reportingPeriodType": "point_in_time",
+      "fiscalYear": "FY2024",
+      "calendarYear": null,
+      "periodStart": null,
+      "periodEnd": null,
+      "asOfDate": "2025-03-31"
+    },
+    "scheme": {
+      "schemeSpecific": true,
+      "schemeId": "jfc-small-business-credit-insurance",
+      "schemeName": {
+        "en": "Small Business Credit Insurance",
+        "zh-TW": "中小企業信用保險"
+      }
+    },
+    "source": {
+      "sourceId": "jfc-operational-performance-2025",
+      "pageOrSection": "Printed p. 79; PDF page index 12",
+      "tableOrFigure": "II. Credit Insurance Programs",
+      "pdfPageIndex": 12,
+      "publicationDate": "2025-09-25",
+      "verifiedDate": "2026-07-26"
+    },
+    "comparability": {
+      "status": "reference_only",
+      "level": "low",
+      "issues": {
+        "en": [
+          "Credit-insurance outstanding is not a direct-guarantee liability.",
+          "As-of dates differ across institutions."
+        ],
+        "zh-TW": ["信用保險餘額不等於直接保證責任。", "三家機構資料基準日不同。"]
+      }
+    },
+    "verificationStatus": "verified_with_limitation",
+    "manualReviewStatus": "completed",
+    "gates": {
+      "researchVerified": true,
+      "schemaValidated": true,
+      "sourceValidated": true,
+      "comparabilityReviewed": true,
+      "manualReviewRequired": false
+    },
+    "derivation": {
+      "isDerived": false,
+      "derivationMethod": null,
+      "inputSourceIds": [],
+      "calculation": null,
+      "calculatedDate": null
+    },
+    "convertedValue": null,
+    "capitalConcept": null,
+    "institutionTypes": [],
+    "notes": {
+      "en": "JFC direct-loan balances and borrower counts are explicitly excluded.",
+      "zh-TW": "明確排除 JFC 直接融資餘額與借款人數。"
+    }
+  },
+  {
+    "recordId": "acgf-cy2024-guarantee-amount",
+    "institutionId": "acgf-tw",
+    "indicatorId": "new_guarantee_volume",
+    "indicatorDefinitionVersion": "1.0",
+    "reported": {
+      "label": "保證金額",
+      "value": 19407404,
+      "unit": "新臺幣千元",
+      "currency": "TWD",
+      "periodLabel": "113 年",
+      "population": "113 年度承保保證案件",
+      "definition": {
+        "en": "Guarantee amount recorded for guarantee cases accepted during CY2024.",
+        "zh-TW": "2024 年度承保保證案件所認列之保證金額。"
+      }
+    },
+    "normalized": {
+      "indicatorId": "new_guarantee_volume",
+      "value": 19407.404,
+      "unit": "TWD million",
+      "currency": "TWD",
+      "method": "Divide the reported thousand-TWD value by 1,000.",
+      "status": "unit_conversion",
+      "notes": {
+        "en": "The adjacent guaranteed-loan amount of TWD 25,245,745 thousand is not used.",
+        "zh-TW": "未使用相鄰欄位之保證貸款金額新臺幣 25,245,745 千元。"
+      }
+    },
+    "period": {
+      "reportingPeriodType": "calendar_year",
+      "fiscalYear": null,
+      "calendarYear": 2024,
+      "periodStart": "2024-01-01",
+      "periodEnd": "2024-12-31",
+      "asOfDate": null
+    },
+    "scheme": {
+      "schemeSpecific": false,
+      "schemeId": null,
+      "schemeName": { "en": null, "zh-TW": null }
+    },
+    "source": {
+      "sourceId": "acgf-annual-report-2024",
+      "pageOrSection": "Printed p. 23; PDF page index 25",
+      "tableOrFigure": "5-1 最近五年保證情形",
+      "pdfPageIndex": 25,
+      "publicationDate": "2025-01-01",
+      "verifiedDate": "2026-07-26"
+    },
+    "comparability": {
+      "status": "reference_only",
+      "level": "medium",
+      "issues": {
+        "en": [
+          "CY2024 differs from the JFC fiscal year and TSMEG CY2025.",
+          "Currencies differ across institutions."
+        ],
+        "zh-TW": ["2024 曆年與 JFC 會計年度及 TSMEG 2025 曆年不同。", "機構間原始幣別不同。"]
+      }
+    },
+    "verificationStatus": "verified",
+    "manualReviewStatus": "completed",
+    "gates": {
+      "researchVerified": true,
+      "schemaValidated": true,
+      "sourceValidated": true,
+      "comparabilityReviewed": true,
+      "manualReviewRequired": false
+    },
+    "derivation": {
+      "isDerived": false,
+      "derivationMethod": null,
+      "inputSourceIds": [],
+      "calculation": null,
+      "calculatedDate": null
+    },
+    "convertedValue": null,
+    "capitalConcept": null,
+    "institutionTypes": [],
+    "notes": {
+      "en": "Second-pass review distinguishes guarantee amount from guaranteed-loan amount.",
+      "zh-TW": "第二次複核已區分保證金額與保證貸款金額。"
+    }
+  },
+  {
+    "recordId": "acgf-2024-guarantee-balance",
+    "institutionId": "acgf-tw",
+    "indicatorId": "outstanding_guarantee_balance",
+    "indicatorDefinitionVersion": "1.0",
+    "reported": {
+      "label": "保證餘額",
+      "value": 63380511,
+      "unit": "新臺幣千元",
+      "currency": "TWD",
+      "periodLabel": "113 年底",
+      "population": "仍存續之保證責任",
+      "definition": {
+        "en": "Outstanding guarantee liability at the end of CY2024.",
+        "zh-TW": "截至 2024 年底仍存續之保證責任餘額。"
+      }
+    },
+    "normalized": {
+      "indicatorId": "outstanding_guarantee_balance",
+      "value": 63380.511,
+      "unit": "TWD million",
+      "currency": "TWD",
+      "method": "Divide the reported thousand-TWD value by 1,000.",
+      "status": "unit_conversion",
+      "notes": {
+        "en": "Preserves the year-end stock concept.",
+        "zh-TW": "保留年末存量概念。"
+      }
+    },
+    "period": {
+      "reportingPeriodType": "point_in_time",
+      "fiscalYear": null,
+      "calendarYear": 2024,
+      "periodStart": null,
+      "periodEnd": null,
+      "asOfDate": "2024-12-31"
+    },
+    "scheme": {
+      "schemeSpecific": false,
+      "schemeId": null,
+      "schemeName": { "en": null, "zh-TW": null }
+    },
+    "source": {
+      "sourceId": "acgf-annual-report-2024",
+      "pageOrSection": "Printed p. 23; PDF page index 25",
+      "tableOrFigure": "5-1 最近五年保證情形",
+      "pdfPageIndex": 25,
+      "publicationDate": "2025-01-01",
+      "verifiedDate": "2026-07-26"
+    },
+    "comparability": {
+      "status": "reference_only",
+      "level": "medium",
+      "issues": {
+        "en": ["As-of dates and currencies differ across institutions."],
+        "zh-TW": ["機構間資料基準日與原始幣別不同。"]
+      }
+    },
+    "verificationStatus": "verified",
+    "manualReviewStatus": "completed",
+    "gates": {
+      "researchVerified": true,
+      "schemaValidated": true,
+      "sourceValidated": true,
+      "comparabilityReviewed": true,
+      "manualReviewRequired": false
+    },
+    "derivation": {
+      "isDerived": false,
+      "derivationMethod": null,
+      "inputSourceIds": [],
+      "calculation": null,
+      "calculatedDate": null
+    },
+    "convertedValue": null,
+    "capitalConcept": null,
+    "institutionTypes": [],
+    "notes": {
+      "en": "The annual flow and year-end stock remain separate records.",
+      "zh-TW": "年度流量與年末存量維持分開記錄。"
+    }
+  },
+  {
+    "recordId": "acgf-cy2024-guarantee-cases",
+    "institutionId": "acgf-tw",
+    "indicatorId": "number_of_guarantees",
+    "indicatorDefinitionVersion": "1.0",
+    "reported": {
+      "label": "保證件數",
+      "value": 19638,
+      "unit": "件",
+      "currency": null,
+      "periodLabel": "113 年",
+      "population": "保證案件",
+      "definition": {
+        "en": "Guarantee cases accepted during CY2024.",
+        "zh-TW": "2024 年度承保之保證案件數。"
+      }
+    },
+    "normalized": {
+      "indicatorId": "number_of_guarantees",
+      "value": 19638,
+      "unit": "guarantee cases",
+      "currency": null,
+      "method": "Direct mapping; retain cases as the counting unit.",
+      "status": "direct",
+      "notes": {
+        "en": "Cases are not treated as distinct beneficiary enterprises.",
+        "zh-TW": "保證件數不視為不重複受益對象數。"
+      }
+    },
+    "period": {
+      "reportingPeriodType": "calendar_year",
+      "fiscalYear": null,
+      "calendarYear": 2024,
+      "periodStart": "2024-01-01",
+      "periodEnd": "2024-12-31",
+      "asOfDate": null
+    },
+    "scheme": {
+      "schemeSpecific": false,
+      "schemeId": null,
+      "schemeName": { "en": null, "zh-TW": null }
+    },
+    "source": {
+      "sourceId": "acgf-annual-report-2024",
+      "pageOrSection": "Printed p. 23; PDF page index 25",
+      "tableOrFigure": "5-1 最近五年保證情形",
+      "pdfPageIndex": 25,
+      "publicationDate": "2025-01-01",
+      "verifiedDate": "2026-07-26"
+    },
+    "comparability": {
+      "status": "reference_only",
+      "level": "low",
+      "issues": {
+        "en": [
+          "Counting units and calendar periods require confirmation before cross-institution comparison."
+        ],
+        "zh-TW": ["跨機構比較前須確認計數單位與曆年期間。"]
+      }
+    },
+    "verificationStatus": "verified",
+    "manualReviewStatus": "completed",
+    "gates": {
+      "researchVerified": true,
+      "schemaValidated": true,
+      "sourceValidated": true,
+      "comparabilityReviewed": true,
+      "manualReviewRequired": false
+    },
+    "derivation": {
+      "isDerived": false,
+      "derivationMethod": null,
+      "inputSourceIds": [],
+      "calculation": null,
+      "calculatedDate": null
+    },
+    "convertedValue": null,
+    "capitalConcept": null,
+    "institutionTypes": [],
+    "notes": {
+      "en": "The official unit is guarantee cases.",
+      "zh-TW": "官方計數單位為保證件數。"
+    }
+  },
+  {
+    "recordId": "acgf-2024-contributed-fund",
+    "institutionId": "acgf-tw",
+    "indicatorId": "capital_or_fund_size",
+    "indicatorDefinitionVersion": "1.0",
+    "reported": {
+      "label": "各單位捐助基金統計表－合計",
+      "value": 10818942,
+      "unit": "新臺幣千元",
+      "currency": "TWD",
+      "periodLabel": "截至 113 年 12 月 31 日",
+      "population": "中央與地方政府及各簽約金融機構累計捐助款",
+      "definition": {
+        "en": "Cumulative contributions from government bodies and contracted financial institutions through 31 December 2024.",
+        "zh-TW": "截至 2024 年 12 月 31 日政府機關與各簽約金融機構之累計捐助款。"
+      }
+    },
+    "normalized": {
+      "indicatorId": "capital_or_fund_size",
+      "value": 10818.942,
+      "unit": "TWD million",
+      "currency": "TWD",
+      "method": "Divide the reported thousand-TWD value by 1,000 and retain the contributed-capital concept.",
+      "status": "unit_conversion",
+      "notes": {
+        "en": "This is contributed capital, not net assets, paid-in share capital or guarantee reserve.",
+        "zh-TW": "此為捐助資本，不是淨資產、實收股本或保證準備。"
+      }
+    },
+    "period": {
+      "reportingPeriodType": "cumulative_since_establishment",
+      "fiscalYear": null,
+      "calendarYear": 2024,
+      "periodStart": "1983-09-27",
+      "periodEnd": null,
+      "asOfDate": "2024-12-31"
+    },
+    "scheme": {
+      "schemeSpecific": false,
+      "schemeId": null,
+      "schemeName": { "en": null, "zh-TW": null }
+    },
+    "source": {
+      "sourceId": "acgf-annual-report-2024",
+      "pageOrSection": "Printed p. 7; PDF page index 9",
+      "tableOrFigure": "各單位捐助基金統計表",
+      "pdfPageIndex": 9,
+      "publicationDate": "2025-01-01",
+      "verifiedDate": "2026-07-26"
+    },
+    "comparability": {
+      "status": "not_comparable",
+      "level": "low",
+      "issues": {
+        "en": [
+          "Capital concepts differ across institutions.",
+          "Cumulative contributions cannot be compared with net assets or reserves."
+        ],
+        "zh-TW": ["機構間資本概念不同。", "累計捐助款不得與淨資產或準備金直接比較。"]
+      }
+    },
+    "verificationStatus": "verified_with_limitation",
+    "manualReviewStatus": "completed",
+    "gates": {
+      "researchVerified": true,
+      "schemaValidated": true,
+      "sourceValidated": true,
+      "comparabilityReviewed": true,
+      "manualReviewRequired": false
+    },
+    "derivation": {
+      "isDerived": false,
+      "derivationMethod": null,
+      "inputSourceIds": [],
+      "calculation": null,
+      "calculatedDate": null
+    },
+    "convertedValue": null,
+    "capitalConcept": "cumulative_contributed_capital",
+    "institutionTypes": ["government bodies", "contracted financial institutions"],
+    "notes": {
+      "en": "The exact official capital concept is displayed in the pilot UI.",
+      "zh-TW": "試辦介面顯示完整官方資本概念。"
+    }
+  },
+  {
+    "recordId": "tsmeg-cy2025-guarantee-amount",
+    "institutionId": "tsmeg-tw",
+    "indicatorId": "new_guarantee_volume",
+    "indicatorDefinitionVersion": "1.0",
+    "reported": {
+      "label": "承保－金額",
+      "value": 1487527,
+      "unit": "新臺幣百萬元",
+      "currency": "TWD",
+      "periodLabel": "114 年",
+      "population": "114 年度承保信用保證",
+      "definition": {
+        "en": "Amount of guarantees provided during CY2025.",
+        "zh-TW": "2025 年度承保信用保證金額。"
+      }
+    },
+    "normalized": {
+      "indicatorId": "new_guarantee_volume",
+      "value": 1487527,
+      "unit": "TWD million",
+      "currency": "TWD",
+      "method": "Direct mapping from the official million-TWD guarantee amount.",
+      "status": "direct",
+      "notes": {
+        "en": "The TWD 1,793,353 million supported-financing amount is not used.",
+        "zh-TW": "未使用新臺幣 1,793,353 百萬元之協助取得融資金額。"
+      }
+    },
+    "period": {
+      "reportingPeriodType": "calendar_year",
+      "fiscalYear": null,
+      "calendarYear": 2025,
+      "periodStart": "2025-01-01",
+      "periodEnd": "2025-12-31",
+      "asOfDate": null
+    },
+    "scheme": {
+      "schemeSpecific": false,
+      "schemeId": null,
+      "schemeName": { "en": null, "zh-TW": null }
+    },
+    "source": {
+      "sourceId": "tsmeg-performance-2025",
+      "pageOrSection": "保證績效 > 114年 > 承保 > 金額",
+      "tableOrFigure": "保證績效",
+      "pdfPageIndex": null,
+      "publicationDate": null,
+      "verifiedDate": "2026-07-26"
+    },
+    "comparability": {
+      "status": "reference_only",
+      "level": "medium",
+      "issues": {
+        "en": ["CY2025 differs from JFC FY2024 and ACGF CY2024.", "Currencies differ from JFC."],
+        "zh-TW": ["2025 曆年與 JFC FY2024、ACGF 2024 曆年不同。", "與 JFC 幣別不同。"]
+      }
+    },
+    "verificationStatus": "verified",
+    "manualReviewStatus": "completed",
+    "gates": {
+      "researchVerified": true,
+      "schemaValidated": true,
+      "sourceValidated": true,
+      "comparabilityReviewed": true,
+      "manualReviewRequired": false
+    },
+    "derivation": {
+      "isDerived": false,
+      "derivationMethod": null,
+      "inputSourceIds": [],
+      "calculation": null,
+      "calculatedDate": null
+    },
+    "convertedValue": null,
+    "capitalConcept": null,
+    "institutionTypes": [],
+    "notes": {
+      "en": "Second-pass review distinguishes guarantee amount from total financing supported.",
+      "zh-TW": "第二次複核已區分保證金額與協助取得融資金額。"
+    }
+  },
+  {
+    "recordId": "tsmeg-2025-guarantee-balance",
+    "institutionId": "tsmeg-tw",
+    "indicatorId": "outstanding_guarantee_balance",
+    "indicatorDefinitionVersion": "1.0",
+    "reported": {
+      "label": "保證餘額－合計",
+      "value": 1485949.1,
+      "unit": "新臺幣百萬元",
+      "currency": "TWD",
+      "periodLabel": "114 年底",
+      "population": "年末存續保證責任，不含年報附註所列委辦貸款",
+      "definition": {
+        "en": "Outstanding guarantee liability at the end of CY2025, subject to the exclusions stated in the annual-report table.",
+        "zh-TW": "截至 2025 年底之保證責任餘額，並依年報表格附註排除特定委辦貸款。"
+      }
+    },
+    "normalized": {
+      "indicatorId": "outstanding_guarantee_balance",
+      "value": 1485949.1,
+      "unit": "TWD million",
+      "currency": "TWD",
+      "method": "Direct mapping from the annual-report year-end total.",
+      "status": "direct",
+      "notes": {
+        "en": "The supported-credit outstanding amount is not used.",
+        "zh-TW": "未使用協助取得融資餘額。"
+      }
+    },
+    "period": {
+      "reportingPeriodType": "point_in_time",
+      "fiscalYear": null,
+      "calendarYear": 2025,
+      "periodStart": null,
+      "periodEnd": null,
+      "asOfDate": "2025-12-31"
+    },
+    "scheme": {
+      "schemeSpecific": false,
+      "schemeId": null,
+      "schemeName": { "en": null, "zh-TW": null }
+    },
+    "source": {
+      "sourceId": "tsmeg-annual-report-2025",
+      "pageOrSection": "Printed p. 6; PDF page index 7",
+      "tableOrFigure": "項目別－保證餘額",
+      "pdfPageIndex": 7,
+      "publicationDate": "2026-03-30",
+      "verifiedDate": "2026-07-26"
+    },
+    "comparability": {
+      "status": "reference_only",
+      "level": "medium",
+      "issues": {
+        "en": ["As-of dates and currencies differ across institutions."],
+        "zh-TW": ["機構間資料基準日與原始幣別不同。"]
+      }
+    },
+    "verificationStatus": "verified",
+    "manualReviewStatus": "completed",
+    "gates": {
+      "researchVerified": true,
+      "schemaValidated": true,
+      "sourceValidated": true,
+      "comparabilityReviewed": true,
+      "manualReviewRequired": false
+    },
+    "derivation": {
+      "isDerived": false,
+      "derivationMethod": null,
+      "inputSourceIds": [],
+      "calculation": null,
+      "calculatedDate": null
+    },
+    "convertedValue": null,
+    "capitalConcept": null,
+    "institutionTypes": [],
+    "notes": {
+      "en": "The annual-report precision is retained rather than the rounded narrative value.",
+      "zh-TW": "保留年報表格精度，不使用序言中的四捨五入值。"
+    }
+  },
+  {
+    "recordId": "tsmeg-cy2025-guarantee-cases",
+    "institutionId": "tsmeg-tw",
+    "indicatorId": "number_of_guarantees",
+    "indicatorDefinitionVersion": "1.0",
+    "reported": {
+      "label": "承保－件數",
+      "value": 371159,
+      "unit": "件",
+      "currency": null,
+      "periodLabel": "114 年",
+      "population": "信用保證案件",
+      "definition": {
+        "en": "Guarantee cases provided during CY2025.",
+        "zh-TW": "2025 年度提供之信用保證件數。"
+      }
+    },
+    "normalized": {
+      "indicatorId": "number_of_guarantees",
+      "value": 371159,
+      "unit": "guarantee cases",
+      "currency": null,
+      "method": "Direct mapping; retain cases as the counting unit.",
+      "status": "direct",
+      "notes": {
+        "en": "Cases are not interpreted as distinct enterprises.",
+        "zh-TW": "保證件數不解讀為不重複企業數。"
+      }
+    },
+    "period": {
+      "reportingPeriodType": "calendar_year",
+      "fiscalYear": null,
+      "calendarYear": 2025,
+      "periodStart": "2025-01-01",
+      "periodEnd": "2025-12-31",
+      "asOfDate": null
+    },
+    "scheme": {
+      "schemeSpecific": false,
+      "schemeId": null,
+      "schemeName": { "en": null, "zh-TW": null }
+    },
+    "source": {
+      "sourceId": "tsmeg-performance-2025",
+      "pageOrSection": "保證績效 > 114年 > 承保 > 件數",
+      "tableOrFigure": "保證績效",
+      "pdfPageIndex": null,
+      "publicationDate": null,
+      "verifiedDate": "2026-07-26"
+    },
+    "comparability": {
+      "status": "reference_only",
+      "level": "low",
+      "issues": {
+        "en": [
+          "CY2025 cannot be compared directly with ACGF CY2024.",
+          "JFC does not disclose a compatible insurance-acceptance count."
+        ],
+        "zh-TW": ["2025 曆年不得與 ACGF 2024 曆年直接比較。", "JFC 未揭露相容的保險承作件數。"]
+      }
+    },
+    "verificationStatus": "verified",
+    "manualReviewStatus": "completed",
+    "gates": {
+      "researchVerified": true,
+      "schemaValidated": true,
+      "sourceValidated": true,
+      "comparabilityReviewed": true,
+      "manualReviewRequired": false
+    },
+    "derivation": {
+      "isDerived": false,
+      "derivationMethod": null,
+      "inputSourceIds": [],
+      "calculation": null,
+      "calculatedDate": null
+    },
+    "convertedValue": null,
+    "capitalConcept": null,
+    "institutionTypes": [],
+    "notes": {
+      "en": "The official unit is guarantee cases.",
+      "zh-TW": "官方計數單位為承保件數。"
+    }
+  },
+  {
+    "recordId": "tsmeg-cy2025-beneficiary-enterprises",
+    "institutionId": "tsmeg-tw",
+    "indicatorId": "beneficiary_enterprises",
+    "indicatorDefinitionVersion": "1.0",
+    "reported": {
+      "label": "協助 276,260 戶企業取得融資",
+      "value": 276260,
+      "unit": "戶企業",
+      "currency": null,
+      "periodLabel": "114 年度",
+      "population": "年報所稱獲協助取得融資之企業戶",
+      "definition": {
+        "en": "Enterprise accounts described by TSMEG as assisted in obtaining financing during CY2025.",
+        "zh-TW": "TSMEG 年報所稱 2025 年度協助取得融資之企業戶。"
+      }
+    },
+    "normalized": {
+      "indicatorId": "beneficiary_enterprises",
+      "value": 276260,
+      "unit": "reported enterprise accounts",
+      "currency": null,
+      "method": "Definition mapping that preserves the official population label; no deduplication is inferred.",
+      "status": "definition_mapping",
+      "notes": {
+        "en": "The source does not document whether the annual population is deduplicated.",
+        "zh-TW": "來源未說明年度企業戶是否經去重。"
+      }
+    },
+    "period": {
+      "reportingPeriodType": "calendar_year",
+      "fiscalYear": null,
+      "calendarYear": 2025,
+      "periodStart": "2025-01-01",
+      "periodEnd": "2025-12-31",
+      "asOfDate": null
+    },
+    "scheme": {
+      "schemeSpecific": false,
+      "schemeId": null,
+      "schemeName": { "en": null, "zh-TW": null }
+    },
+    "source": {
+      "sourceId": "tsmeg-annual-report-2025",
+      "pageOrSection": "Unnumbered preface; PDF page index 2",
+      "tableOrFigure": "序言",
+      "pdfPageIndex": 2,
+      "publicationDate": "2026-03-30",
+      "verifiedDate": "2026-07-26"
+    },
+    "comparability": {
+      "status": "not_comparable",
+      "level": "low",
+      "issues": {
+        "en": [
+          "Population and deduplication definitions are not disclosed.",
+          "No compatible JFC or ACGF annual value is available."
+        ],
+        "zh-TW": ["來源未揭露母體與去重定義。", "JFC 與 ACGF 無相容年度數值。"]
+      }
+    },
+    "verificationStatus": "verified_with_limitation",
+    "manualReviewStatus": "completed",
+    "gates": {
+      "researchVerified": true,
+      "schemaValidated": true,
+      "sourceValidated": true,
+      "comparabilityReviewed": true,
+      "manualReviewRequired": false
+    },
+    "derivation": {
+      "isDerived": false,
+      "derivationMethod": null,
+      "inputSourceIds": [],
+      "calculation": null,
+      "calculatedDate": null
+    },
+    "convertedValue": null,
+    "capitalConcept": null,
+    "institutionTypes": [],
+    "notes": {
+      "en": "The record preserves the source's enterprise-account wording instead of silently claiming distinct enterprises.",
+      "zh-TW": "本筆保留來源的企業戶用語，不自行宣稱為不重複企業。"
+    }
+  },
+  {
+    "recordId": "tsmeg-2025-partner-institutions",
+    "institutionId": "tsmeg-tw",
+    "indicatorId": "partner_financial_institutions",
+    "indicatorDefinitionVersion": "1.0",
+    "reported": {
+      "label": "金融機構別（具保證餘額之具名機構）",
+      "value": null,
+      "unit": "官方具名機構清單",
+      "currency": null,
+      "periodLabel": "114 年底",
+      "population": "年報金融機構別表具名列出且有保證餘額之機構；排除「其他非簽約金融機構」彙總列",
+      "definition": {
+        "en": "Named financial institutions with a reported guarantee balance in the year-end annual-report table, excluding the aggregate other-non-contracted row.",
+        "zh-TW": "年報年末金融機構別表中具名且有保證餘額之機構，排除「其他非簽約金融機構」彙總列。"
+      }
+    },
+    "normalized": {
+      "indicatorId": "partner_financial_institutions",
+      "value": 41,
+      "unit": "named institutions",
+      "currency": null,
+      "method": "Count 22 named institutions on PDF page index 9 and 19 on index 10; exclude the aggregate other-non-contracted row.",
+      "status": "counted_from_official_list",
+      "notes": {
+        "en": "This is a reproducible research count, not an officially published total of all contracted institutions.",
+        "zh-TW": "此為可重現的研究計數，不是官方直接公布的全部簽約機構總數。"
+      }
+    },
+    "period": {
+      "reportingPeriodType": "point_in_time",
+      "fiscalYear": null,
+      "calendarYear": 2025,
+      "periodStart": null,
+      "periodEnd": null,
+      "asOfDate": "2025-12-31"
+    },
+    "scheme": {
+      "schemeSpecific": false,
+      "schemeId": null,
+      "schemeName": { "en": null, "zh-TW": null }
+    },
+    "source": {
+      "sourceId": "tsmeg-annual-report-2025",
+      "pageOrSection": "Printed pp. 8–9; PDF page indexes 9–10",
+      "tableOrFigure": "金融機構別",
+      "pdfPageIndex": 9,
+      "publicationDate": "2026-03-30",
+      "verifiedDate": "2026-07-26"
+    },
+    "comparability": {
+      "status": "not_comparable",
+      "level": "low",
+      "issues": {
+        "en": [
+          "Count covers named institutions with balances, not necessarily every signed partner.",
+          "Other institutions do not publish a compatible entity count."
+        ],
+        "zh-TW": [
+          "計數涵蓋具保證餘額之具名機構，不必然等於全部簽約夥伴。",
+          "其他 Pilot 機構未公布相容法人計數。"
+        ]
+      }
+    },
+    "verificationStatus": "verified_with_limitation",
+    "manualReviewStatus": "completed",
+    "gates": {
+      "researchVerified": true,
+      "schemaValidated": true,
+      "sourceValidated": true,
+      "comparabilityReviewed": true,
+      "manualReviewRequired": false
+    },
+    "derivation": {
+      "isDerived": true,
+      "derivationMethod": "counted_from_official_institution_list",
+      "inputSourceIds": ["tsmeg-annual-report-2025"],
+      "calculation": "22 named institutions on PDF page index 9 + 19 on index 10 = 41; aggregate '其他非簽約金融機構' excluded",
+      "calculatedDate": "2026-07-26"
+    },
+    "convertedValue": null,
+    "capitalConcept": null,
+    "institutionTypes": ["banks", "agricultural bank", "credit cooperatives", "export-import bank"],
+    "notes": {
+      "en": "The UI labels this as derived and shows the calculation.",
+      "zh-TW": "介面將本筆標為衍生值並顯示計算方式。"
+    }
+  },
+  {
+    "recordId": "tsmeg-2025-cumulative-contributions",
+    "institutionId": "tsmeg-tw",
+    "indicatorId": "capital_or_fund_size",
+    "indicatorDefinitionVersion": "1.0",
+    "reported": {
+      "label": "政府及金融機構累計捐助款",
+      "value": 1777.09,
+      "unit": "新臺幣億元",
+      "currency": "TWD",
+      "periodLabel": "自 63 年設立至 114 年底",
+      "population": "政府及金融機構累計捐助款",
+      "definition": {
+        "en": "Cumulative contributions from government and financial institutions from establishment through the end of CY2025.",
+        "zh-TW": "自 1974 年設立至 2025 年底政府及金融機構之累計捐助款。"
+      }
+    },
+    "normalized": {
+      "indicatorId": "capital_or_fund_size",
+      "value": 177709,
+      "unit": "TWD million",
+      "currency": "TWD",
+      "method": "Multiply the reported hundred-million-TWD value by 100 and retain the contributed-capital concept.",
+      "status": "unit_conversion",
+      "notes": {
+        "en": "This is cumulative contributed capital, not net assets, guarantee reserve or authorised capital.",
+        "zh-TW": "此為累計捐助資本，不是淨資產、保證準備或授權資本。"
+      }
+    },
+    "period": {
+      "reportingPeriodType": "cumulative_since_establishment",
+      "fiscalYear": null,
+      "calendarYear": 2025,
+      "periodStart": "1974-07-01",
+      "periodEnd": null,
+      "asOfDate": "2025-12-31"
+    },
+    "scheme": {
+      "schemeSpecific": false,
+      "schemeId": null,
+      "schemeName": { "en": null, "zh-TW": null }
+    },
+    "source": {
+      "sourceId": "tsmeg-annual-report-2025",
+      "pageOrSection": "Printed p. 3; PDF page index 4",
+      "tableOrFigure": "貳、資金來源",
+      "pdfPageIndex": 4,
+      "publicationDate": "2026-03-30",
+      "verifiedDate": "2026-07-26"
+    },
+    "comparability": {
+      "status": "not_comparable",
+      "level": "low",
+      "issues": {
+        "en": ["Capital concepts and accumulation periods differ across institutions."],
+        "zh-TW": ["機構間資本概念與累計期間不同。"]
+      }
+    },
+    "verificationStatus": "verified_with_limitation",
+    "manualReviewStatus": "completed",
+    "gates": {
+      "researchVerified": true,
+      "schemaValidated": true,
+      "sourceValidated": true,
+      "comparabilityReviewed": true,
+      "manualReviewRequired": false
+    },
+    "derivation": {
+      "isDerived": false,
+      "derivationMethod": null,
+      "inputSourceIds": [],
+      "calculation": null,
+      "calculatedDate": null
+    },
+    "convertedValue": null,
+    "capitalConcept": "cumulative_contributed_capital",
+    "institutionTypes": ["government", "financial institutions"],
+    "notes": {
+      "en": "Government and financial-institution subtotals remain in the official source; only the official total is published here.",
+      "zh-TW": "政府與金融機構分項保留於官方來源；本筆只發布官方合計。"
+    }
+  }
+]

@@ -5,8 +5,8 @@
 ## Current governed coverage
 
 - Formal members: 20; observers: 1; countries/economies: 14; institutions: 21.
-- Level 1 complete: 21; strict Level 2 complete: 4; partial: 16; insufficient: 1; reliable Level 3 metrics: 0.
-- Source references: 64; unique official sources: 45; field-level evidence objects: 222.
+- Level 1 complete: 21; strict Level 2 complete: 4; partial: 16; insufficient: 1; verified Level 3 pilot records: 12.
+- Source references: 67; unique official sources: 48; field-level evidence objects: 222.
 - User-visible governed content bilingual coverage: 100%; official native-language names: 11/21.
 
 <!-- GENERATED:COVERAGE:END -->
@@ -19,7 +19,7 @@ Level 2 is calculated from the central versioned standard. Missing applicable fi
 | India             | Credit Guarantee Fund Trust for Micro and Small Enterprises | CGTMSE        | Member       | credit_guarantee_fund                    |    100% | partial (50%)      |                 2 |                         9 | pending     | 2026-07-16    |
 | Indonesia         | Association of Indonesia Credit Guarantee Corporations      | ASIPPINDO     | Member       | guarantee_association                    |    100% | partial (53%)      |                 2 |                         8 | official    | 2026-07-16    |
 | Indonesia         | PT. Asuransi Kredit Indonesia                               | ASKRINDO      | Member       | credit_guarantee_corporation             |    100% | insufficient (11%) |                 2 |                        16 | pending     | 2026-07-16    |
-| Japan             | Japan Finance Corporation                                   | JFC           | Member       | policy_finance_institution               |    100% | complete (100%)    |                 5 |                         0 | official    | 2026-07-16    |
+| Japan             | Japan Finance Corporation                                   | JFC           | Member       | policy_finance_institution               |    100% | complete (100%)    |                 6 |                         0 | official    | 2026-07-26    |
 | Japan             | Japan Federation of Credit Guarantee Corporations           | JFG           | Member       | guarantee_federation                     |    100% | partial (88%)      |                 4 |                         2 | official    | 2026-07-26    |
 | Republic of Korea | Korea Credit Guarantee Fund                                 | KODIT         | Member       | credit_guarantee_fund                    |    100% | partial (50%)      |                 3 |                         9 | official    | 2026-07-16    |
 | Republic of Korea | Korea Federation of Credit Guarantee Foundations            | KOREG         | Member       | guarantee_federation                     |    100% | partial (41%)      |                 2 |                        10 | official    | 2026-07-16    |
@@ -33,7 +33,7 @@ Level 2 is calculated from the central versioned standard. Missing applicable fi
 | Philippines       | Philippine Guarantee Corporation                            | PHILGUARANTEE | Member       | credit_guarantee_corporation             |    100% | partial (56%)      |                 3 |                         8 | pending     | 2026-07-16    |
 | Sri Lanka         | Central Bank of Sri Lanka                                   | CBSL          | Member       | central_bank                             |    100% | partial (63%)      |                 2 |                         6 | pending     | 2026-07-16    |
 | Sri Lanka         | Sri Lanka Export Credit Insurance Corporation               | SLECIC        | Member       | export_credit_insurer_and_guarantor      |    100% | complete (100%)    |                 5 |                         0 | pending     | 2026-07-26    |
-| Taiwan            | Small and Medium Enterprise Credit Guarantee Fund of Taiwan | TSMEG         | Member       | credit_guarantee_fund                    |    100% | partial (44%)      |                 2 |                        10 | official    | 2026-07-16    |
+| Taiwan            | Small and Medium Enterprise Credit Guarantee Fund of Taiwan | TSMEG         | Member       | credit_guarantee_fund                    |    100% | partial (44%)      |                 4 |                        10 | official    | 2026-07-26    |
 | Thailand          | Thai Credit Guarantee Corporation                           | TCG           | Member       | credit_guarantee_corporation             |    100% | partial (50%)      |                 2 |                         9 | official    | 2026-07-16    |
 | Taiwan            | Agricultural Credit Guarantee Fund                          | ACGF          | Observer     | agricultural_credit_guarantee_fund       |    100% | complete (100%)    |                 4 |                         0 | official    | 2026-07-26    |
 
@@ -43,5 +43,6 @@ Level 2 is calculated from the central versioned standard. Missing applicable fi
 - official_institution_profile: 28
 - official_governance_document: 3
 - official_law_or_regulation: 5
-- official_annual_report: 6
+- official_annual_report: 8
 - official_strategy_document: 1
+- official_government_source: 1

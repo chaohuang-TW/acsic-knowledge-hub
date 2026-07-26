@@ -4,6 +4,7 @@ import prettier from 'prettier';
 const root = new URL('../', import.meta.url);
 const institutions = JSON.parse(readFileSync(new URL('src/data/institutions.json', root)));
 const sources = JSON.parse(readFileSync(new URL('src/data/sources.json', root)));
+const level3Pilot = JSON.parse(readFileSync(new URL('src/data/level3-pilot.json', root)));
 const standard = JSON.parse(readFileSync(new URL('src/data/level2-standard.json', root)));
 const sourceById = new Map(sources.map((source) => [source.sourceId, source]));
 
@@ -85,7 +86,7 @@ const stats = {
   complete: records.filter((record) => record.level2Status === 'complete').length,
   partial: records.filter((record) => record.level2Status === 'partial').length,
   insufficient: records.filter((record) => record.level2Status === 'insufficient').length,
-  level3: 0,
+  level3: level3Pilot.length,
   references: records.reduce((sum, record) => sum + record.sourceIds.length, 0),
   uniqueSources: sources.length,
   evidence: records.reduce((sum, record) => sum + record.verifiedApplicable.length, 0),
@@ -100,7 +101,7 @@ const summaryBlock = `<!-- GENERATED:COVERAGE:START -->
 ## Current governed coverage
 
 - Formal members: ${stats.formalMembers}; observers: ${stats.observers}; countries/economies: ${stats.countries}; institutions: ${stats.institutions}.
-- Level 1 complete: ${stats.level1}; strict Level 2 complete: ${stats.complete}; partial: ${stats.partial}; insufficient: ${stats.insufficient}; reliable Level 3 metrics: ${stats.level3}.
+- Level 1 complete: ${stats.level1}; strict Level 2 complete: ${stats.complete}; partial: ${stats.partial}; insufficient: ${stats.insufficient}; verified Level 3 pilot records: ${stats.level3}.
 - Source references: ${stats.references}; unique official sources: ${stats.uniqueSources}; field-level evidence objects: ${stats.evidence}.
 - User-visible governed content bilingual coverage: ${stats.bilingual}%; official native-language names: ${stats.native}/${stats.institutions}.
 <!-- GENERATED:COVERAGE:END -->`;
@@ -132,7 +133,7 @@ const completionBlock = `<!-- GENERATED:COMPLETION:START -->
 ## Calibrated production result
 
 - Membership remains ${stats.formalMembers} formal members plus ${stats.observers} observer across ${stats.countries} countries/economies.
-- Strict Level 2: ${stats.complete} complete, ${stats.partial} partial and ${stats.insufficient} insufficient. Level 3 reliable metrics remain ${stats.level3}.
+- Strict Level 2: ${stats.complete} complete, ${stats.partial} partial and ${stats.insufficient} insufficient. Verified Level 3 pilot records: ${stats.level3}.
 - ${stats.references} source-reference relationships resolve to ${stats.uniqueSources} unique official sources and ${stats.evidence} field-evidence objects.
 - Governed user-visible data content has ${stats.bilingual}% English/Traditional-Chinese coverage; ${stats.native} official native-language names are confirmed.
 - Confidence distribution: high ${stats.confidenceHigh}, medium ${stats.confidenceMedium}, low ${stats.confidenceLow}.

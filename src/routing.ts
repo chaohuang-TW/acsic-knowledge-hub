@@ -7,6 +7,7 @@ export type PageId =
   | 'systems'
   | 'reference'
   | 'framework'
+  | 'data-pilot'
   | 'practices'
   | 'resources'
   | 'compare'

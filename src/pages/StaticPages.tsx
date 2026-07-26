@@ -6,6 +6,7 @@ import { level2FieldLabels } from '../data/level2-standards';
 import {
   indicatorCategoryLabels,
   indicatorDictionary,
+  indicatorDictionaryTitle,
   level3PilotReadiness,
   productionLevel3Values,
 } from '../data/indicators';
@@ -511,8 +512,8 @@ export function ComparativeFrameworkPage() {
         </p>
         <p>
           {locale === 'en'
-            ? `Production Level 3 values: ${productionLevel3Values.length}. Empty by design until an approved pilot.`
-            : `正式 Level 3 數值：${productionLevel3Values.length}。核准試辦前依設計維持空白。`}
+            ? `${indicatorDictionaryTitle}. Production Level 3 values: ${productionLevel3Values.length}; verified pilot records only.`
+            : `${indicatorDictionaryTitle}。正式 Level 3 數值：${productionLevel3Values.length}；僅含完成查證的試辦資料。`}
         </p>
       </div>
       <div className="framework-summary">

@@ -29,3 +29,18 @@ Checked 2026-07-16 with redirects enabled and a 20-second timeout. These transpo
 No official URL was replaced with a non-official mirror. Temporary transport errors are retained as research-quality warnings.
 
 Additional native-language and legal-source checks used in the calibration include JFC's Japanese profile and governance pages, JFG's Japanese profile, KODIT's Korean homepage, KOTEC's Korean site map and current statutory text, DCGF's Nepali introduction and Act, and PHILGUARANTEE's official establishing order. Each is registered once in `src/data/sources.json`; transport access does not by itself determine evidence completeness or confidence.
+
+## Level 3 Pilot v1 diagnostics
+
+Rechecked 2026-07-26:
+
+| Pilot source                          | Command-line result                  | Research validation                                                                                  |
+| ------------------------------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| JFC 2025 Operational Performances PDF | HTTP 200, `application/pdf`          | Printed p. 79 / PDF index 12 inspected; SME Credit Insurance table verified                          |
+| ACGF 2024 Annual Report PDF           | HTTP 200, `application/pdf`          | Printed pp. 7 and 23 inspected; contribution and guarantee tables verified                           |
+| TSMEG Performance page                | HTTP 403 from non-browser diagnostic | Official page remained browser-reader accessible; complete CY2025 table verified                     |
+| TSMEG 2025 Annual Report page and PDF | HTTP 403 from non-browser diagnostic | Official 47-page PDF remained browser-reader accessible; preface and PDF indexes 4, 7, 9–10 verified |
+
+The TSMEG responses are bot-protection results, not substituted sources. The
+production records retain the official URLs, exact page/table locators and the
+2026-07-26 verification date.

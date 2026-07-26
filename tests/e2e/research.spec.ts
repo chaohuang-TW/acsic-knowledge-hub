@@ -10,7 +10,7 @@ test('international default uses English and preserves the independent disclaime
   ).toBeVisible();
   await expect(page.getByText('Independent, unofficial platform')).toBeVisible();
   await expect(page.getByText('20', { exact: true }).first()).toBeVisible();
-  await expect(page.getByText('45', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('48', { exact: true }).first()).toBeVisible();
 });
 
 test('English and Traditional Chinese routes, switch and preference memory work', async ({
@@ -128,8 +128,8 @@ test('all 21 institution details can be opened and closed', async ({ page }) => 
 
 test('source registry statistics, metadata and filters are functional', async ({ page }) => {
   await page.goto('./#/en/sources');
-  await expect(page.getByText('64', { exact: true }).first()).toBeVisible();
-  await expect(page.getByText('45', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('67', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('48', { exact: true }).first()).toBeVisible();
   await expect(page.getByText('Annual or integrated reports')).toBeVisible();
   await expect(page.getByText('Scheme or programme documents')).toBeVisible();
   await page.getByLabel('Institution', { exact: true }).selectOption('askrindo-id');
@@ -255,4 +255,69 @@ test('new research pages remain usable on mobile', async ({ page }) => {
   await page.goto('./#/zh-TW/framework');
   await expect(page.locator('.indicator-group details')).toHaveCount(21);
   await expect(page.locator('.table-scroll')).toBeVisible();
+});
+
+test('English pilot route publishes 12 governed records and 21 readiness decisions', async ({
+  page,
+}) => {
+  await page.goto('./#/en/data-pilot');
+  await expect(page.getByRole('heading', { name: 'Verified Data Pilot' })).toBeVisible();
+  await expect(page.locator('.pilot-record-card')).toHaveCount(12);
+  await expect(page.locator('.readiness-section tbody tr')).toHaveCount(21);
+  await expect(page.getByText('Verified with limitation').first()).toBeVisible();
+  await expect(page.getByText('No chart is displayed')).toBeVisible();
+});
+
+test('Traditional Chinese pilot route, filters and bilingual statuses work', async ({ page }) => {
+  await page.goto('./#/zh-TW/data-pilot');
+  await expect(page.getByRole('heading', { name: '官方量化資料試辦' })).toBeVisible();
+  await page.locator('.pilot-toolbar').getByLabel('機構', { exact: true }).selectOption('jfc-jp');
+  await expect(page.locator('.pilot-record-card')).toHaveCount(2);
+  await expect(page.getByText('已查證但有限制').first()).toBeVisible();
+  await expect(page.getByText('特定方案適用').first()).toBeVisible();
+  await expect(page.locator('main')).not.toContainText('new_guarantee_volume');
+});
+
+test('provenance viewer links each displayed value to its official source and page', async ({
+  page,
+}) => {
+  await page.goto('./#/en/data-pilot');
+  const card = page.locator('.pilot-record-card').first();
+  await card.getByText('View provenance').click();
+  const provenance = card.locator('.provenance-viewer');
+  await expect(provenance.getByText('Official source', { exact: true }).last()).toBeVisible();
+  await expect(provenance.getByText('Page / table', { exact: true })).toBeVisible();
+  await expect(card.getByText('Definition mapping', { exact: true })).toBeVisible();
+  await expect(card.getByText('Normalization', { exact: true })).toBeVisible();
+  await expect(card.getByText('Knowledge Hub indicator', { exact: true })).toBeVisible();
+  await expect(card.getByRole('link', { name: 'Open official source' })).toHaveAttribute(
+    'href',
+    /^https:/,
+  );
+});
+
+test('pilot JSON and readiness CSV export in both languages', async ({ page }) => {
+  await page.goto('./#/en/data-pilot');
+  let pending = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export pilot JSON' }).click();
+  expect((await pending).suggestedFilename()).toBe('acsic-level3-pilot-v1-en.json');
+  pending = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export readiness CSV' }).click();
+  expect((await pending).suggestedFilename()).toBe('acsic-level3-readiness-v1-en.csv');
+
+  await page.getByLabel('Language').selectOption('zh-TW');
+  pending = page.waitForEvent('download');
+  await page.getByRole('button', { name: '匯出試辦 JSON' }).click();
+  expect((await pending).suggestedFilename()).toBe('acsic-level3-pilot-v1-zh-TW.json');
+});
+
+test('pilot remains usable at 390px without page-level horizontal overflow', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('./#/zh-TW/data-pilot');
+  await expect(page.locator('.pilot-record-card')).toHaveCount(12);
+  await page.locator('.pilot-record-card').first().getByText('檢視資料來源鏈').click();
+  await expect(page.getByText('Knowledge Hub 指標', { exact: true }).first()).toBeVisible();
+  expect(
+    await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1),
+  ).toBe(true);
 });
