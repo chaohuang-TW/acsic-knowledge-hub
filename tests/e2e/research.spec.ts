@@ -315,6 +315,8 @@ test('pilot remains usable at 390px without page-level horizontal overflow', asy
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('./#/zh-TW/data-pilot');
   await expect(page.locator('.pilot-record-card')).toHaveCount(12);
+  await expect(page.locator('.pilot-toolbar select').first()).toHaveCSS('min-width', '0px');
+  await expect(page.locator('.pilot-toolbar .button').first()).toHaveCSS('min-width', '0px');
   await page.locator('.pilot-record-card').first().getByText('檢視資料來源鏈').click();
   await expect(page.getByText('Knowledge Hub 指標', { exact: true }).first()).toBeVisible();
   expect(
