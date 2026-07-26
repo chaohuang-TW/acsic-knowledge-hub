@@ -2,6 +2,8 @@ import rawInstitutions from './institutions.json';
 import rawSources from './sources.json';
 import { level2FieldLabels, requiredLevel2Fields } from './level2-standards';
 import { hasResearchTranslation, localize, localizeList } from './translations';
+import { referenceSetByInstitutionId } from './reference-set';
+import { researchPriorityByInstitutionId } from './research-priority';
 import type {
   AcsicMembershipStatus,
   FieldEvidence,
@@ -84,18 +86,45 @@ const evidenceSourceOverrides: Record<string, Record<string, string>> = {
     sharedServices: 'jfg-japanese-profile',
     policyRepresentation: 'jfg-japanese-profile',
     trainingOrCapacityBuildingRole: 'jfg-japanese-profile',
+    officialPublications: 'jfg-credit-guarantee-system-2025',
+    geographicScope: 'jfg-credit-guarantee-system-2025',
   },
   'kotec-kr': {
     legalBasis: 'kotec-act-current',
     fundingOrCapitalBasis: 'kotec-act-current',
     guaranteeRole: 'kotec-act-current',
     fundingSources: 'kotec-act-current',
+    supervisingOrOversightAuthority: 'kotec-company-overview',
+    officialPublications: 'kotec-annual-report-2023',
+    investmentRole: 'kotec-company-overview',
+    technologyTransferRole: 'kotec-company-overview',
+    geographicScope: 'kotec-company-overview',
   },
   'philguarantee-ph': { legalBasis: 'philguarantee-eo58-2018' },
   'dcgf-np': {
     legalBasis: 'dcgf-act-2073',
     coveredInstitutions: 'dcgf-act-2073',
     governanceOfDualMandate: 'dcgf-act-2073',
+    fundingOrCapitalBasis: 'dcgf-what-we-do',
+    geographicScope: 'dcgf-what-we-do',
+    officialPublications: 'dcgf-financial-reports',
+  },
+  'smec-pg': {
+    officialPublications: 'smec-policy-legislation',
+    geographicScope: 'smec-legislation',
+  },
+  'slecic-lk': {
+    legalBasis: 'slecic-act-1978',
+    fundingOrCapitalBasis: 'slecic-financial-statements-2023',
+    officialPublications: 'slecic-annual-reports',
+    geographicScope: 'slecic-act-1978',
+    legalMandate: 'slecic-act-1978',
+  },
+  'acgf-tw': {
+    fundingOrCapitalBasis: 'acgf-budget-2026',
+    geographicScope: 'acgf-annual-report-2024',
+    officialPublications: 'acgf-annual-report-2024',
+    eligibleAgriculturalSectors: 'acgf-annual-report-2024',
   },
 };
 
@@ -159,7 +188,7 @@ function evidenceFor(record: Institution, field: string, sourceId: string): Fiel
         : source.sourceType.endsWith('_document')
           ? 'official_document_summary'
           : 'direct_official_statement',
-    verifiedDate: '2026-07-16',
+    verifiedDate: source.accessedDate,
   };
 }
 
@@ -183,8 +212,15 @@ function initialInstitution(raw: RawInstitution): Institution {
               .join('、'),
           }
         : null;
-  const officialPublications =
-    raw.id === 'jfc-jp' ? [localize('Guide to Japan Finance Corporation 2024')] : [];
+  const publicationValues = raw.typeSpecificProfile.officialPublications;
+  const officialPublications = Array.isArray(publicationValues)
+    ? localizeList(publicationValues)
+    : raw.id === 'jfc-jp'
+      ? [localize('Guide to Japan Finance Corporation 2024')]
+      : [];
+  const reference = referenceSetByInstitutionId.get(raw.id);
+  const researchPriority = researchPriorityByInstitutionId.get(raw.id);
+  if (!researchPriority) throw new Error(`Missing research priority for ${raw.id}`);
   const acsicRoleNotes = {
     en:
       raw.status === 'observer'
@@ -228,6 +264,11 @@ function initialInstitution(raw: RawInstitution): Institution {
     geographicScope: raw.countryName,
     officialPublications,
     acsicRoleNotes,
+    referenceSet: Boolean(reference),
+    referenceSetRole: reference?.role ?? null,
+    referenceSetRationale: reference?.rationale ?? null,
+    referenceSetVerifiedDate: reference?.verifiedDate ?? null,
+    researchPriority,
     typeSpecificProfile,
     sourceIds: raw.sourceIds,
     sourceReferences,
@@ -302,6 +343,12 @@ function initialInstitution(raw: RawInstitution): Institution {
     fieldEvidence[field] = [evidenceFor(record, field, sourceId)];
   }
   record.fieldEvidence = fieldEvidence;
+  record.lastVerifiedDate = Object.values(fieldEvidence)
+    .flat()
+    .map((evidence) => evidence.verifiedDate)
+    .sort()
+    .at(-1)!;
+  record.institutionVerifiedDate = record.lastVerifiedDate;
 
   const excluded = new Set(raw.notApplicableFields.map((item) => item.field));
   record.level2ApplicableFields = record.level2RequiredFields.filter(
@@ -411,7 +458,7 @@ function initialInstitution(raw: RawInstitution): Institution {
     statement: evidence[0]!.evidenceSummary,
     fieldKeys: [field],
     sourceEvidenceIds: evidence.map((item) => item.evidenceId),
-    verifiedDate: '2026-07-16',
+    verifiedDate: evidence[0]!.verifiedDate,
   }));
   return record;
 }

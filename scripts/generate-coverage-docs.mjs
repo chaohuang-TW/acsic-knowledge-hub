@@ -60,6 +60,10 @@ function calibrated(record) {
     completion,
     level2Status,
     confidence,
+    lastVerified: recordSources
+      .map((source) => source.accessedDate)
+      .sort()
+      .at(-1),
   };
 }
 
@@ -104,7 +108,7 @@ const summaryBlock = `<!-- GENERATED:COVERAGE:START -->
 const rows = records
   .map(
     (record) =>
-      `| ${record.countryName.en} | ${record.officialEnglish} | ${record.abbr} | ${record.status === 'member' ? 'Member' : 'Observer'} | ${record.role} | 100% | ${record.level2Status} (${record.completion}%) | ${record.sourceIds.length} | ${record.missing.length} | ${record.nativeName.status} | 2026-07-16 |`,
+      `| ${record.countryName.en} | ${record.officialEnglish} | ${record.abbr} | ${record.status === 'member' ? 'Member' : 'Observer'} | ${record.role} | 100% | ${record.level2Status} (${record.completion}%) | ${record.sourceIds.length} | ${record.missing.length} | ${record.nativeName.status} | ${record.lastVerified} |`,
   )
   .join('\n');
 const coverageDoc = `# ACSIC Member Coverage

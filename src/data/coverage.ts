@@ -1,4 +1,7 @@
 import { institutions, sourceRegistry } from './institutions';
+import { indicatorDictionary, level3PilotReadiness } from './indicators';
+import { referenceSetDefinitions } from './reference-set';
+import { researchPriorities } from './research-priority';
 import type { LocalizedText, SourceType } from '../types';
 
 function hasBoth(value: LocalizedText | null): boolean {
@@ -43,6 +46,17 @@ export const coverageStats = {
       .map((record) => record.countryCode),
   ).size,
   institutions: institutions.length,
+  referenceSetInstitutions: referenceSetDefinitions.length,
+  priorityHigh: researchPriorities.filter((item) => item.priorityBand === 'high').length,
+  priorityMedium: researchPriorities.filter((item) => item.priorityBand === 'medium').length,
+  priorityLow: researchPriorities.filter((item) => item.priorityBand === 'low').length,
+  priorityDeferred: researchPriorities.filter((item) => item.priorityBand === 'deferred').length,
+  indicatorDefinitions: indicatorDictionary.length,
+  indicatorCategories: new Set(indicatorDictionary.map((item) => item.category)).size,
+  level3PilotReady: level3PilotReadiness.filter((item) => item.pilotReadiness === 'ready').length,
+  level3PilotPartiallyReady: level3PilotReadiness.filter(
+    (item) => item.pilotReadiness === 'partially_ready',
+  ).length,
   level1Complete: institutions.filter((record) => record.level1Completion === 100).length,
   level2Complete: institutions.filter((record) => record.level2Status === 'complete').length,
   level2Partial: institutions.filter((record) => record.level2Status === 'partial').length,

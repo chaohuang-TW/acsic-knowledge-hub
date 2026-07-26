@@ -5,6 +5,8 @@ export type PageId =
   | 'overview'
   | 'members'
   | 'systems'
+  | 'reference'
+  | 'framework'
   | 'practices'
   | 'resources'
   | 'compare'

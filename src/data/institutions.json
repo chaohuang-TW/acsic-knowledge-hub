@@ -310,11 +310,17 @@
         "Group credit life insurance administration"
       ],
       "policyRepresentation": "Represents and coordinates the nationwide network of 51 credit guarantee corporations",
-      "trainingOrCapacityBuildingRole": "Plans and operates training for the credit guarantee network"
+      "trainingOrCapacityBuildingRole": "Plans and operates training for the credit guarantee network",
+      "officialPublications": ["Credit Guarantee System in Japan 2025"]
     },
     "supervisingOrOversightAuthority": null,
     "profileSourceId": "jfg-jp-profile",
-    "sourceIds": ["acsic-2026-member-roster", "jfg-jp-profile", "jfg-japanese-profile"],
+    "sourceIds": [
+      "acsic-2026-member-roster",
+      "jfg-jp-profile",
+      "jfg-japanese-profile",
+      "jfg-credit-guarantee-system-2025"
+    ],
     "verifiedFieldKeys": [
       "establishedYear",
       "legalBasis",
@@ -326,7 +332,9 @@
       "coordinationRole",
       "sharedServices",
       "policyRepresentation",
-      "trainingOrCapacityBuildingRole"
+      "trainingOrCapacityBuildingRole",
+      "officialPublications",
+      "geographicScope"
     ],
     "nativeName": {
       "value": "一般社団法人 全国信用保証協会連合会",
@@ -495,7 +503,10 @@
         "Contributions from financial companies",
         "Government contributions",
         "Other contributions"
-      ]
+      ],
+      "investmentRole": "Guarantee-linked equity investment",
+      "technologyTransferRole": "Technology transfer and protection services",
+      "officialPublications": ["KOTEC Annual Report 2023"]
     },
     "supervisingOrOversightAuthority": "Ministry of SMEs and Startups",
     "profileSourceId": "kotec-kr-profile",
@@ -503,7 +514,9 @@
       "acsic-2026-member-roster",
       "kotec-kr-profile",
       "kotec-act-current",
-      "kotec-korean-site-map"
+      "kotec-korean-site-map",
+      "kotec-company-overview",
+      "kotec-annual-report-2023"
     ],
     "verifiedFieldKeys": [
       "establishedYear",
@@ -516,7 +529,11 @@
       "technologyAppraisalRole",
       "guaranteeRole",
       "fundingSources",
-      "fundingOrCapitalBasis"
+      "fundingOrCapitalBasis",
+      "investmentRole",
+      "technologyTransferRole",
+      "officialPublications",
+      "geographicScope"
     ],
     "nativeName": {
       "value": "기술보증기금",
@@ -705,7 +722,9 @@
       "depositGuaranteeRole": "Guarantees eligible natural-person deposits",
       "creditGuaranteeRole": "Guarantees eligible BFI credit portfolios",
       "coveredInstitutions": "Banks and financial institutions participating in eligible deposit and credit guarantee arrangements",
-      "governanceOfDualMandate": "The Act assigns both deposit guarantee and credit guarantee functions to the Fund"
+      "governanceOfDualMandate": "The Act assigns both deposit guarantee and credit guarantee functions to the Fund",
+      "fundingOrCapitalBasis": "Authorised capital of NPR 10 billion and paid-up capital disclosed by the Fund",
+      "officialPublications": ["Financial reports"]
     },
     "supervisingOrOversightAuthority": null,
     "profileSourceId": "dcgf-np-profile",
@@ -713,7 +732,9 @@
       "acsic-2026-member-roster",
       "dcgf-np-profile",
       "dcgf-act-2073",
-      "dcgf-nepali-introduction"
+      "dcgf-nepali-introduction",
+      "dcgf-what-we-do",
+      "dcgf-financial-reports"
     ],
     "verifiedFieldKeys": [
       "establishedYear",
@@ -725,7 +746,10 @@
       "depositGuaranteeRole",
       "creditGuaranteeRole",
       "coveredInstitutions",
-      "governanceOfDualMandate"
+      "governanceOfDualMandate",
+      "fundingOrCapitalBasis",
+      "geographicScope",
+      "officialPublications"
     ],
     "nativeName": {
       "value": "निक्षेप तथा कर्जा सुरक्षण कोष",
@@ -767,11 +791,17 @@
     "typeSpecificProfile": {
       "SMEDevelopmentMandate": "National SME development",
       "financialAccessRole": "Access facilitation, not a general guarantee fund",
-      "trainingAndCapacityBuilding": "MSME training and advisory"
+      "trainingAndCapacityBuilding": "MSME training and advisory",
+      "officialPublications": ["MSME Policy 2022", "MSME Medium Term Development Plan 2023–2027"]
     },
     "supervisingOrOversightAuthority": "Ministry of Commerce and Industry",
     "profileSourceId": "smec-pg-profile",
-    "sourceIds": ["acsic-2026-member-roster", "smec-pg-profile"],
+    "sourceIds": [
+      "acsic-2026-member-roster",
+      "smec-pg-profile",
+      "smec-legislation",
+      "smec-policy-legislation"
+    ],
     "verifiedFieldKeys": [
       "establishedYear",
       "legalBasis",
@@ -782,7 +812,9 @@
       "majorFunctions",
       "SMEDevelopmentMandate",
       "financialAccessRole",
-      "trainingAndCapacityBuilding"
+      "trainingAndCapacityBuilding",
+      "officialPublications",
+      "geographicScope"
     ],
     "nativeName": {
       "value": null,
@@ -989,11 +1021,20 @@
     "typeSpecificProfile": {
       "exportCreditInsuranceRole": "Insurance against commercial and non-commercial payment risks",
       "bankGuaranteeRole": "Guarantees facilitating pre- and post-shipment finance",
-      "exporterSupport": "Protection, information and support"
+      "exporterSupport": "Protection, information and support",
+      "fundingOrCapitalBasis": "Capital and financial position disclosed in audited annual financial statements",
+      "officialPublications": ["Annual reports and annual financial statements"],
+      "legalMandate": "Sri Lanka Export Credit Insurance Act No. 15 of 1978"
     },
     "supervisingOrOversightAuthority": "Ministry of Finance, Planning and Economic Development",
     "profileSourceId": "slecic-lk-profile",
-    "sourceIds": ["acsic-2026-member-roster", "slecic-lk-profile"],
+    "sourceIds": [
+      "acsic-2026-member-roster",
+      "slecic-lk-profile",
+      "slecic-act-1978",
+      "slecic-annual-reports",
+      "slecic-financial-statements-2023"
+    ],
     "verifiedFieldKeys": [
       "establishedYear",
       "legalBasis",
@@ -1004,7 +1045,11 @@
       "majorFunctions",
       "exportCreditInsuranceRole",
       "bankGuaranteeRole",
-      "exporterSupport"
+      "exporterSupport",
+      "fundingOrCapitalBasis",
+      "officialPublications",
+      "geographicScope",
+      "legalMandate"
     ],
     "nativeName": {
       "value": null,
@@ -1135,11 +1180,19 @@
     "typeSpecificProfile": {
       "agricultureSpecificMandate": "Agriculture and fisheries finance",
       "partnerFinancialInstitutions": ["Contracted banks", "Farmers' and fishers' associations"],
-      "agriculturalPolicyRole": "Supports implementation of agricultural finance policy"
+      "agriculturalPolicyRole": "Supports implementation of agricultural finance policy",
+      "fundingOrCapitalBasis": "Annual budget and foundation resources disclosed through official public information",
+      "officialPublications": ["Agricultural Credit Guarantee Fund 2024 Annual Report"],
+      "eligibleAgriculturalSectors": ["Agriculture", "Fisheries"]
     },
     "supervisingOrOversightAuthority": "農業部",
     "profileSourceId": "acgf-tw-profile",
-    "sourceIds": ["acsic-current-member-institutions", "acgf-tw-profile"],
+    "sourceIds": [
+      "acsic-current-member-institutions",
+      "acgf-tw-profile",
+      "acgf-annual-report-2024",
+      "acgf-budget-2026"
+    ],
     "verifiedFieldKeys": [
       "establishedYear",
       "legalBasis",
@@ -1150,7 +1203,11 @@
       "majorFunctions",
       "agricultureSpecificMandate",
       "partnerFinancialInstitutions",
-      "agriculturalPolicyRole"
+      "agriculturalPolicyRole",
+      "fundingOrCapitalBasis",
+      "officialPublications",
+      "geographicScope",
+      "eligibleAgriculturalSectors"
     ],
     "nativeName": {
       "value": "財團法人農業信用保證基金",

@@ -6,6 +6,8 @@ const navigation: Array<[PageId, keyof ReturnType<typeof useLocale>['t']['nav']]
   ['overview', 'overview'],
   ['members', 'members'],
   ['systems', 'systems'],
+  ['reference', 'reference'],
+  ['framework', 'framework'],
   ['practices', 'practices'],
   ['resources', 'resources'],
 ];

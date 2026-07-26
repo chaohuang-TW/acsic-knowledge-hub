@@ -6,6 +6,7 @@ const zh: Record<string, string> = {
   'Agricultural and fisheries businesses': '農漁業事業',
   'Agricultural credit guarantee': '農業信用保證',
   Agriculture: '農業',
+  Fisheries: '漁業',
   'Agriculture and fisheries finance': '農漁業金融',
   'Agriculture and food-production guarantees': '農業與食品生產保證',
   'Agriculture credit guarantees': '農業信用保證',
@@ -194,6 +195,20 @@ const zh: Record<string, string> = {
   'Represents and coordinates the nationwide network of 51 credit guarantee corporations':
     '代表並協調全國 51 家信用保證協會網絡',
   'Plans and operates training for the credit guarantee network': '規劃並辦理信用保證網絡培訓',
+  'Credit Guarantee System in Japan 2025': '《2025 年日本信用保證制度》',
+  'Technology transfer and protection services': '技術移轉與保護服務',
+  'KOTEC Annual Report 2023': '《KOTEC 2023 年報》',
+  'Authorised capital of NPR 10 billion and paid-up capital disclosed by the Fund':
+    '基金揭露授權資本為 100 億尼泊爾盧比，並揭露實收資本',
+  'Financial reports': '財務報告',
+  'MSME Policy 2022': '《2022 年微中小企業政策》',
+  'MSME Medium Term Development Plan 2023–2027': '《2023–2027 年微中小企業中期發展計畫》',
+  'Capital and financial position disclosed in audited annual financial statements':
+    '經查核年度財務報表揭露的資本與財務狀況',
+  'Annual reports and annual financial statements': '年度報告及年度財務報表',
+  'Annual budget and foundation resources disclosed through official public information':
+    '官方公開資訊所揭露的年度預算與基金資源',
+  'Agricultural Credit Guarantee Fund 2024 Annual Report': '《農業信用保證基金 2024 年報》',
   臺灣地區農業信用保證制度實施方案: '《臺灣地區農業信用保證制度實施方案》',
   農業部: '農業部',
 };

@@ -914,6 +914,83 @@ tbody th {
   color: var(--muted);
   font-size: 0.85rem;
 }
+.research-notice {
+  margin: 1.5rem 0;
+  padding: 1.1rem 1.25rem;
+  border-left: 4px solid var(--accent);
+  border-radius: 0.25rem 0.8rem 0.8rem 0.25rem;
+  background: var(--accent-soft);
+}
+.research-notice p {
+  margin: 0.45rem 0 0;
+}
+.reference-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.reference-card,
+.indicator-group {
+  padding: 1.3rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: var(--surface);
+}
+.reference-role {
+  color: var(--accent);
+  font-weight: 800;
+}
+.metric-list,
+.indicator-detail dl {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65rem;
+}
+.metric-list div,
+.indicator-detail dl div {
+  padding: 0.75rem;
+  border-radius: 0.65rem;
+  background: var(--surface-strong);
+}
+.metric-list dt,
+.indicator-detail dt {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.metric-list dd,
+.indicator-detail dd {
+  margin: 0.25rem 0 0;
+  font-weight: 700;
+}
+.framework-summary {
+  display: flex;
+  gap: 0.6rem 1.2rem;
+  align-items: baseline;
+  margin: 1.5rem 0;
+}
+.framework-summary strong {
+  font-size: 2rem;
+}
+.indicator-groups {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.indicator-group details {
+  border-top: 1px solid var(--line);
+}
+.indicator-group summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  cursor: pointer;
+  font-weight: 700;
+}
+.indicator-group summary small {
+  color: var(--muted);
+  font-weight: 500;
+}
 
 @media (max-width: 1080px) {
   .site-header {
@@ -971,6 +1048,7 @@ tbody th {
     order: -1;
   }
   .problem-grid,
+  .reference-grid,
   .concept-matrix,
   .selector-grid,
   .record-summary,
@@ -978,6 +1056,10 @@ tbody th {
   .evidence-grid,
   .sources-block dl,
   .governance-principles {
+    grid-template-columns: 1fr;
+  }
+  .metric-list,
+  .indicator-detail dl {
     grid-template-columns: 1fr;
   }
   .problem-grid article:last-child {
