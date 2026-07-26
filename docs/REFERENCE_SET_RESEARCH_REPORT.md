@@ -8,8 +8,8 @@ New evidence includes official annual reports, budgets, statutes, institutional 
 
 ## Conservative findings
 
-- ACGF and KOTEC now satisfy the current strict Level 2 standard.
-- DCGF, JFG, SLECIC and SMEC retain any unsupported gaps.
+- JFC remains complete; ACGF, KOTEC and SLECIC now also satisfy the current strict Level 2 standard.
+- DCGF, JFG and SMEC retain their unsupported gaps.
 - ASKRINDO remains insufficient and its research priority is deferred because a critical official profile is unavailable.
 - Missing values were not converted to `not applicable`.
 - No Level 3 production value or institutional ranking was introduced.
