@@ -13,6 +13,8 @@ import {
   KnowledgePracticesPage,
   OverviewPage,
   ResourcesPage,
+  ReferenceInstitutionsPage,
+  ComparativeFrameworkPage,
   SourcesPage,
   SystemsPage,
 } from './pages/StaticPages';
@@ -23,6 +25,8 @@ const pages: PageId[] = [
   'overview',
   'members',
   'systems',
+  'reference',
+  'framework',
   'practices',
   'resources',
   'compare',
@@ -92,6 +96,8 @@ export default function App() {
         {state.page === 'overview' && <OverviewPage />}
         {state.page === 'members' && <InstitutionsPage />}
         {state.page === 'systems' && <SystemsPage />}
+        {state.page === 'reference' && <ReferenceInstitutionsPage />}
+        {state.page === 'framework' && <ComparativeFrameworkPage />}
         {state.page === 'practices' && <KnowledgePracticesPage />}
         {state.page === 'resources' && <ResourcesPage />}
         {state.page === 'compare' && <ComparisonPage />}

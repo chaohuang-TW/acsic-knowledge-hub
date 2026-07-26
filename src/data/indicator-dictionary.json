@@ -1,0 +1,736 @@
+[
+  {
+    "indicatorId": "new_guarantee_volume",
+    "category": "guarantee_activity",
+    "name": { "en": "New Guarantee Volume", "zh-TW": "當期新增保證金額" },
+    "definition": {
+      "en": "The original-currency value of guarantees newly approved, issued or accepted during a defined reporting period, using the institution's stated recognition point.",
+      "zh-TW": "在明確報導期間內，依該機構所定認列時點新增核准、簽發或承作之保證原幣金額。"
+    },
+    "requiredMetadata": [
+      "value",
+      "unit",
+      "currency",
+      "reportedCurrency",
+      "reportingPeriodType",
+      "periodStart",
+      "periodEnd",
+      "sourceId"
+    ],
+    "numeratorDefinition": null,
+    "denominatorDefinition": null,
+    "comparabilityLevel": "medium",
+    "commonMisinterpretations": {
+      "en": [
+        "Do not substitute outstanding, cumulative, supported-loan or approved-facility amounts."
+      ],
+      "zh-TW": ["不得以期末餘額、累計金額、受支持貸款額或核准額替代。"]
+    },
+    "allowedAggregation": ["sum_same_definition_same_currency_non_overlapping_periods"],
+    "notComparableWith": ["outstanding_guarantee_balance", "cumulative_guarantee_volume"],
+    "notes": {
+      "en": "Record whether the official source uses approval, issuance or acceptance.",
+      "zh-TW": "須記錄官方來源採核准、簽發或承作何種認列時點。"
+    },
+    "valueType": "monetary",
+    "timeBasis": "flow"
+  },
+  {
+    "indicatorId": "outstanding_guarantee_balance",
+    "category": "guarantee_activity",
+    "name": { "en": "Outstanding Guarantee Balance", "zh-TW": "期末保證餘額" },
+    "definition": {
+      "en": "The original-currency guarantee liability remaining in force at a specified point in time.",
+      "zh-TW": "截至特定時點仍在有效期間內之保證責任原幣餘額。"
+    },
+    "requiredMetadata": ["value", "unit", "currency", "reportedCurrency", "asOfDate", "sourceId"],
+    "numeratorDefinition": null,
+    "denominatorDefinition": null,
+    "comparabilityLevel": "medium",
+    "commonMisinterpretations": {
+      "en": ["Do not substitute the supported loan balance or annual new guarantees."],
+      "zh-TW": ["不得以受支持貸款餘額或當期新增保證替代。"]
+    },
+    "allowedAggregation": ["sum_same_as_of_date_same_currency_non_overlapping_portfolios"],
+    "notComparableWith": ["new_guarantee_volume", "cumulative_guarantee_volume"],
+    "notes": { "en": "The as-of date is mandatory.", "zh-TW": "必須記錄資料基準日。" },
+    "valueType": "monetary",
+    "timeBasis": "stock"
+  },
+  {
+    "indicatorId": "cumulative_guarantee_volume",
+    "category": "guarantee_activity",
+    "name": { "en": "Cumulative Guarantee Volume", "zh-TW": "累計保證金額" },
+    "definition": {
+      "en": "Guarantee value accumulated from a documented starting point through an as-of date.",
+      "zh-TW": "自明確起算點累積至資料基準日之保證金額。"
+    },
+    "requiredMetadata": [
+      "value",
+      "unit",
+      "currency",
+      "reportedCurrency",
+      "periodStart",
+      "asOfDate",
+      "sourceId"
+    ],
+    "numeratorDefinition": null,
+    "denominatorDefinition": null,
+    "comparabilityLevel": "low",
+    "commonMisinterpretations": {
+      "en": [
+        "Do not compare with annual new guarantees without converting both to the same period concept."
+      ],
+      "zh-TW": ["未統一期間概念前，不得與年度新增保證比較。"]
+    },
+    "allowedAggregation": [],
+    "notComparableWith": ["new_guarantee_volume", "outstanding_guarantee_balance"],
+    "notes": {
+      "en": "The cumulative starting point must be explicit.",
+      "zh-TW": "必須明確記錄累計起算點。"
+    },
+    "valueType": "monetary",
+    "timeBasis": "cumulative"
+  },
+  {
+    "indicatorId": "number_of_guarantees",
+    "category": "operational_efficiency",
+    "name": { "en": "Number of Guarantees", "zh-TW": "保證件數" },
+    "definition": {
+      "en": "The number of guarantee units recognised during a period or at a point in time, with the unit explicitly identified as cases, facilities or loans.",
+      "zh-TW": "在特定期間或時點認列之保證單位數，並明確標示為案件、授信額度或貸款。"
+    },
+    "requiredMetadata": [
+      "value",
+      "unit",
+      "reportingPeriodType",
+      "periodStart",
+      "periodEnd",
+      "asOfDate",
+      "sourceId"
+    ],
+    "numeratorDefinition": null,
+    "denominatorDefinition": null,
+    "comparabilityLevel": "low",
+    "commonMisinterpretations": {
+      "en": ["Cases, facilities, loans and enterprises are not interchangeable."],
+      "zh-TW": ["案件、授信額度、貸款與企業數不得混用。"]
+    },
+    "allowedAggregation": ["sum_same_unit_non_overlapping_periods"],
+    "notComparableWith": ["number_of_beneficiary_enterprises"],
+    "notes": { "en": "Unit semantics are mandatory.", "zh-TW": "必須記錄計數單位的實質意義。" },
+    "valueType": "count",
+    "timeBasis": "institution_specific"
+  },
+  {
+    "indicatorId": "number_of_beneficiary_enterprises",
+    "category": "reach_and_inclusion",
+    "name": { "en": "Number of Beneficiary Enterprises", "zh-TW": "受益企業數" },
+    "definition": {
+      "en": "The count of distinct enterprises benefiting from guarantee or related support within a stated period or as of a stated date.",
+      "zh-TW": "在明確期間內或截至特定日期，受保證或相關支援之不重複企業數。"
+    },
+    "requiredMetadata": [
+      "value",
+      "unit",
+      "reportingPeriodType",
+      "periodStart",
+      "periodEnd",
+      "asOfDate",
+      "sourceId"
+    ],
+    "numeratorDefinition": null,
+    "denominatorDefinition": null,
+    "comparabilityLevel": "medium",
+    "commonMisinterpretations": {
+      "en": ["Do not use guarantee cases as enterprise counts; document deduplication."],
+      "zh-TW": ["不得以保證件數代替企業數，並須記錄去重方式。"]
+    },
+    "allowedAggregation": ["sum_only_when_enterprise_populations_do_not_overlap"],
+    "notComparableWith": ["number_of_guarantees"],
+    "notes": {
+      "en": "Distinct-beneficiary logic must be documented.",
+      "zh-TW": "須記錄不重複受益對象的計算方式。"
+    },
+    "valueType": "count",
+    "timeBasis": "institution_specific"
+  },
+  {
+    "indicatorId": "guarantee_coverage_ratio",
+    "category": "guarantee_terms",
+    "name": { "en": "Guarantee Coverage Ratio", "zh-TW": "保證成數" },
+    "definition": {
+      "en": "The guaranteed portion of an eligible credit exposure under a specified scheme and date.",
+      "zh-TW": "特定方案及日期下，符合資格授信曝險中由保證承擔之比例。"
+    },
+    "requiredMetadata": [
+      "value",
+      "unit",
+      "scheme",
+      "minimum",
+      "maximum",
+      "standard",
+      "exceptionalCoverage",
+      "asOfDate",
+      "sourceId"
+    ],
+    "numeratorDefinition": {
+      "en": "Guaranteed amount or guaranteed loss share defined by the scheme.",
+      "zh-TW": "方案所定保證金額或保證損失分擔額。"
+    },
+    "denominatorDefinition": {
+      "en": "Eligible loan, facility or loss exposure defined by the scheme.",
+      "zh-TW": "方案所定符合資格貸款、授信額度或損失曝險。"
+    },
+    "comparabilityLevel": "low",
+    "commonMisinterpretations": {
+      "en": ["Portfolio coverage, individual maximum coverage and loss-share rates may differ."],
+      "zh-TW": ["組合保證成數、個案最高成數與損失分擔率可能不同。"]
+    },
+    "allowedAggregation": [],
+    "notComparableWith": ["guarantee_ceiling"],
+    "notes": {
+      "en": "Preserve scheme, minimum, maximum, standard and exceptional rates.",
+      "zh-TW": "須保存方案、最低、最高、標準及例外成數。"
+    },
+    "valueType": "ratio",
+    "timeBasis": "point_in_time"
+  },
+  {
+    "indicatorId": "guarantee_ceiling",
+    "category": "guarantee_terms",
+    "name": { "en": "Guarantee Ceiling", "zh-TW": "保證上限" },
+    "definition": {
+      "en": "The maximum guarantee amount allowed per borrower, loan, enterprise or programme under stated rules.",
+      "zh-TW": "依明確規則按借款人、貸款、企業或方案計算之最高保證金額。"
+    },
+    "requiredMetadata": [
+      "value",
+      "unit",
+      "currency",
+      "reportedCurrency",
+      "ceilingBasis",
+      "scheme",
+      "asOfDate",
+      "sourceId"
+    ],
+    "numeratorDefinition": null,
+    "denominatorDefinition": null,
+    "comparabilityLevel": "low",
+    "commonMisinterpretations": {
+      "en": ["Per-borrower, per-loan and programme ceilings are not equivalent."],
+      "zh-TW": ["每一借款人、每筆貸款及方案上限並不等同。"]
+    },
+    "allowedAggregation": [],
+    "notComparableWith": ["guarantee_coverage_ratio"],
+    "notes": {
+      "en": "Original currency and ceiling basis are mandatory.",
+      "zh-TW": "必須保存原始幣別與上限計算基礎。"
+    },
+    "valueType": "monetary",
+    "timeBasis": "point_in_time"
+  },
+  {
+    "indicatorId": "guarantee_fee",
+    "category": "guarantee_terms",
+    "name": { "en": "Guarantee Fee", "zh-TW": "保證費率" },
+    "definition": {
+      "en": "The price charged for guarantee coverage under a specified scheme, fee basis and date.",
+      "zh-TW": "特定方案、費率基礎及日期下，取得信用保證所支付之價格。"
+    },
+    "requiredMetadata": [
+      "value",
+      "unit",
+      "feeBasis",
+      "scheme",
+      "minimum",
+      "maximum",
+      "asOfDate",
+      "sourceId"
+    ],
+    "numeratorDefinition": {
+      "en": "Guarantee fee charged for the stated fee period or event.",
+      "zh-TW": "特定計費期間或事件所收取之保證費。"
+    },
+    "denominatorDefinition": {
+      "en": "Guaranteed amount, loan amount or other official fee base.",
+      "zh-TW": "保證金額、貸款金額或其他官方計費基礎。"
+    },
+    "comparabilityLevel": "low",
+    "commonMisinterpretations": {
+      "en": ["Annual, one-off, risk-based, fixed, subsidised and programme-specific fees differ."],
+      "zh-TW": ["年費、一次性、風險差別、固定、補貼及方案別費率不同。"]
+    },
+    "allowedAggregation": [],
+    "notComparableWith": [],
+    "notes": {
+      "en": "Fee basis and subsidy treatment are mandatory.",
+      "zh-TW": "必須記錄計費基礎及補貼處理方式。"
+    },
+    "valueType": "ratio",
+    "timeBasis": "point_in_time"
+  },
+  {
+    "indicatorId": "claims_paid",
+    "category": "recovery_and_claims",
+    "name": { "en": "Claims Paid", "zh-TW": "代償／理賠金額" },
+    "definition": {
+      "en": "The original-currency amount paid during a period under the institution's official claim, subrogation, payout or indemnification terminology.",
+      "zh-TW": "在特定期間內，依機構官方所稱代償、理賠、保證給付或補償所支付之原幣金額。"
+    },
+    "requiredMetadata": [
+      "value",
+      "unit",
+      "currency",
+      "reportedCurrency",
+      "reportingPeriodType",
+      "periodStart",
+      "periodEnd",
+      "originalTerm",
+      "sourceId"
+    ],
+    "numeratorDefinition": null,
+    "denominatorDefinition": null,
+    "comparabilityLevel": "medium",
+    "commonMisinterpretations": {
+      "en": ["Preserve the official term; claim approval and cash payment may differ."],
+      "zh-TW": ["須保存官方原始名詞；核准理賠與實際現金支付可能不同。"]
+    },
+    "allowedAggregation": ["sum_same_definition_same_currency_non_overlapping_periods"],
+    "notComparableWith": ["claim_rate", "default_npl_indicator"],
+    "notes": { "en": "Original terminology is mandatory.", "zh-TW": "必須保存官方原始名詞。" },
+    "valueType": "monetary",
+    "timeBasis": "flow"
+  },
+  {
+    "indicatorId": "claim_rate",
+    "category": "portfolio_risk",
+    "name": { "en": "Claim Rate", "zh-TW": "代償率" },
+    "definition": {
+      "en": "A ratio reported by an institution using its stated claim numerator and exposure denominator; no universal formula is assumed.",
+      "zh-TW": "依機構明確公布之代償分子與曝險分母計算的比率，不預設統一公式。"
+    },
+    "requiredMetadata": [
+      "value",
+      "unit",
+      "numeratorDefinition",
+      "denominatorDefinition",
+      "reportingPeriodType",
+      "periodStart",
+      "periodEnd",
+      "sourceId"
+    ],
+    "numeratorDefinition": {
+      "en": "Institution-reported claims, payouts or subrogation amount or count.",
+      "zh-TW": "機構公布之代償、給付或理賠金額或件數。"
+    },
+    "denominatorDefinition": {
+      "en": "Institution-reported guarantee flow, exposure, balance or other official base.",
+      "zh-TW": "機構公布之保證流量、曝險、餘額或其他官方基礎。"
+    },
+    "comparabilityLevel": "low",
+    "commonMisinterpretations": {
+      "en": ["Claim rate is not NPL ratio, default rate or delinquency ratio."],
+      "zh-TW": ["代償率不等於逾放比率、違約率或逾期率。"]
+    },
+    "allowedAggregation": [],
+    "notComparableWith": ["default_npl_indicator"],
+    "notes": {
+      "en": "Both numerator and denominator must reproduce the official formula.",
+      "zh-TW": "分子與分母均須忠實重現官方公式。"
+    },
+    "valueType": "ratio",
+    "timeBasis": "flow"
+  },
+  {
+    "indicatorId": "default_npl_indicator",
+    "category": "portfolio_risk",
+    "name": { "en": "Default / NPL Indicator", "zh-TW": "違約／逾期指標" },
+    "definition": {
+      "en": "An institution-specific default, non-performing loan or delinquency measure preserved under its original definition.",
+      "zh-TW": "依機構原始定義保存之違約、逾期放款或延滯衡量指標。"
+    },
+    "requiredMetadata": [
+      "value",
+      "unit",
+      "originalTerm",
+      "numeratorDefinition",
+      "denominatorDefinition",
+      "asOfDate",
+      "sourceId"
+    ],
+    "numeratorDefinition": {
+      "en": "Exposure meeting the institution's official default, NPL or delinquency rule.",
+      "zh-TW": "符合機構官方違約、逾放或延滯定義之曝險。"
+    },
+    "denominatorDefinition": {
+      "en": "Portfolio base used in the institution's official calculation.",
+      "zh-TW": "機構官方計算所採用之組合分母。"
+    },
+    "comparabilityLevel": "institution_specific",
+    "commonMisinterpretations": {
+      "en": ["NPL ratio, default rate, delinquency ratio and claim rate are distinct."],
+      "zh-TW": ["逾放比率、違約率、逾期率與代償率各不相同。"]
+    },
+    "allowedAggregation": [],
+    "notComparableWith": ["claim_rate"],
+    "notes": {
+      "en": "Use descriptively unless definitions are demonstrably aligned.",
+      "zh-TW": "除非定義確實一致，僅作描述性使用。"
+    },
+    "valueType": "ratio",
+    "timeBasis": "point_in_time"
+  },
+  {
+    "indicatorId": "recovery_amount",
+    "category": "recovery_and_claims",
+    "name": { "en": "Recovery Amount", "zh-TW": "追償收回金額" },
+    "definition": {
+      "en": "The original-currency amount recovered during a defined period after claim or guarantee payment.",
+      "zh-TW": "在明確期間內，於代償或保證給付後追償收回之原幣金額。"
+    },
+    "requiredMetadata": [
+      "value",
+      "unit",
+      "currency",
+      "reportedCurrency",
+      "reportingPeriodType",
+      "periodStart",
+      "periodEnd",
+      "sourceId"
+    ],
+    "numeratorDefinition": null,
+    "denominatorDefinition": null,
+    "comparabilityLevel": "medium",
+    "commonMisinterpretations": {
+      "en": [
+        "Do not mix cash recovery with write-offs, collateral proceeds or accounting reversals unless defined."
+      ],
+      "zh-TW": ["未有定義時，不得混入呆帳沖銷、擔保品處分或會計迴轉。"]
+    },
+    "allowedAggregation": ["sum_same_definition_same_currency_non_overlapping_periods"],
+    "notComparableWith": ["recovery_rate"],
+    "notes": {
+      "en": "Recovery components must be documented.",
+      "zh-TW": "須記錄追償收回的組成項目。"
+    },
+    "valueType": "monetary",
+    "timeBasis": "flow"
+  },
+  {
+    "indicatorId": "recovery_rate",
+    "category": "recovery_and_claims",
+    "name": { "en": "Recovery Rate", "zh-TW": "追償率" },
+    "definition": {
+      "en": "Recovery proceeds divided by the institution's explicitly stated recovery base.",
+      "zh-TW": "追償收回金額除以機構明確公布之追償計算基礎。"
+    },
+    "requiredMetadata": [
+      "value",
+      "unit",
+      "numeratorDefinition",
+      "denominatorDefinition",
+      "reportingPeriodType",
+      "periodStart",
+      "periodEnd",
+      "sourceId"
+    ],
+    "numeratorDefinition": {
+      "en": "Recovery proceeds recognised under the official method.",
+      "zh-TW": "依官方方法認列之追償收回額。"
+    },
+    "denominatorDefinition": {
+      "en": "Claims paid, recoverable rights, opening recovery stock or other official base.",
+      "zh-TW": "代償額、可追償債權、期初追償存量或其他官方基礎。"
+    },
+    "comparabilityLevel": "low",
+    "commonMisinterpretations": {
+      "en": ["Different recovery denominators produce different rates."],
+      "zh-TW": ["不同追償分母會產生不同追償率。"]
+    },
+    "allowedAggregation": [],
+    "notComparableWith": ["recovery_amount"],
+    "notes": { "en": "The denominator is mandatory.", "zh-TW": "分母為必要欄位。" },
+    "valueType": "ratio",
+    "timeBasis": "flow"
+  },
+  {
+    "indicatorId": "guarantee_leverage_ratio",
+    "category": "financial_capacity",
+    "name": { "en": "Guarantee Leverage Ratio", "zh-TW": "保證槓桿倍數" },
+    "definition": {
+      "en": "A ratio of guarantee exposure to a defined capital, fund or reserve base, used only when the official formula and compatible inputs are documented.",
+      "zh-TW": "保證曝險除以明確資本、基金或準備基礎之比率，僅在官方公式及相容資料完整時使用。"
+    },
+    "requiredMetadata": [
+      "value",
+      "unit",
+      "numeratorDefinition",
+      "denominatorDefinition",
+      "asOfDate",
+      "sourceId"
+    ],
+    "numeratorDefinition": {
+      "en": "Officially defined guarantee exposure.",
+      "zh-TW": "官方定義之保證曝險。"
+    },
+    "denominatorDefinition": {
+      "en": "Officially defined capital, fund, endowment or reserve base.",
+      "zh-TW": "官方定義之資本、基金、捐助財產或準備基礎。"
+    },
+    "comparabilityLevel": "low",
+    "commonMisinterpretations": {
+      "en": ["Do not self-calculate from incompatible exposure and capital concepts."],
+      "zh-TW": ["不得以不相容的曝險及資本概念自行推算。"]
+    },
+    "allowedAggregation": [],
+    "notComparableWith": ["capital_fund_size"],
+    "notes": {
+      "en": "No derived value without a documented formula.",
+      "zh-TW": "未有明確公式不得自行衍生數值。"
+    },
+    "valueType": "ratio",
+    "timeBasis": "point_in_time"
+  },
+  {
+    "indicatorId": "capital_fund_size",
+    "category": "institutional_scale",
+    "name": { "en": "Capital / Fund Size", "zh-TW": "資本額／基金規模" },
+    "definition": {
+      "en": "An institution's original-currency paid-in capital, authorised capital, endowment, guarantee reserve or fund balance, with the capital concept preserved.",
+      "zh-TW": "以原始幣別保存之實收資本、授權資本、捐助財產、保證準備或基金餘額，並保留資本概念。"
+    },
+    "requiredMetadata": [
+      "value",
+      "unit",
+      "currency",
+      "reportedCurrency",
+      "capitalConcept",
+      "asOfDate",
+      "sourceId"
+    ],
+    "numeratorDefinition": null,
+    "denominatorDefinition": null,
+    "comparabilityLevel": "low",
+    "commonMisinterpretations": {
+      "en": ["Paid-in capital, authorised capital, endowment, reserve and fund balance differ."],
+      "zh-TW": ["實收資本、授權資本、捐助財產、準備及基金餘額不同。"]
+    },
+    "allowedAggregation": [],
+    "notComparableWith": ["government_contribution", "guarantee_leverage_ratio"],
+    "notes": {
+      "en": "Never replace the original official value with a converted value.",
+      "zh-TW": "不得以換算值取代原始官方數值。"
+    },
+    "valueType": "monetary",
+    "timeBasis": "stock"
+  },
+  {
+    "indicatorId": "government_contribution",
+    "category": "financial_capacity",
+    "name": { "en": "Government Contribution", "zh-TW": "政府出資／撥補" },
+    "definition": {
+      "en": "An original-currency government capital subscription, annual contribution, cumulative contribution or subsidy, with the contribution type preserved.",
+      "zh-TW": "以原始幣別保存之政府認購資本、年度撥補、累計出資或補貼，並保留出資類型。"
+    },
+    "requiredMetadata": [
+      "value",
+      "unit",
+      "currency",
+      "reportedCurrency",
+      "contributionType",
+      "reportingPeriodType",
+      "periodStart",
+      "periodEnd",
+      "asOfDate",
+      "sourceId"
+    ],
+    "numeratorDefinition": null,
+    "denominatorDefinition": null,
+    "comparabilityLevel": "low",
+    "commonMisinterpretations": {
+      "en": ["Annual, cumulative, subscription and subsidy amounts are not interchangeable."],
+      "zh-TW": ["年度、累計、資本認購及補貼金額不得混用。"]
+    },
+    "allowedAggregation": ["sum_same_contribution_type_same_currency_non_overlapping_periods"],
+    "notComparableWith": ["capital_fund_size"],
+    "notes": {
+      "en": "Contribution type and time basis are mandatory.",
+      "zh-TW": "必須記錄出資類型與時間基準。"
+    },
+    "valueType": "monetary",
+    "timeBasis": "institution_specific"
+  },
+  {
+    "indicatorId": "partner_financial_institutions",
+    "category": "delivery_network",
+    "name": { "en": "Partner Financial Institutions", "zh-TW": "合作金融機構數" },
+    "definition": {
+      "en": "The number of distinct partner institutions at a stated date, classified by bank, cooperative, credit union, NBFI or rural institution type.",
+      "zh-TW": "截至特定日期之不重複合作機構數，並按銀行、合作社、信用合作社、非銀行金融機構或農村金融機構分類。"
+    },
+    "requiredMetadata": ["value", "unit", "institutionTypes", "asOfDate", "sourceId"],
+    "numeratorDefinition": null,
+    "denominatorDefinition": null,
+    "comparabilityLevel": "medium",
+    "commonMisinterpretations": {
+      "en": ["Branches, legal entities and signed agreements may produce different counts."],
+      "zh-TW": ["分行、法人機構及簽約件數可能產生不同計數。"]
+    },
+    "allowedAggregation": ["sum_only_when_entities_are_distinct"],
+    "notComparableWith": [],
+    "notes": {
+      "en": "Entity and network-unit definitions must be explicit.",
+      "zh-TW": "須明確定義法人與網絡單位。"
+    },
+    "valueType": "count",
+    "timeBasis": "point_in_time"
+  },
+  {
+    "indicatorId": "sme_msme_share",
+    "category": "reach_and_inclusion",
+    "name": { "en": "SME / MSME Share", "zh-TW": "中小微企業業務占比" },
+    "definition": {
+      "en": "The share of activity attributed to officially defined SMEs or MSMEs using a documented activity denominator.",
+      "zh-TW": "依官方中小企業或中小微企業定義，以明確業務分母計算之占比。"
+    },
+    "requiredMetadata": [
+      "value",
+      "unit",
+      "numeratorDefinition",
+      "denominatorDefinition",
+      "reportingPeriodType",
+      "periodStart",
+      "periodEnd",
+      "sourceId"
+    ],
+    "numeratorDefinition": {
+      "en": "Activity attributed to the official SME or MSME population.",
+      "zh-TW": "歸屬於官方中小企業或中小微企業範圍之業務量。"
+    },
+    "denominatorDefinition": {
+      "en": "Total activity measured on the same amount, count and period basis.",
+      "zh-TW": "以相同金額、件數及期間基礎計算之總業務量。"
+    },
+    "comparabilityLevel": "low",
+    "commonMisinterpretations": {
+      "en": ["National SME definitions and activity denominators differ."],
+      "zh-TW": ["各國中小企業定義及業務分母不同。"]
+    },
+    "allowedAggregation": [],
+    "notComparableWith": [],
+    "notes": { "en": "Preserve the national SME definition.", "zh-TW": "須保存各國中小企業定義。" },
+    "valueType": "ratio",
+    "timeBasis": "flow"
+  },
+  {
+    "indicatorId": "agriculture_related_guarantee_activity",
+    "category": "special_policy_programmes",
+    "name": { "en": "Agriculture-related Guarantee Activity", "zh-TW": "農業相關保證業務" },
+    "definition": {
+      "en": "A structured description or measure of guarantee activity explicitly classified as agricultural by the institution or governing programme.",
+      "zh-TW": "由機構或主管方案明確分類為農業之保證業務描述或衡量值。"
+    },
+    "requiredMetadata": [
+      "value",
+      "unit",
+      "definitionUsed",
+      "reportingPeriodType",
+      "periodStart",
+      "periodEnd",
+      "asOfDate",
+      "sourceId"
+    ],
+    "numeratorDefinition": null,
+    "denominatorDefinition": null,
+    "comparabilityLevel": "institution_specific",
+    "commonMisinterpretations": {
+      "en": ["Not every institution has an agriculture mandate or compatible sector taxonomy."],
+      "zh-TW": ["並非所有機構具有農業任務或相容的產業分類。"]
+    },
+    "allowedAggregation": [],
+    "notComparableWith": [],
+    "notes": {
+      "en": "Absence may mean non-applicability, not missing performance.",
+      "zh-TW": "未提供可能是不適用，不代表績效缺漏。"
+    },
+    "valueType": "descriptive",
+    "timeBasis": "institution_specific"
+  },
+  {
+    "indicatorId": "green_esg_guarantee_activity",
+    "category": "special_policy_programmes",
+    "name": { "en": "Green / ESG Guarantee Activity", "zh-TW": "綠色／永續信用保證業務" },
+    "definition": {
+      "en": "The existence or scale of a guarantee programme classified under a documented green, climate or ESG taxonomy.",
+      "zh-TW": "依明確綠色、氣候或 ESG 分類法認定之保證方案存在狀態或業務規模。"
+    },
+    "requiredMetadata": [
+      "value",
+      "unit",
+      "taxonomyUsed",
+      "programmeExists",
+      "reportingPeriodType",
+      "periodStart",
+      "periodEnd",
+      "asOfDate",
+      "sourceId"
+    ],
+    "numeratorDefinition": null,
+    "denominatorDefinition": null,
+    "comparabilityLevel": "low",
+    "commonMisinterpretations": {
+      "en": [
+        "Programme existence, guarantee amount and beneficiary count are separate observations."
+      ],
+      "zh-TW": ["方案存在、保證金額及受益對象數是不同觀察值。"]
+    },
+    "allowedAggregation": [],
+    "notComparableWith": [],
+    "notes": {
+      "en": "Taxonomy and reporting year are mandatory.",
+      "zh-TW": "必須記錄分類法及報導年度。"
+    },
+    "valueType": "descriptive",
+    "timeBasis": "institution_specific"
+  },
+  {
+    "indicatorId": "average_processing_time",
+    "category": "operational_efficiency",
+    "name": { "en": "Average Processing Time", "zh-TW": "平均處理時間" },
+    "definition": {
+      "en": "The institution-reported average elapsed time for a defined application or claim process and service channel.",
+      "zh-TW": "機構公布之特定申請或理賠流程及服務通路平均經過時間。"
+    },
+    "requiredMetadata": [
+      "value",
+      "unit",
+      "processDefinition",
+      "reportingPeriodType",
+      "periodStart",
+      "periodEnd",
+      "sourceId"
+    ],
+    "numeratorDefinition": {
+      "en": "Total elapsed processing time for included cases.",
+      "zh-TW": "納入案件之總處理經過時間。"
+    },
+    "denominatorDefinition": {
+      "en": "Number of included completed cases.",
+      "zh-TW": "納入之已完成案件數。"
+    },
+    "comparabilityLevel": "medium",
+    "commonMisinterpretations": {
+      "en": ["Application, approval, issuance and claim processing times differ."],
+      "zh-TW": ["申請、核准、簽發及理賠處理時間不同。"]
+    },
+    "allowedAggregation": ["weighted_average_same_process_definition"],
+    "notComparableWith": [],
+    "notes": {
+      "en": "Process boundaries and service channel are mandatory.",
+      "zh-TW": "必須記錄流程起訖與服務通路。"
+    },
+    "valueType": "ratio",
+    "timeBasis": "flow"
+  }
+]

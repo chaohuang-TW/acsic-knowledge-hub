@@ -10,7 +10,7 @@ test('international default uses English and preserves the independent disclaime
   ).toBeVisible();
   await expect(page.getByText('Independent, unofficial platform')).toBeVisible();
   await expect(page.getByText('20', { exact: true }).first()).toBeVisible();
-  await expect(page.getByText('33', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('45', { exact: true }).first()).toBeVisible();
 });
 
 test('English and Traditional Chinese routes, switch and preference memory work', async ({
@@ -128,8 +128,8 @@ test('all 21 institution details can be opened and closed', async ({ page }) => 
 
 test('source registry statistics, metadata and filters are functional', async ({ page }) => {
   await page.goto('./#/en/sources');
-  await expect(page.getByText('52', { exact: true }).first()).toBeVisible();
-  await expect(page.getByText('33', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('64', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('45', { exact: true }).first()).toBeVisible();
   await expect(page.getByText('Annual or integrated reports')).toBeVisible();
   await expect(page.getByText('Scheme or programme documents')).toBeVisible();
   await page.getByLabel('Institution', { exact: true }).selectOption('askrindo-id');
@@ -140,7 +140,7 @@ test('source registry statistics, metadata and filters are functional', async ({
   await page.getByLabel('Institution', { exact: true }).selectOption('all');
   await page.getByLabel('Access status').selectOption('all');
   await page.getByLabel('Document type').selectOption('official_law_or_regulation');
-  await expect(page.locator('.institution-list article')).toHaveCount(3);
+  await expect(page.locator('.institution-list article')).toHaveCount(5);
   await expect(page.locator('.institution-list')).not.toContainText('official_law_or_regulation');
 });
 
@@ -218,4 +218,41 @@ test('hash refresh and Pages subpath preserve a deep bilingual route', async ({ 
   await page.reload();
   await expect(page).toHaveURL(/acsic-knowledge-hub\/#\/zh-TW\/sources$/);
   await expect(page.getByRole('heading', { name: '官方來源' })).toBeVisible();
+});
+
+test('reference set page exposes seven evidence-led cases in English', async ({ page }) => {
+  await page.goto('./#/en/reference');
+  await expect(page.getByRole('heading', { name: 'Reference Institutions' })).toBeVisible();
+  await expect(page.locator('.reference-card')).toHaveCount(7);
+  await expect(page.getByText('Research boundary')).toBeVisible();
+  await expect(page.locator('main')).toContainText('not a ranking of institutional performance');
+});
+
+test('reference and framework routes switch to Traditional Chinese', async ({ page }) => {
+  await page.goto('./#/en/reference');
+  await page.getByLabel('Language').selectOption('zh-TW');
+  await expect(page).toHaveURL(/#\/zh-TW\/reference$/);
+  await expect(page.getByRole('heading', { name: '標竿研究機構' })).toBeVisible();
+  await page.goto('./#/zh-TW/framework');
+  await expect(page.getByRole('heading', { name: '比較指標框架' })).toBeVisible();
+  await expect(page.locator('main')).toContainText('不作績效排名');
+});
+
+test('comparative framework renders 21 definitions and five readiness rows', async ({ page }) => {
+  await page.goto('./#/en/framework');
+  await expect(page.getByText('21', { exact: true }).first()).toBeVisible();
+  await expect(page.locator('.indicator-group details')).toHaveCount(21);
+  await expect(page.locator('tbody tr')).toHaveCount(5);
+  await page.locator('.indicator-group details').first().locator('summary').click();
+  await expect(page.locator('.indicator-detail').first()).toBeVisible();
+});
+
+test('new research pages remain usable on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('./#/zh-TW/reference');
+  await expect(page.locator('.reference-card')).toHaveCount(7);
+  await expect(page.getByLabel('語言')).toBeVisible();
+  await page.goto('./#/zh-TW/framework');
+  await expect(page.locator('.indicator-group details')).toHaveCount(21);
+  await expect(page.locator('.table-scroll')).toBeVisible();
 });

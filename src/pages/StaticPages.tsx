@@ -3,6 +3,14 @@ import { PageHeader, ResearchBadge } from '../components/Layout';
 import { coverageStats, membershipStats } from '../data/coverage';
 import { institutions, sourceRegistry } from '../data/institutions';
 import { level2FieldLabels } from '../data/level2-standards';
+import {
+  indicatorCategoryLabels,
+  indicatorDictionary,
+  level3PilotReadiness,
+  productionLevel3Values,
+} from '../data/indicators';
+import { referenceSetDisclaimer } from '../data/reference-set';
+import { researchPriorityDisclaimer } from '../data/research-priority';
 import { useLocale } from '../i18n';
 import { routePath } from '../routing';
 import type { Locale, SourceType } from '../types';
@@ -394,6 +402,191 @@ export function SystemsPage() {
       <div className="state-message">
         <h2>{c.emptyTitle}</h2>
         <p>{c.emptyText}</p>
+      </div>
+    </section>
+  );
+}
+
+export function ReferenceInstitutionsPage() {
+  const { locale } = useLocale();
+  const records = institutions.filter((record) => record.referenceSet);
+  const statusLabel = (status: string) =>
+    locale === 'en'
+      ? status.replaceAll('_', ' ')
+      : status === 'complete'
+        ? '完整'
+        : status === 'partial'
+          ? '部分完成'
+          : '證據不足';
+  return (
+    <section className="section-shell page-section">
+      <PageHeader
+        title={locale === 'en' ? 'Reference Institutions' : '標竿研究機構'}
+        intro={
+          locale === 'en'
+            ? 'Seven institutionally diverse cases anchor Level 2 research and future comparison design.'
+            : '以七個制度角色多元的機構案例，作為 Level 2 研究與未來比較設計的基礎。'
+        }
+      />
+      <div className="research-notice" role="note">
+        <strong>{locale === 'en' ? 'Research boundary' : '研究邊界'}</strong>
+        <p>{referenceSetDisclaimer[locale]}</p>
+        <p>{researchPriorityDisclaimer[locale]}</p>
+      </div>
+      <div className="reference-grid">
+        {records.map((record) => (
+          <article className="reference-card" key={record.id}>
+            <div className="record-title">
+              <div>
+                <span className="eyebrow">
+                  {record.countryName[locale]} · {record.institutionAbbreviation}
+                </span>
+                <h2>{record.name[locale]}</h2>
+              </div>
+              <span className={`status ${record.level2Status}`}>
+                {statusLabel(record.level2Status)}
+              </span>
+            </div>
+            <p className="reference-role">{record.referenceSetRole?.[locale]}</p>
+            <p>{record.referenceSetRationale?.[locale]}</p>
+            <dl className="metric-list">
+              <div>
+                <dt>{locale === 'en' ? 'Level 2 completion' : 'Level 2 完成度'}</dt>
+                <dd>{record.level2Completion}%</dd>
+              </div>
+              <div>
+                <dt>{locale === 'en' ? 'Evidence objects' : '證據物件'}</dt>
+                <dd>{Object.values(record.fieldEvidence).flat().length}</dd>
+              </div>
+              <div>
+                <dt>{locale === 'en' ? 'Research priority' : '研究優先級'}</dt>
+                <dd>
+                  {record.researchPriority.score}/20 · {record.researchPriority.priorityBand}
+                </dd>
+              </div>
+            </dl>
+            <p>
+              <strong>{locale === 'en' ? 'Research role: ' : '研究角色：'}</strong>
+              {record.referenceSetRole?.[locale]}
+            </p>
+            <p>
+              <strong>{locale === 'en' ? 'Remaining gaps: ' : '待補缺口：'}</strong>
+              {record.missingFields.length
+                ? record.missingFields
+                    .map(
+                      (field) =>
+                        (level2FieldLabels[field] ?? { en: field, 'zh-TW': field })[locale],
+                    )
+                    .join(locale === 'en' ? ', ' : '、')
+                : locale === 'en'
+                  ? 'None under the current Level 2 standard'
+                  : '目前 Level 2 標準下無缺口'}
+            </p>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export function ComparativeFrameworkPage() {
+  const { locale } = useLocale();
+  const categories = [...new Set(indicatorDictionary.map((item) => item.category))];
+  return (
+    <section className="section-shell page-section">
+      <PageHeader
+        title={locale === 'en' ? 'Comparative Indicator Framework' : '比較指標框架'}
+        intro={
+          locale === 'en'
+            ? 'A governed dictionary for future Level 3 data collection, with explicit comparability limits.'
+            : '供未來 Level 3 資料蒐集使用的治理型指標字典，並明確標示可比性限制。'
+        }
+      />
+      <div className="research-notice" role="note">
+        <strong>{locale === 'en' ? 'No performance ranking' : '不作績效排名'}</strong>
+        <p>
+          {locale === 'en'
+            ? 'Indicators describe disclosed activity under different mandates and definitions. They must not be used as a league table.'
+            : '各指標描述不同法定任務與定義下的公開業務，不得作為機構績效排行榜。'}
+        </p>
+        <p>
+          {locale === 'en'
+            ? `Production Level 3 values: ${productionLevel3Values.length}. Empty by design until an approved pilot.`
+            : `正式 Level 3 數值：${productionLevel3Values.length}。核准試辦前依設計維持空白。`}
+        </p>
+      </div>
+      <div className="framework-summary">
+        <strong>{indicatorDictionary.length}</strong>
+        <span>{locale === 'en' ? 'governed indicators' : '個治理指標'}</span>
+        <strong>{categories.length}</strong>
+        <span>{locale === 'en' ? 'categories' : '個分類'}</span>
+      </div>
+      <div className="indicator-groups">
+        {categories.map((category) => (
+          <section key={category} className="indicator-group">
+            <h2>{indicatorCategoryLabels[category][locale]}</h2>
+            {indicatorDictionary
+              .filter((indicator) => indicator.category === category)
+              .map((indicator) => (
+                <details key={indicator.indicatorId}>
+                  <summary>
+                    <span>{indicator.name[locale]}</span>
+                    <small>{indicator.comparabilityLevel.replaceAll('_', ' ')}</small>
+                  </summary>
+                  <div className="indicator-detail">
+                    <p>{indicator.definition[locale]}</p>
+                    <dl>
+                      <div>
+                        <dt>{locale === 'en' ? 'Unit' : '單位'}</dt>
+                        <dd>{indicator.valueType}</dd>
+                      </div>
+                      <div>
+                        <dt>{locale === 'en' ? 'Time basis' : '時間基礎'}</dt>
+                        <dd>{indicator.timeBasis.replaceAll('_', ' ')}</dd>
+                      </div>
+                      <div>
+                        <dt>{locale === 'en' ? 'Comparability risk' : '可比性風險'}</dt>
+                        <dd>
+                          {indicator.comparabilityLevel.replaceAll('_', ' ')} —{' '}
+                          {indicator.notes[locale]}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>{locale === 'en' ? 'Do not compare with' : '不可直接比較'}</dt>
+                        <dd>{indicator.notComparableWith.join(', ') || '—'}</dd>
+                      </div>
+                    </dl>
+                  </div>
+                </details>
+              ))}
+          </section>
+        ))}
+      </div>
+      <h2>{locale === 'en' ? 'Level 3 pilot readiness' : 'Level 3 試辦準備度'}</h2>
+      <div className="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>{locale === 'en' ? 'Institution' : '機構'}</th>
+              <th>{locale === 'en' ? 'Readiness' : '準備度'}</th>
+              <th>{locale === 'en' ? 'Comparability risk' : '可比性風險'}</th>
+              <th>{locale === 'en' ? 'Research note' : '研究說明'}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {level3PilotReadiness.map((item) => {
+              const institution = institutions.find((record) => record.id === item.institutionId)!;
+              return (
+                <tr key={item.institutionId}>
+                  <th scope="row">{institution.name[locale]}</th>
+                  <td>{item.pilotReadiness.replaceAll('_', ' ')}</td>
+                  <td>{item.comparabilityRisk}</td>
+                  <td>{item.rationale[locale]}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </section>
   );

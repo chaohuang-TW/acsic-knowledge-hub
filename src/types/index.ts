@@ -129,6 +129,21 @@ export interface Institution {
   geographicScope: LocalizedText | null;
   officialPublications: LocalizedText[];
   acsicRoleNotes: LocalizedText;
+  referenceSet: boolean;
+  referenceSetRole: LocalizedText | null;
+  referenceSetRationale: LocalizedText | null;
+  referenceSetVerifiedDate: string | null;
+  researchPriority: {
+    strategicRelevance: number;
+    comparabilityPotential: number;
+    sourceAvailability: number;
+    researchGapValue: number;
+    score: number;
+    priorityBand: 'high' | 'medium' | 'low' | 'deferred';
+    researchStatus: 'active' | 'deferred_due_to_source_limitations';
+    rationale: LocalizedText;
+    lastReviewedDate: string;
+  };
   typeSpecificProfile: Record<string, LocalizedText | LocalizedText[] | null>;
   sourceIds: string[];
   sourceReferences: SourceReference[];

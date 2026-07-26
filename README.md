@@ -26,6 +26,8 @@ An independent bilingual public-data research platform for ACSIC member institut
 - Credit Guarantee Systems
 - Knowledge & Practices
 - Events & Resources
+- Reference Institutions
+- Comparative Indicator Framework
 
 Comparison, reports, source governance and downloads remain available as research tools. Empty future sections use explicit bilingual states and do not contain invented institutions or systems.
 
@@ -53,6 +55,8 @@ See [Member Coverage](docs/ACSIC_MEMBER_COVERAGE.md), [Membership Methodology](d
 The latest transport-level checks are recorded in [Official URL Validation](docs/SOURCE_URL_VALIDATION.md).
 
 See [Translation Guide](docs/TRANSLATION_GUIDE.md) and [Source Methodology](docs/SOURCE_METHODOLOGY.md).
+
+The current research release is documented in [Reference Institutions](docs/REFERENCE_INSTITUTIONS.md), [Comparative Indicator Methodology](docs/COMPARATIVE_INDICATOR_METHODOLOGY.md), [Research Priority Methodology](docs/RESEARCH_PRIORITY_METHODOLOGY.md) and [Level 3 Data Contract](docs/LEVEL3_DATA_CONTRACT.md).
 
 ## Development
 
@@ -82,8 +86,8 @@ The repository was renamed from `acgf-strategy-os-demo` on 2026-07-16. See [Repo
 ## Current governed coverage
 
 - Formal members: 20; observers: 1; countries/economies: 14; institutions: 21.
-- Level 1 complete: 21; strict Level 2 complete: 1; partial: 19; insufficient: 1; reliable Level 3 metrics: 0.
-- Source references: 52; unique official sources: 33; field-level evidence objects: 203.
+- Level 1 complete: 21; strict Level 2 complete: 4; partial: 16; insufficient: 1; reliable Level 3 metrics: 0.
+- Source references: 64; unique official sources: 45; field-level evidence objects: 222.
 - User-visible governed content bilingual coverage: 100%; official native-language names: 11/21.
 
 <!-- GENERATED:COVERAGE:END -->
