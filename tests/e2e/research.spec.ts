@@ -337,6 +337,17 @@ test('English data route publishes 12 records and keeps readiness behind methodo
 test('Traditional Chinese pilot route, filters and bilingual statuses work', async ({ page }) => {
   await page.goto('./#/zh-TW/data-pilot');
   await expect(page.getByRole('heading', { name: '已查證官方數據' })).toBeVisible();
+  const primaryPeriods = page.locator(
+    '.pilot-record-card > .record-title, .pilot-record-card > .pilot-record-grid:not(.methodology-grid)',
+  );
+  const primaryPeriodText = (await primaryPeriods.allTextContents()).join(' ');
+  expect(primaryPeriodText).not.toContain('113 年');
+  expect(primaryPeriodText).not.toContain('114 年');
+  expect(primaryPeriodText).not.toContain('民國');
+  await expect(page.getByText('2024 年', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('2025 年', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('截至 2025 年 12 月 31 日', { exact: true })).toHaveCount(2);
+  await expect(page.getByText('1974–2025', { exact: true })).toBeVisible();
   await page.locator('.pilot-toolbar').getByLabel('機構', { exact: true }).selectOption('jfc-jp');
   await expect(page.locator('.pilot-record-card')).toHaveCount(2);
   await expect(page.getByText('已查證但有限制').first()).toBeVisible();
@@ -364,12 +375,31 @@ test('provenance viewer links each displayed value to its official source and pa
   );
 });
 
+test('provenance preserves original ROC labels and source locators separately from normalized periods', async ({
+  page,
+}) => {
+  await page.goto('./#/zh-TW/data-pilot');
+  const tsmecCumulative = page.locator('.pilot-record-card').filter({ hasText: '1974–2025' });
+  await tsmecCumulative.getByText('查看來源與資料處理').click();
+  await expect(tsmecCumulative.getByText('官方原始期間標示', { exact: true })).toBeVisible();
+  await expect(tsmecCumulative.getByText('自 63 年設立至 114 年底', { exact: true })).toBeVisible();
+  await expect(tsmecCumulative).toContainText('1974–2025');
+  const performanceRecord = page.locator('.pilot-record-card').filter({ hasText: '1,487,527' });
+  await performanceRecord.getByText('查看來源與資料處理').click();
+  await expect(
+    performanceRecord.getByText('保證績效 > 114年 > 承保 > 金額', { exact: true }),
+  ).toBeVisible();
+});
+
 test('pilot JSON and readiness CSV export in both languages', async ({ page }) => {
   await page.goto('./#/en/data-pilot');
   await page.locator('.download-details summary').click();
   let pending = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Export pilot JSON' }).click();
   expect((await pending).suggestedFilename()).toBe('acsic-level3-pilot-v1-en.json');
+  pending = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export pilot CSV' }).click();
+  expect((await pending).suggestedFilename()).toBe('acsic-level3-pilot-v1-en.csv');
   pending = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Export readiness CSV' }).click();
   expect((await pending).suggestedFilename()).toBe('acsic-level3-readiness-v1-en.csv');

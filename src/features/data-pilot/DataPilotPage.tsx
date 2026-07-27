@@ -10,6 +10,7 @@ import {
 import { institutions, sourceRegistry } from '../../data/institutions';
 import { useLocale } from '../../i18n';
 import type { Locale } from '../../types';
+import { formatDisplayPeriod } from '../../utils/period';
 import type {
   IndicatorReadinessStatus,
   ProductionVerificationStatus,
@@ -53,11 +54,13 @@ const copy = {
     indicator: 'Indicator',
     all: 'All',
     exportJson: 'Export pilot JSON',
+    exportPilotCsv: 'Export pilot CSV',
     exportCsv: 'Export readiness CSV',
     officialLabel: 'Official reported label',
     reportedValue: 'Reported value',
     originalCurrency: 'Original currency',
     period: 'Reporting period',
+    originalPeriod: 'Official original period label',
     scheme: 'Scheme',
     normalized: 'Normalized interpretation',
     comparability: 'Comparability',
@@ -108,11 +111,13 @@ const copy = {
     indicator: '指標',
     all: '全部',
     exportJson: '匯出試辦 JSON',
+    exportPilotCsv: '匯出試辦 CSV',
     exportCsv: '匯出準備度 CSV',
     officialLabel: '官方原始欄位名稱',
     reportedValue: '官方原始值',
     originalCurrency: '原始幣別',
     period: '報告期間',
+    originalPeriod: '官方原始期間標示',
     scheme: '方案',
     normalized: '標準化解讀',
     comparability: '可比性',
@@ -185,6 +190,10 @@ export function DataPilotPage() {
   const institutionName = (id: string) =>
     institutions.find((institution) => institution.id === id)?.name[locale] ?? id;
   const indicatorName = (id: string) => indicatorById.get(id)?.name[locale] ?? id;
+  const displayRecord = (record: (typeof productionLevel3Values)[number]) => ({
+    ...record,
+    displayPeriod: formatDisplayPeriod(record.period, locale),
+  });
 
   const exportJson = () =>
     downloadFile(
@@ -193,7 +202,7 @@ export function DataPilotPage() {
         {
           dictionary: indicatorDictionaryTitle,
           exportedLocale: locale,
-          records: productionLevel3Values,
+          records: productionLevel3Values.map(displayRecord),
         },
         null,
         2,
@@ -224,6 +233,32 @@ export function DataPilotPage() {
     ]);
     downloadFile(
       `acsic-level3-readiness-v1-${locale}.csv`,
+      [header, ...rows].map((row) => row.map(escapeCsv).join(',')).join('\n'),
+      'text/csv;charset=utf-8',
+    );
+  };
+
+  const exportPilotCsv = () => {
+    const header = [
+      c.institution,
+      c.indicator,
+      c.period,
+      c.originalPeriod,
+      c.reportedValue,
+      c.originalCurrency,
+      c.source,
+    ];
+    const rows = productionLevel3Values.map((record) => [
+      institutionName(record.institutionId),
+      indicatorName(record.indicatorId),
+      formatDisplayPeriod(record.period, locale),
+      record.reported.originalPeriodLabel ?? '',
+      `${formatNumber(record.reported.value, locale)} ${record.reported.unit}`,
+      record.reported.currency ?? '',
+      sourceRegistry.find((source) => source.sourceId === record.source.sourceId)?.title ?? '',
+    ]);
+    downloadFile(
+      `acsic-level3-pilot-v1-${locale}.csv`,
       [header, ...rows].map((row) => row.map(escapeCsv).join(',')).join('\n'),
       'text/csv;charset=utf-8',
     );
@@ -285,6 +320,9 @@ export function DataPilotPage() {
           <button className="button secondary" type="button" onClick={exportJson}>
             {c.exportJson}
           </button>
+          <button className="button secondary" type="button" onClick={exportPilotCsv}>
+            {c.exportPilotCsv}
+          </button>
           <button className="button secondary" type="button" onClick={exportReadiness}>
             {c.exportCsv}
           </button>
@@ -306,7 +344,8 @@ export function DataPilotPage() {
               <div className="record-title">
                 <div>
                   <span className="eyebrow">
-                    {institutionName(record.institutionId)} · {record.reported.periodLabel}
+                    {institutionName(record.institutionId)} ·{' '}
+                    {formatDisplayPeriod(record.period, locale)}
                   </span>
                   <h2>{indicatorName(record.indicatorId)}</h2>
                 </div>
@@ -327,16 +366,13 @@ export function DataPilotPage() {
                 </div>
                 <div>
                   <dt>{c.period}</dt>
-                  <dd>
-                    {record.reported.periodLabel}
-                    {record.period.asOfDate ? ` · ${record.period.asOfDate}` : ''}
-                  </dd>
+                  <dd>{formatDisplayPeriod(record.period, locale)}</dd>
                 </div>
                 <div>
                   <dt>{c.source}</dt>
                   <dd>
                     <a href={source.url} target="_blank" rel="noreferrer">
-                      {source.title}
+                      {source.publisher}
                     </a>
                   </dd>
                 </div>
@@ -349,6 +385,12 @@ export function DataPilotPage() {
                     <dt>{c.officialLabel}</dt>
                     <dd lang={source.originalLanguage}>{record.reported.label}</dd>
                   </div>
+                  {record.reported.originalPeriodLabel && (
+                    <div>
+                      <dt>{c.originalPeriod}</dt>
+                      <dd lang={source.originalLanguage}>{record.reported.originalPeriodLabel}</dd>
+                    </div>
+                  )}
                   <div>
                     <dt>{c.scheme}</dt>
                     <dd>{scheme}</dd>
