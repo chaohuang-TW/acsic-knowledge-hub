@@ -44,10 +44,13 @@ const pageCopy = {
       primary: 'Explore institutions',
       secondary: 'Compare institutions',
       tertiary: 'About ACSIC',
-      imageAlt:
-        'Abstract knowledge flow connecting official sources, verification and research outputs',
-      imageCaption:
-        'Official sources become traceable knowledge through structured review and comparison.',
+      networkTitle: 'ACSIC Network',
+      acrossAsia: 'Across Asia',
+      formalMembers: 'Formal Members',
+      observer: 'Observer',
+      countriesEconomies: 'Countries / Economies',
+      institutionsCovered: 'Institutions Covered',
+      exploreAll: 'Explore all institutions →',
       scopeTitle: 'What you can do here',
       scope: [
         ['Find institutions', 'Find ACSIC members and its observer by country, type and mandate.'],
@@ -167,8 +170,13 @@ const pageCopy = {
       primary: '探索會員機構',
       secondary: '比較制度',
       tertiary: '認識 ACSIC',
-      imageAlt: '抽象知識流程圖，連結官方來源、查證程序與研究成果',
-      imageCaption: '官方來源經結構化、查證與比較後，形成可追溯的研究知識。',
+      networkTitle: 'ACSIC 聯盟概況',
+      acrossAsia: '橫跨亞洲',
+      formalMembers: '正式會員',
+      observer: '觀察員',
+      countriesEconomies: '國家／經濟體',
+      institutionsCovered: '涵蓋機構',
+      exploreAll: '探索全部會員機構 →',
       scopeTitle: '你可以在這裡做什麼',
       scope: [
         ['找機構', '依國家、類型與任務快速查找 ACSIC 會員及觀察員。'],
@@ -265,6 +273,21 @@ const pageCopy = {
 export function HomePage() {
   const { locale } = useLocale();
   const c = pageCopy[locale].home;
+  const countries = useMemo(
+    () =>
+      [
+        ...new Map(
+          institutions.map((record) => [record.countryCode, record.countryName[locale]]),
+        ).values(),
+      ].sort((left, right) => left.localeCompare(right, locale)),
+    [locale],
+  );
+  const networkStats = [
+    [c.formalMembers, membershipStats.formalMembers],
+    [c.observer, membershipStats.observers],
+    [c.countriesEconomies, membershipStats.countriesEconomies],
+    [c.institutionsCovered, membershipStats.institutionsCovered],
+  ] as const;
   return (
     <>
       <section className="hero section-shell">
@@ -284,15 +307,24 @@ export function HomePage() {
             {c.tertiary}
           </a>
         </div>
-        <figure className="hero-visual">
-          <img
-            src={`${import.meta.env.BASE_URL}assets/knowledge-flow.png`}
-            alt={c.imageAlt}
-            width="1536"
-            height="1024"
-          />
-          <figcaption>{c.imageCaption}</figcaption>
-        </figure>
+        <aside className="network-hero" aria-label={c.networkTitle}>
+          <h2>{c.networkTitle}</h2>
+          <dl className="network-stats">
+            {networkStats.map(([label, value]) => (
+              <div key={label}>
+                <dt>{label}</dt>
+                <dd>{value}</dd>
+              </div>
+            ))}
+          </dl>
+          <section className="network-countries" aria-labelledby="network-countries-title">
+            <h3 id="network-countries-title">{c.acrossAsia}</h3>
+            <p>{countries.join(', ')}</p>
+          </section>
+          <a className="network-link" href={`#${routePath(locale, 'members')}`}>
+            {c.exploreAll}
+          </a>
+        </aside>
       </section>
       <section className="section-shell problem-section">
         <h2>{c.scopeTitle}</h2>
@@ -305,28 +337,8 @@ export function HomePage() {
           ))}
         </div>
       </section>
-      <section className="section-shell outcomes-section">
-        <h2>{locale === 'en' ? 'ACSIC at a glance' : 'ACSIC 一覽'}</h2>
-        <div className="problem-grid coverage-grid">
-          {[
-            [locale === 'en' ? 'Formal Members' : '正式會員', membershipStats.formalMembers],
-            [locale === 'en' ? 'Observer' : '觀察員', membershipStats.observers],
-            [
-              locale === 'en' ? 'Countries / Economies' : '國家／經濟體',
-              membershipStats.countriesEconomies,
-            ],
-            [
-              locale === 'en' ? 'Institutions Covered' : '涵蓋機構',
-              membershipStats.institutionsCovered,
-            ],
-          ].map(([label, value]) => (
-            <article key={label}>
-              <strong className="coverage-number">{value}</strong>
-              <p>{label}</p>
-            </article>
-          ))}
-        </div>
-        <div className="outcome-callout">
+      <section className="section-shell boundary-section home-boundary">
+        <div>
           <h3>{c.boundaryTitle}</h3>
           <p>{c.boundary}</p>
         </div>
