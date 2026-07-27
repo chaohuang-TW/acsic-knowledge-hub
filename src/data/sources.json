@@ -1,5 +1,93 @@
 [
   {
+    "sourceId": "jfc-credit-insurance-outline",
+    "institutionIds": ["jfc-jp", "jfg-jp"],
+    "title": "信用保険業務（概要）",
+    "publisher": "Japan Finance Corporation",
+    "sourceType": "official_scheme_document",
+    "tier": "tier_1",
+    "url": "https://www.jfc.go.jp/n/company/sme/insurance_outline.html",
+    "finalResolvedUrl": "https://www.jfc.go.jp/n/company/sme/insurance_outline.html",
+    "originalLanguage": "ja",
+    "publicationDate": null,
+    "documentDate": null,
+    "accessedDate": "2026-07-27",
+    "pageOrSection": "信用補完制度の仕組み；信用補完制度の流れ；Ⅱ 保険金の支払；Ⅲ 回収金の納付",
+    "accessStatus": "accessible",
+    "stalenessWarning": false,
+    "isPrimarySource": true,
+    "notes": {
+      "en": "Official JFC overview of the CGC guarantee and JFC credit-insurance relationship, including subrogation insurance payments and recovery remittance.",
+      "zh-TW": "JFC 官方概要，說明信用保證協會保證與 JFC 信用保險的關係，包括代位清償保險金及回收款繳納。"
+    }
+  },
+  {
+    "sourceId": "kodit-credit-guarantee-process",
+    "institutionIds": ["kodit-kr"],
+    "title": "Credit Guarantee",
+    "publisher": "Korea Credit Guarantee Fund",
+    "sourceType": "official_scheme_document",
+    "tier": "tier_1",
+    "url": "https://www.kodit.or.kr/koditEng/cm/cntnts/cntntsView.do?cntntsId=11562&mi=2770",
+    "finalResolvedUrl": "https://www.kodit.or.kr/koditEng/cm/cntnts/cntntsView.do?cntntsId=11562&mi=2770",
+    "originalLanguage": "en",
+    "publicationDate": null,
+    "documentDate": null,
+    "accessedDate": "2026-07-27",
+    "pageOrSection": "Procedure; Guarantee application & interview; Partial Guarantee System; Guarantee Fee",
+    "accessStatus": "accessible",
+    "stalenessWarning": false,
+    "isPrimarySource": true,
+    "notes": {
+      "en": "Official KODIT procedure, partial-guarantee and guarantee-fee description used only for system-level knowledge and governed field evidence.",
+      "zh-TW": "KODIT 官方程序、部分保證與保證費說明，僅用於制度層知識與治理後欄位證據。"
+    }
+  },
+  {
+    "sourceId": "kodit-p-cbo-guarantee",
+    "institutionIds": ["kodit-kr"],
+    "title": "P-CBO Guarantee",
+    "publisher": "Korea Credit Guarantee Fund",
+    "sourceType": "official_scheme_document",
+    "tier": "tier_1",
+    "url": "https://www.kodit.or.kr/koditEng/cm/cntnts/cntntsView.do?cntntsId=11565&mi=2773",
+    "finalResolvedUrl": "https://www.kodit.or.kr/koditEng/cm/cntnts/cntntsView.do?cntntsId=11565&mi=2773",
+    "originalLanguage": "en",
+    "publicationDate": null,
+    "documentDate": null,
+    "accessedDate": "2026-07-27",
+    "pageOrSection": "Overview; Procedure",
+    "accessStatus": "accessible",
+    "stalenessWarning": false,
+    "isPrimarySource": true,
+    "notes": {
+      "en": "Official description of P-CBO guarantees for direct-market fundraising through corporate bonds and the associated securitisation structure.",
+      "zh-TW": "官方說明 P-CBO 保證，支持企業透過公司債及相關證券化架構進入直接金融市場籌資。"
+    }
+  },
+  {
+    "sourceId": "acsic-38th-conference-2026",
+    "institutionIds": ["cgtmse-in"],
+    "title": "Global Symposium & 38th ACSIC Conference 2026",
+    "publisher": "Credit Guarantee Fund Trust for Micro and Small Enterprises",
+    "sourceType": "official_event_announcement",
+    "tier": "tier_1",
+    "url": "https://globalacsic2026.in/",
+    "finalResolvedUrl": "https://globalacsic2026.in/",
+    "originalLanguage": "en",
+    "publicationDate": null,
+    "documentDate": "2026-04-23",
+    "accessedDate": "2026-07-27",
+    "pageOrSection": "Home; About the Event; Key Focus Areas; Venue",
+    "accessStatus": "accessible",
+    "stalenessWarning": false,
+    "isPrimarySource": true,
+    "notes": {
+      "en": "Official CGTMSE event website recording the 38th ACSIC Conference dates, venue, combined symposium and published focus areas.",
+      "zh-TW": "CGTMSE 官方活動網站，記錄第 38 屆 ACSIC 年會日期、場地、合辦論壇及已公開的重點主題。"
+    }
+  },
+  {
     "sourceId": "tsmeg-indirect-guarantee",
     "institutionIds": ["tsmeg-tw"],
     "title": "間接保證",

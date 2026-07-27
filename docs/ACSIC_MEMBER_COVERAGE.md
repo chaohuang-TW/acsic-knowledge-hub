@@ -6,7 +6,7 @@
 
 - Formal members: 20; observers: 1; countries/economies: 14; institutions: 21.
 - Level 1 complete: 21; strict Level 2 complete: 4; partial: 16; insufficient: 1; verified Level 3 pilot records: 12.
-- Source references: 70; unique official sources: 51; field-level evidence objects: 222.
+- Source references: 73; unique official sources: 55; field-level evidence objects: 224.
 - User-visible governed content bilingual coverage: 100%; official native-language names: 11/21.
 
 <!-- GENERATED:COVERAGE:END -->
@@ -19,9 +19,9 @@ Level 2 is calculated from the central versioned standard. Missing applicable fi
 | India             | Credit Guarantee Fund Trust for Micro and Small Enterprises | CGTMSE        | Member       | credit_guarantee_fund                    |    100% | partial (50%)      |                 2 |                         9 | pending     | 2026-07-16    |
 | Indonesia         | Association of Indonesia Credit Guarantee Corporations      | ASIPPINDO     | Member       | guarantee_association                    |    100% | partial (53%)      |                 2 |                         8 | official    | 2026-07-16    |
 | Indonesia         | PT. Asuransi Kredit Indonesia                               | ASKRINDO      | Member       | credit_guarantee_corporation             |    100% | insufficient (11%) |                 2 |                        16 | pending     | 2026-07-16    |
-| Japan             | Japan Finance Corporation                                   | JFC           | Member       | policy_finance_institution               |    100% | complete (100%)    |                 6 |                         0 | official    | 2026-07-26    |
+| Japan             | Japan Finance Corporation                                   | JFC           | Member       | policy_finance_institution               |    100% | complete (100%)    |                 7 |                         0 | official    | 2026-07-27    |
 | Japan             | Japan Federation of Credit Guarantee Corporations           | JFG           | Member       | guarantee_federation                     |    100% | partial (88%)      |                 4 |                         2 | official    | 2026-07-26    |
-| Republic of Korea | Korea Credit Guarantee Fund                                 | KODIT         | Member       | credit_guarantee_fund                    |    100% | partial (50%)      |                 3 |                         9 | official    | 2026-07-16    |
+| Republic of Korea | Korea Credit Guarantee Fund                                 | KODIT         | Member       | credit_guarantee_fund                    |    100% | partial (61%)      |                 5 |                         7 | official    | 2026-07-27    |
 | Republic of Korea | Korea Federation of Credit Guarantee Foundations            | KOREG         | Member       | guarantee_federation                     |    100% | partial (41%)      |                 2 |                        10 | official    | 2026-07-16    |
 | Republic of Korea | Korea Technology Finance Corporation                        | KOTEC         | Member       | technology_finance_guarantee_institution |    100% | complete (100%)    |                 8 |                         0 | official    | 2026-07-27    |
 | Kyrgyz Republic   | Open Joint Stock Company Guarantee Fund                     | OJSCGF        | Member       | credit_guarantee_corporation             |    100% | partial (44%)      |                 2 |                        10 | pending     | 2026-07-16    |
@@ -39,7 +39,8 @@ Level 2 is calculated from the central versioned standard. Missing applicable fi
 
 ## Unique source types
 
-- official_scheme_document: 3
+- official_scheme_document: 6
+- official_event_announcement: 1
 - official_membership_roster: 2
 - official_institution_profile: 28
 - official_governance_document: 3

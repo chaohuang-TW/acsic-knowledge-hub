@@ -192,8 +192,8 @@ test('all 21 institution details can be opened and closed', async ({ page }) => 
 
 test('source registry statistics, metadata and filters are functional', async ({ page }) => {
   await page.goto('./#/en/sources');
-  await expect(page.getByText('70', { exact: true }).first()).toBeVisible();
-  await expect(page.getByText('51', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('73', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('55', { exact: true }).first()).toBeVisible();
   await expect(page.getByText('Annual or integrated reports')).toBeVisible();
   await expect(page.getByText('Scheme or programme documents')).toBeVisible();
   await page.getByLabel('Institution', { exact: true }).selectOption('askrindo-id');
@@ -221,27 +221,42 @@ test('systems publish only source-supported public system knowledge in both lang
     page.getByRole('heading', { name: 'Japan: differentiated institutional roles' }),
   ).toBeVisible();
   await expect(page.getByText('51 credit guarantee corporations')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Credit insurance coverage' })).toBeVisible();
+  await expect(page.getByText('70%, 80% or 90% of the subrogated amount')).toBeVisible();
+  await expect(page.locator('main')).not.toContainText('Guarantee Coverage Ratio');
+  await expect(page.getByRole('heading', { name: 'Direct application model' })).toBeVisible();
+  await expect(page.getByText('KODIT branch or online')).toBeVisible();
+  await expect(page.getByText('70%–85%')).toBeVisible();
+  await expect(page.getByText('90%–100%')).toBeVisible();
+  await expect(page.getByText('0.5%–3.0%')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'P-CBO guarantee' })).toBeVisible();
+  await expect(page.getByText('capital market')).toBeVisible();
   await expect(
     page.getByRole('heading', {
       name: 'Republic of Korea: technology appraisal in guarantee review',
     }),
   ).toBeVisible();
   await expect(page.getByRole('heading', { name: 'AIRATE technology appraisal' })).toBeVisible();
-  await expect(page.locator('main')).not.toContainText('70%');
   await page.getByLabel('Language').selectOption('zh-TW');
   await expect(page).toHaveURL(/#\/zh-TW\/systems$/);
   await expect(page.getByRole('heading', { name: '信用保證制度' })).toBeVisible();
   await expect(page.getByRole('heading', { name: '間接保證' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '信用保險填補比例' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'P-CBO 保證' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'AIRATE 技術評價' })).toBeVisible();
 });
 
-test('resources retain an official-verification gate for ACSIC event records', async ({ page }) => {
+test('resources publish only ACSIC events with verified official sources', async ({ page }) => {
   await page.goto('./#/en/resources');
-  await expect(page.getByRole('heading', { name: 'ACSIC event archive - planned' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'ACSIC Events' })).toBeVisible();
   await expect(
-    page.getByText('Event materials are listed only after official provenance'),
+    page.getByRole('heading', { name: 'Global Symposium & 38th ACSIC Conference 2026' }),
   ).toBeVisible();
-  await expect(page.locator('main')).not.toContainText('2027');
+  await expect(page.getByText('23–24 April 2026')).toBeVisible();
+  await expect(page.getByText('The Taj Mahal Palace, Mumbai, India')).toBeVisible();
+  await expect(page.getByText('CGTMSE')).toBeVisible();
+  await expect(page.locator('.event-card a[href="https://globalacsic2026.in/"]')).toHaveCount(1);
+  await expect(page.locator('main')).not.toContainText('event archive - planned');
 });
 
 test('cross-role comparison shows warning and user-first comparison fields', async ({ page }) => {

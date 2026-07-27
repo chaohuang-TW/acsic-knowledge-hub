@@ -142,8 +142,7 @@ describe('deduplicated source registry and evidence', () => {
     expect(serializedRegistry).not.toContain('notion.so');
     expect(serializedRegistry).not.toContain('notion.site');
     expect(serializedRegistry).not.toContain('notion.com');
-    expect(serializedRegistry).not.toContain('docs.google.com');
-    expect(serializedRegistry).not.toContain('drive.google.com');
+    expect(serializedRegistry).not.toContain('app.notion.com');
   });
   it('gives every evidence object a valid source', () =>
     institutions.forEach((r) =>

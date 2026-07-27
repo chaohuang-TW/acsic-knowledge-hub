@@ -81,6 +81,7 @@ const evidenceSourceOverrides: Record<string, Record<string, string>> = {
     supervisingOrOversightAuthority: 'jfc-governance',
     fundingOrCapitalBasis: 'jfc-governance',
     geographicScope: 'jfc-japanese-profile',
+    creditInsuranceOrGuaranteeRole: 'jfc-credit-insurance-outline',
   },
   'jfg-jp': {
     sharedServices: 'jfg-japanese-profile',
@@ -103,6 +104,11 @@ const evidenceSourceOverrides: Record<string, Record<string, string>> = {
   },
   'tsmeg-tw': {
     guaranteeDeliveryModel: 'tsmeg-indirect-guarantee',
+  },
+  'kodit-kr': {
+    guaranteeDeliveryModel: 'kodit-credit-guarantee-process',
+    riskSharingOverview: 'kodit-credit-guarantee-process',
+    mainGuaranteeCategories: 'kodit-p-cbo-guarantee',
   },
   'philguarantee-ph': { legalBasis: 'philguarantee-eo58-2018' },
   'dcgf-np': {

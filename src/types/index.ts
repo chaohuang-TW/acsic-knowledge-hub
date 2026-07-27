@@ -28,6 +28,7 @@ export type SourceType =
   | 'official_governance_document'
   | 'official_government_source'
   | 'official_press_release'
+  | 'official_event_announcement'
   | 'official_strategy_document';
 
 export interface SourceReference {
