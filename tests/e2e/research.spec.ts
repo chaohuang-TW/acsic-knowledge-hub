@@ -10,6 +10,17 @@ test('international default uses English and preserves the independent disclaime
   ).toBeVisible();
   await expect(page.getByText('Independent, unofficial platform')).toBeVisible();
   await expect(page.getByText('20', { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'ACSIC Network' })).toBeVisible();
+  await expect(page.getByText('Across Asia')).toBeVisible();
+  await expect(page.getByText('Cambodia, India, Indonesia, Japan')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Explore all institutions →' })).toHaveAttribute(
+    'href',
+    '#/en/members',
+  );
+  await expect(page.locator('main')).not.toContainText(
+    'Official sources become traceable knowledge through structured review and comparison.',
+  );
+  await expect(page.getByRole('heading', { name: 'ACSIC at a glance' })).toHaveCount(0);
   await expect(
     page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link'),
   ).toHaveCount(5);
@@ -30,6 +41,20 @@ test('international default uses English and preserves the independent disclaime
   ).toHaveCount(0);
   await expect(page.locator('main')).not.toContainText('Level 2 Complete');
   await expect(page.locator('main')).not.toContainText('Source references');
+});
+
+test('Traditional Chinese homepage renders the dynamic ACSIC network overview', async ({
+  page,
+}) => {
+  await page.goto('./#/zh-TW/');
+  await expect(page.getByRole('heading', { name: 'ACSIC 聯盟概況' })).toBeVisible();
+  await expect(page.getByText('橫跨亞洲')).toBeVisible();
+  await expect(page.locator('.network-countries p')).toContainText('柬埔寨');
+  await expect(page.locator('.network-countries p')).toContainText('日本');
+  await expect(page.getByRole('link', { name: '探索全部會員機構 →' })).toHaveAttribute(
+    'href',
+    '#/zh-TW/members',
+  );
 });
 
 test('English and Traditional Chinese routes, switch and preference memory work', async ({
