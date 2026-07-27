@@ -5,11 +5,8 @@ import { routePath, type PageId } from '../routing';
 const navigation: Array<[PageId, keyof ReturnType<typeof useLocale>['t']['nav']]> = [
   ['overview', 'overview'],
   ['members', 'members'],
-  ['systems', 'systems'],
-  ['reference', 'reference'],
-  ['framework', 'framework'],
+  ['compare', 'compare'],
   ['data-pilot', 'dataPilot'],
-  ['practices', 'practices'],
   ['resources', 'resources'],
 ];
 
@@ -21,7 +18,6 @@ export function ResearchBadge() {
 export function PageHeader({ title, intro }: { title: string; intro: string }) {
   return (
     <header className="page-header">
-      <ResearchBadge />
       <h1>{title}</h1>
       <p>{intro}</p>
     </header>
@@ -85,6 +81,16 @@ export function Layout({ page, children }: { page: PageId; children: ReactNode }
           <p>{t.disclaimer}</p>
         </div>
         <div className="footer-links">
+          <strong>{locale === 'en' ? 'Research & Methodology' : '研究與方法'}</strong>
+          <a href={`#${routePath(locale, 'sources')}`}>
+            {locale === 'en' ? 'Official sources' : '官方來源'}
+          </a>
+          <a href={`#${routePath(locale, 'reference')}`}>
+            {locale === 'en' ? 'Reference institutions' : '標竿研究機構'}
+          </a>
+          <a href={`#${routePath(locale, 'framework')}`}>
+            {locale === 'en' ? 'Comparative framework' : '比較指標框架'}
+          </a>
           <a href={`#${routePath(locale, 'governance')}`}>
             {locale === 'en' ? 'Data governance' : '資料治理'}
           </a>
