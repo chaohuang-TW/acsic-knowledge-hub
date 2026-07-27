@@ -39,16 +39,16 @@ const statusLabels: Record<
 
 const copy = {
   en: {
-    title: 'Verified Data Pilot',
+    title: 'Verified Data',
     intro:
-      'Trace each published value from an official source through definition mapping and normalization to a governed Level 3 indicator.',
-    boundary: 'Pilot boundary',
+      'Explore quantitative data with traceable official sources, reporting periods and definitions.',
+    boundary: 'Data boundary',
     boundaryText:
       'Twelve official records cover JFC, ACGF and TSMEG only. Missing values remain governed readiness outcomes; no USD conversion, chart or performance ranking is produced.',
-    records: 'production records',
-    readiness: 'indicator readiness decisions',
-    institutions: 'pilot institutions',
-    dictionary: 'Dictionary',
+    records: 'verified data records',
+    institutions: 'institutions',
+    indicators: 'indicators',
+    download: 'Download data',
     institution: 'Institution',
     indicator: 'Indicator',
     all: 'All',
@@ -64,7 +64,7 @@ const copy = {
     source: 'Official source',
     page: 'Page / section',
     verifiedDate: 'Verification date',
-    viewProvenance: 'View provenance',
+    viewProvenance: 'View source & methodology',
     officialSource: 'Official source',
     sourceLocation: 'Page / table',
     reported: 'Reported value',
@@ -95,15 +95,15 @@ const copy = {
     gatesPassed: 'Research, schema, source and comparability review passed.',
   },
   'zh-TW': {
-    title: '官方量化資料試辦',
-    intro: '每筆發布數值皆可由官方來源，經定義對映與標準化程序，追溯至治理後的 Level 3 指標。',
-    boundary: '試辦邊界',
+    title: '已查證官方數據',
+    intro: '查看具有官方來源、報告期間與資料定義的量化資訊。',
+    boundary: '資料範圍',
     boundaryText:
       '12 筆官方資料僅涵蓋 JFC、ACGF 與 TSMEG。缺漏維持治理狀態；不轉換美元、不建立圖表或績效排名。',
-    records: '筆 production 資料',
-    readiness: '格指標準備度判斷',
-    institutions: '家試辦機構',
-    dictionary: '指標字典',
+    records: '筆已查證資料',
+    institutions: '家機構',
+    indicators: '個指標',
+    download: '下載資料',
     institution: '機構',
     indicator: '指標',
     all: '全部',
@@ -119,7 +119,7 @@ const copy = {
     source: '官方來源',
     page: '頁碼／章節',
     verifiedDate: '查證日期',
-    viewProvenance: '檢視資料來源鏈',
+    viewProvenance: '查看來源與資料處理',
     officialSource: '官方來源',
     sourceLocation: '頁碼／表格',
     reported: '官方原始值',
@@ -232,27 +232,18 @@ export function DataPilotPage() {
   return (
     <section className="section-shell page-section data-pilot-page">
       <PageHeader title={c.title} intro={c.intro} />
-      <div className="research-notice" role="note">
-        <strong>{c.boundary}</strong>
-        <p>{c.boundaryText}</p>
-      </div>
-
       <div className="pilot-summary" aria-label={c.boundary}>
         <div>
           <strong>{productionLevel3Values.length}</strong>
           <span>{c.records}</span>
         </div>
         <div>
-          <strong>{indicatorReadiness.length}</strong>
-          <span>{c.readiness}</span>
-        </div>
-        <div>
           <strong>{pilotInstitutionIds.length}</strong>
           <span>{c.institutions}</span>
         </div>
         <div>
-          <strong>v1.0</strong>
-          <span>{c.dictionary}</span>
+          <strong>{pilotIndicatorIds.length}</strong>
+          <span>{c.indicators}</span>
         </div>
       </div>
 
@@ -287,6 +278,9 @@ export function DataPilotPage() {
             ))}
           </select>
         </label>
+      </div>
+      <details className="download-details">
+        <summary>{c.download}</summary>
         <div className="button-row">
           <button className="button secondary" type="button" onClick={exportJson}>
             {c.exportJson}
@@ -295,7 +289,7 @@ export function DataPilotPage() {
             {c.exportCsv}
           </button>
         </div>
-      </div>
+      </details>
 
       <div className="pilot-records" aria-live="polite">
         {records.map((record) => {
@@ -322,10 +316,6 @@ export function DataPilotPage() {
               </div>
               <dl className="pilot-record-grid">
                 <div>
-                  <dt>{c.officialLabel}</dt>
-                  <dd lang={source.originalLanguage}>{record.reported.label}</dd>
-                </div>
-                <div>
                   <dt>{c.reportedValue}</dt>
                   <dd className="reported-number">
                     {formatNumber(record.reported.value, locale)} {record.reported.unit}
@@ -343,39 +333,49 @@ export function DataPilotPage() {
                   </dd>
                 </div>
                 <div>
-                  <dt>{c.scheme}</dt>
-                  <dd>{scheme}</dd>
-                </div>
-                <div>
-                  <dt>{c.normalized}</dt>
-                  <dd>
-                    {formatNumber(record.normalized.value, locale)} {record.normalized.unit}
-                    <small>{record.normalized.notes[locale]}</small>
-                  </dd>
-                </div>
-                <div>
-                  <dt>{c.comparability}</dt>
-                  <dd>
-                    {record.comparability.status.replaceAll('_', ' ')}
-                    <small>{record.comparability.issues[locale].join(' ')}</small>
-                  </dd>
-                </div>
-                <div>
                   <dt>{c.source}</dt>
-                  <dd>{source.title}</dd>
-                </div>
-                <div>
-                  <dt>{c.page}</dt>
-                  <dd>{record.source.pageOrSection}</dd>
-                </div>
-                <div>
-                  <dt>{c.verifiedDate}</dt>
-                  <dd>{record.source.verifiedDate}</dd>
+                  <dd>
+                    <a href={source.url} target="_blank" rel="noreferrer">
+                      {source.title}
+                    </a>
+                  </dd>
                 </div>
               </dl>
 
               <details className="provenance-viewer">
                 <summary>{c.viewProvenance}</summary>
+                <dl className="pilot-record-grid methodology-grid">
+                  <div>
+                    <dt>{c.officialLabel}</dt>
+                    <dd lang={source.originalLanguage}>{record.reported.label}</dd>
+                  </div>
+                  <div>
+                    <dt>{c.scheme}</dt>
+                    <dd>{scheme}</dd>
+                  </div>
+                  <div>
+                    <dt>{c.normalized}</dt>
+                    <dd>
+                      {formatNumber(record.normalized.value, locale)} {record.normalized.unit}
+                      <small>{record.normalized.notes[locale]}</small>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>{c.comparability}</dt>
+                    <dd>
+                      {record.comparability.status.replaceAll('_', ' ')}
+                      <small>{record.comparability.issues[locale].join(' ')}</small>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>{c.page}</dt>
+                    <dd>{record.source.pageOrSection}</dd>
+                  </div>
+                  <div>
+                    <dt>{c.verifiedDate}</dt>
+                    <dd>{record.source.verifiedDate}</dd>
+                  </div>
+                </dl>
                 <ol>
                   <li>
                     <strong>{c.officialSource}</strong>
@@ -438,8 +438,10 @@ export function DataPilotPage() {
         <p>{c.noChart}</p>
       </section>
 
-      <section className="readiness-section">
-        <h2>{c.readinessTitle}</h2>
+      <details className="research-details readiness-section">
+        <summary>
+          {locale === 'en' ? 'Research methodology: data availability' : '研究方法：資料可用性'}
+        </summary>
         <p>{c.readinessIntro}</p>
         <div className="table-scroll">
           <table>
@@ -473,7 +475,7 @@ export function DataPilotPage() {
             </tbody>
           </table>
         </div>
-      </section>
+      </details>
     </section>
   );
 }

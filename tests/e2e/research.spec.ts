@@ -6,11 +6,30 @@ test('international default uses English and preserves the independent disclaime
   await page.goto('./');
   await expect(page).toHaveURL(/acsic-knowledge-hub\/#\/en\/$/);
   await expect(
-    page.getByRole('heading', { name: 'Credit guarantee knowledge, connected across Asia' }),
+    page.getByRole('heading', { name: 'Explore Asia’s credit guarantee systems' }),
   ).toBeVisible();
   await expect(page.getByText('Independent, unofficial platform')).toBeVisible();
   await expect(page.getByText('20', { exact: true }).first()).toBeVisible();
-  await expect(page.getByText('48', { exact: true }).first()).toBeVisible();
+  await expect(
+    page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link'),
+  ).toHaveCount(5);
+  await expect(
+    page
+      .getByRole('navigation', { name: 'Primary navigation' })
+      .getByRole('link', { name: 'Reference Institutions' }),
+  ).toHaveCount(0);
+  await expect(
+    page
+      .getByRole('navigation', { name: 'Primary navigation' })
+      .getByRole('link', { name: 'Comparative Framework' }),
+  ).toHaveCount(0);
+  await expect(
+    page
+      .getByRole('navigation', { name: 'Primary navigation' })
+      .getByRole('link', { name: 'Verified Data Pilot' }),
+  ).toHaveCount(0);
+  await expect(page.locator('main')).not.toContainText('Level 2 Complete');
+  await expect(page.locator('main')).not.toContainText('Source references');
 });
 
 test('English and Traditional Chinese routes, switch and preference memory work', async ({
@@ -28,6 +47,24 @@ test('English and Traditional Chinese routes, switch and preference memory work'
   );
   await page.goto('./');
   await expect(page).toHaveURL(/#\/zh-TW\/$/);
+});
+
+test('ACSIC overview answers first-visit questions with current membership facts', async ({
+  page,
+}) => {
+  await page.goto('./#/en/overview');
+  await expect(page.getByRole('heading', { name: 'What is ACSIC?' })).toBeVisible();
+  await expect(page.getByText('20', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('1', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('14', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('21', { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Official source', exact: true })).toHaveAttribute(
+    'href',
+    'https://www.smeg.org.tw/en/basic/?node=10104',
+  );
+  await expect(page.locator('main')).not.toContainText(
+    'complete membership list will be validated next',
+  );
 });
 
 test('production member page has no development-state controls', async ({ page }) => {
@@ -53,10 +90,6 @@ test('search and all member filter classes use readable bilingual labels', async
   await expect(page.locator('.institution-list')).not.toContainText(
     'technology_finance_guarantee_institution',
   );
-  await page.getByRole('button', { name: 'Clear filters' }).click();
-  await page.getByLabel('Strict Level 2 status').selectOption('insufficient');
-  await expect(page.locator('.institution-list article')).toHaveCount(1);
-  await expect(page.getByText('PT. Asuransi Kredit Indonesia').first()).toBeVisible();
   await page.getByRole('button', { name: 'Clear filters' }).click();
   await page.getByLabel('ACSIC status').selectOption('observer');
   await expect(page.locator('.institution-list article')).toHaveCount(1);
@@ -85,8 +118,11 @@ test('detail view is readable, linked and preserves filter and record when langu
   await expect(
     detail.getByText('一般社団法人 全国信用保証協会連合会 (ja)', { exact: true }),
   ).toBeVisible();
+  const research = detail.locator('.research-details');
+  await expect(research).not.toHaveAttribute('open', '');
+  await research.locator('summary').click();
   await expect(
-    detail.getByRole('heading', { name: 'Documented non-applicable fields' }),
+    research.getByRole('heading', { name: 'Documented non-applicable fields' }),
   ).toBeVisible();
   await expect(detail.locator('a[href^="https://www.zenshinhoren.or.jp/"]').first()).toBeVisible();
   await expect(detail.getByRole('link', { name: 'Open source' }).first()).toHaveAttribute(
@@ -106,6 +142,7 @@ test('ASKRINDO exposes low confidence and critical source warning', async ({ pag
   await page.getByLabel('Search').fill('ASKRINDO');
   await page.getByRole('button', { name: 'View profile' }).click();
   const detail = page.locator('.detail-panel');
+  await detail.locator('.research-details summary').click();
   await expect(detail.getByText('Pending official-source confirmation')).toBeVisible();
   await expect(detail.getByText('Low ·')).toBeVisible();
   await expect(detail.getByText(/Source warning:/)).toBeVisible();
@@ -119,9 +156,7 @@ test('all 21 institution details can be opened and closed', async ({ page }) => 
   for (let index = 0; index < 21; index += 1) {
     await buttons.nth(index).click();
     await expect(page.locator('.detail-panel')).toBeVisible();
-    await expect(
-      page.locator('.detail-panel').getByRole('heading', { name: 'Field-level evidence' }),
-    ).toBeVisible();
+    await expect(page.locator('.detail-panel .research-details')).not.toHaveAttribute('open', '');
     await page.getByRole('button', { name: 'Close profile' }).click();
   }
 });
@@ -144,14 +179,14 @@ test('source registry statistics, metadata and filters are functional', async ({
   await expect(page.locator('.institution-list')).not.toContainText('official_law_or_regulation');
 });
 
-test('cross-role comparison shows warning and readable strict fields', async ({ page }) => {
+test('cross-role comparison shows warning and user-first comparison fields', async ({ page }) => {
   await page.goto('./#/en/compare');
   await expect(page.getByRole('heading', { name: 'Comparability warning' })).toBeVisible();
-  await expect(page.getByRole('rowheader', { name: 'Strict Level 2 status' })).toBeVisible();
-  await expect(
-    page.getByRole('rowheader', { name: 'Documented non-applicable fields' }),
-  ).toBeVisible();
-  await expect(page.getByRole('rowheader', { name: 'Confidence and rationale' })).toBeVisible();
+  await expect(page.getByRole('rowheader', { name: 'Country / Economy' })).toBeVisible();
+  await expect(page.getByRole('rowheader', { name: 'Mandate' })).toBeVisible();
+  await expect(page.getByRole('rowheader', { name: 'Funding / capital basis' })).toBeVisible();
+  await expect(page.getByRole('rowheader', { name: 'Strict Level 2 status' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Sources for this comparison' })).toBeVisible();
   await expect(page.locator('table')).not.toContainText('credit_guarantee_corporation');
 });
 
@@ -257,12 +292,14 @@ test('new research pages remain usable on mobile', async ({ page }) => {
   await expect(page.locator('.table-scroll')).toBeVisible();
 });
 
-test('English pilot route publishes 12 governed records and 21 readiness decisions', async ({
+test('English data route publishes 12 records and keeps readiness behind methodology', async ({
   page,
 }) => {
   await page.goto('./#/en/data-pilot');
-  await expect(page.getByRole('heading', { name: 'Verified Data Pilot' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Verified Data' })).toBeVisible();
   await expect(page.locator('.pilot-record-card')).toHaveCount(12);
+  await expect(page.locator('.readiness-section')).not.toHaveAttribute('open', '');
+  await page.locator('.readiness-section summary').click();
   await expect(page.locator('.readiness-section tbody tr')).toHaveCount(21);
   await expect(page.getByText('Verified with limitation').first()).toBeVisible();
   await expect(page.getByText('No chart is displayed')).toBeVisible();
@@ -270,10 +307,11 @@ test('English pilot route publishes 12 governed records and 21 readiness decisio
 
 test('Traditional Chinese pilot route, filters and bilingual statuses work', async ({ page }) => {
   await page.goto('./#/zh-TW/data-pilot');
-  await expect(page.getByRole('heading', { name: '官方量化資料試辦' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '已查證官方數據' })).toBeVisible();
   await page.locator('.pilot-toolbar').getByLabel('機構', { exact: true }).selectOption('jfc-jp');
   await expect(page.locator('.pilot-record-card')).toHaveCount(2);
   await expect(page.getByText('已查證但有限制').first()).toBeVisible();
+  await page.locator('.readiness-section summary').click();
   await expect(page.getByText('特定方案適用').first()).toBeVisible();
   await expect(page.locator('main')).not.toContainText('new_guarantee_volume');
 });
@@ -282,8 +320,9 @@ test('provenance viewer links each displayed value to its official source and pa
   page,
 }) => {
   await page.goto('./#/en/data-pilot');
+  await page.locator('.download-details summary').click();
   const card = page.locator('.pilot-record-card').first();
-  await card.getByText('View provenance').click();
+  await card.getByText('View source & methodology').click();
   const provenance = card.locator('.provenance-viewer');
   await expect(provenance.getByText('Official source', { exact: true }).last()).toBeVisible();
   await expect(provenance.getByText('Page / table', { exact: true })).toBeVisible();
@@ -298,6 +337,7 @@ test('provenance viewer links each displayed value to its official source and pa
 
 test('pilot JSON and readiness CSV export in both languages', async ({ page }) => {
   await page.goto('./#/en/data-pilot');
+  await page.locator('.download-details summary').click();
   let pending = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Export pilot JSON' }).click();
   expect((await pending).suggestedFilename()).toBe('acsic-level3-pilot-v1-en.json');
@@ -316,8 +356,8 @@ test('pilot remains usable at 390px without page-level horizontal overflow', asy
   await page.goto('./#/zh-TW/data-pilot');
   await expect(page.locator('.pilot-record-card')).toHaveCount(12);
   await expect(page.locator('.pilot-toolbar select').first()).toHaveCSS('min-width', '0px');
-  await expect(page.locator('.pilot-toolbar .button').first()).toHaveCSS('min-width', '0px');
-  await page.locator('.pilot-record-card').first().getByText('檢視資料來源鏈').click();
+  await expect(page.locator('.download-details')).not.toHaveAttribute('open', '');
+  await page.locator('.pilot-record-card').first().getByText('查看來源與資料處理').click();
   await expect(page.getByText('Knowledge Hub 指標', { exact: true }).first()).toBeVisible();
   expect(
     await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1),

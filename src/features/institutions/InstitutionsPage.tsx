@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { PageHeader, ResearchBadge } from '../../components/Layout';
+import { PageHeader } from '../../components/Layout';
 import { institutions } from '../../data/institutions';
 import { level2FieldLabels } from '../../data/level2-standards';
 import { useLocale } from '../../i18n';
@@ -9,13 +9,11 @@ import { displayValue } from '../../utils/core';
 const ui = {
   en: {
     title: 'Member Institutions',
-    intro:
-      'Auditable bilingual profiles with strict Level 2 status, field evidence and visible research gaps.',
+    intro: 'Find ACSIC members and its observer by country, institution type and public mandate.',
     search: 'Search',
     placeholder: 'Search institution, country, abbreviation or summary',
     country: 'Countries / Economies',
     type: 'Institution type',
-    status: 'Strict Level 2 status',
     membership: 'ACSIC status',
     all: 'All',
     member: 'Member',
@@ -33,9 +31,10 @@ const ui = {
     translation: 'Chinese-name status',
     role: 'Institution type',
     level2: 'Strict Level 2 status',
-    method: 'Completion method',
-    methodText:
-      'Verified applicable fields divided by all fields required by the central standard. A field is excluded only with a documented non-applicability reason.',
+    atGlance: 'At a glance',
+    whatItDoes: 'What this institution does',
+    framework: 'Institutional framework',
+    researchDetails: 'Research notes & data quality',
     service: 'Service targets',
     functions: 'Major functions',
     established: 'Established year',
@@ -71,12 +70,11 @@ const ui = {
   },
   'zh-TW': {
     title: '會員機構',
-    intro: '以嚴格 Level 2 狀態、欄位級證據與公開研究缺口呈現可稽核的完整雙語檔案。',
+    intro: '依國家、機構類型與公開任務，探索 ACSIC 會員及觀察員。',
     search: '關鍵字搜尋',
     placeholder: '搜尋機構、國家、簡稱或摘要',
     country: '國家／經濟體',
     type: '機構類型',
-    status: '嚴格 Level 2 狀態',
     membership: 'ACSIC 身分',
     all: '全部',
     member: '正式會員',
@@ -94,9 +92,10 @@ const ui = {
     translation: '中文名稱狀態',
     role: '機構類型',
     level2: '嚴格 Level 2 狀態',
-    method: '完整度算法',
-    methodText:
-      '以中央規格要求的全部欄位為基礎，計算已有證據的適用欄位比例；只有具正式理由的不適用欄位才能排除。',
+    atGlance: '機構概覽',
+    whatItDoes: '機構任務與業務',
+    framework: '制度架構',
+    researchDetails: '研究註記與資料品質',
     service: '服務對象',
     functions: '主要功能',
     established: '設立年份',
@@ -160,11 +159,20 @@ function InstitutionDetail({ record, onClose }: { record: Institution; onClose: 
   const { locale } = useLocale();
   const c = ui[locale];
   const source = (id: string) => record.sourceReferences.find((item) => item.sourceId === id);
+  const primarySources = [...record.sourceReferences].sort((left, right) => {
+    const priority = (item: SourceType) =>
+      [
+        'official_institution_profile',
+        'official_law_or_regulation',
+        'official_annual_report',
+        'official_scheme_document',
+      ].indexOf(item);
+    return priority(left.sourceType) - priority(right.sourceType);
+  });
   return (
     <section className="detail-panel" aria-labelledby="detail-title">
       <div className="detail-heading">
         <div>
-          <ResearchBadge />
           <h2 id="detail-title">{record.name[locale]}</h2>
           <p>
             {record.countryName[locale]} · {record.type[locale]} · ACSIC{' '}
@@ -175,181 +183,210 @@ function InstitutionDetail({ record, onClose }: { record: Institution; onClose: 
           {c.close}
         </button>
       </div>
-      <div className="detail-grid">
-        <section>
-          <h3>{c.officialName}</h3>
-          <p>{record.name.officialEnglish}</p>
-        </section>
-        <section>
-          <h3>{c.nativeName}</h3>
-          <p>
-            {record.name.nativeName.status === 'official'
-              ? `${record.name.nativeName.value} (${record.name.nativeName.language})`
-              : c.nativePending}
-          </p>
-        </section>
-        <section>
-          <h3>{c.translatedName}</h3>
-          <p>
-            {record.name['zh-TW']} · {c[record.name.zhTWTranslationStatus]}
-          </p>
-        </section>
-        <section>
-          <h3>{c.role}</h3>
-          <p>{record.type[locale]}</p>
-        </section>
-        <section>
-          <h3>{c.level2}</h3>
-          <p>
-            {statusLabel(record.level2Status, locale)} · {record.level2Completion}%
-          </p>
-        </section>
-        <section>
-          <h3>{c.method}</h3>
-          <p>{c.methodText}</p>
-        </section>
-        <section>
-          <h3>{c.established}</h3>
-          <p>{displayValue(record.establishedYear, locale)}</p>
-        </section>
-        <section>
-          <h3>{c.legal}</h3>
-          <p>{displayValue(record.legalBasis, locale)}</p>
-        </section>
-        <section>
-          <h3>{c.authority}</h3>
-          <p>{displayValue(record.supervisingOrOversightAuthority, locale)}</p>
-        </section>
-        <section>
-          <h3>{c.governance}</h3>
-          <p>{displayValue(record.governanceType, locale)}</p>
-        </section>
-        <section>
-          <h3>{c.funding}</h3>
-          <p>{displayValue(record.fundingOrCapitalBasis, locale)}</p>
-        </section>
-        <section>
-          <h3>{c.scope}</h3>
-          <p>{displayValue(record.geographicScope, locale)}</p>
-        </section>
-        <section>
-          <h3>{c.service}</h3>
-          {localizedList(record.serviceTargets, locale, c.noItems)}
-        </section>
-        <section>
-          <h3>{c.functions}</h3>
-          {localizedList(record.majorFunctions, locale, c.noItems)}
-        </section>
-        <section>
-          <h3>{c.confidence}</h3>
-          <p>
-            {c[record.confidenceLevel]} · {record.confidenceScore}/100
-          </p>
-        </section>
-        <section>
-          <h3>{c.confidenceReason}</h3>
-          <p>{record.confidenceRationale[locale]}</p>
-        </section>
-        <section>
-          <h3>{c.nextPriority}</h3>
-          <p>{record.nextResearchPriority[locale]}</p>
-        </section>
-        <section>
-          <h3>{c.officialWebsite}</h3>
-          <p>
-            <a href={record.officialWebsite} target="_blank" rel="noreferrer">
-              {record.officialWebsite}
-            </a>
-          </p>
-        </section>
-      </div>
-      <div className="evidence-grid">
-        <section>
-          <h3>{c.missingFields}</h3>
-          <ul>
-            {record.missingFields.map((field) => (
-              <li key={field}>
-                {(level2FieldLabels[field] ?? { en: field, 'zh-TW': field })[locale]}
-              </li>
-            ))}
-          </ul>
-        </section>
-        <section>
-          <h3>{c.notApplicable}</h3>
-          {record.notApplicableFields.length ? (
-            record.notApplicableFields.map((item) => (
-              <article key={item.field}>
-                <strong>
-                  {
-                    (level2FieldLabels[item.field] ?? { en: item.field, 'zh-TW': item.field })[
-                      locale
-                    ]
-                  }
-                </strong>
-                <p>{item.reason[locale]}</p>
-              </article>
-            ))
-          ) : (
-            <p>{c.noItems}</p>
-          )}
-        </section>
-      </div>
-      <section className="sources-block">
-        <h3>{c.evidence}</h3>
-        {Object.entries(record.fieldEvidence).map(([field, entries]) => (
-          <article key={field} className="evidence-card">
-            <h4>{(level2FieldLabels[field] ?? { en: field, 'zh-TW': field })[locale]}</h4>
-            {entries.map((entry) => {
-              const item = source(entry.sourceId);
-              return (
-                <div key={entry.evidenceId}>
-                  <p>{entry.evidenceSummary[locale]}</p>
-                  <p>
-                    <strong>{item?.title}</strong> · {entry.pageOrSection} · {entry.verifiedDate}
-                  </p>
-                  {item && (
-                    <a href={item.url} target="_blank" rel="noreferrer">
-                      {c.openSource}
-                    </a>
-                  )}
-                </div>
-              );
-            })}
-          </article>
-        ))}
-      </section>
-      <section className="sources-block">
-        <h3>{c.claims}</h3>
-        <ul>
-          {record.verifiedFacts.map((claim) => (
-            <li key={claim.claimId}>{claim.statement[locale]}</li>
-          ))}
-        </ul>
-      </section>
-      <section className="sources-block">
-        <h3>{c.sources}</h3>
-        {record.sourceReferences.map((item, index) => (
-          <article key={item.sourceId} className="source-card">
-            <h4>
-              [{index + 1}] {item.title}
-            </h4>
+      <section className="detail-section">
+        <h3>{c.atGlance}</h3>
+        <div className="detail-grid">
+          <section>
+            <h4>{c.officialName}</h4>
+            <p>{record.name.officialEnglish}</p>
+          </section>
+          <section>
+            <h4>{c.nativeName}</h4>
             <p>
-              {item.publisher} · {sourceTypeLabels[item.sourceType][locale]} ·{' '}
-              {item.originalLanguage} · {item.accessedDate}
+              {record.name.nativeName.status === 'official'
+                ? `${record.name.nativeName.value} (${record.name.nativeName.language})`
+                : c.nativePending}
             </p>
-            <p>{item.notes[locale]}</p>
-            {(item.stalenessWarning || item.accessStatus === 'temporarily_unavailable') && (
-              <p className="warning">
-                <strong>{c.sourceWarning}:</strong>{' '}
-                {item.stalenessWarning ? c.stale : c.unavailable}
-              </p>
-            )}
+          </section>
+          <section>
+            <h4>{c.translatedName}</h4>
+            <p>
+              {record.name['zh-TW']} · {c[record.name.zhTWTranslationStatus]}
+            </p>
+          </section>
+          <section>
+            <h4>{c.role}</h4>
+            <p>{record.type[locale]}</p>
+          </section>
+          <section>
+            <h4>{c.established}</h4>
+            <p>{displayValue(record.establishedYear, locale)}</p>
+          </section>
+          <section>
+            <h4>{c.officialWebsite}</h4>
+            <p>
+              <a href={record.officialWebsite} target="_blank" rel="noreferrer">
+                {record.officialWebsite}
+              </a>
+            </p>
+          </section>
+        </div>
+      </section>
+      <section className="detail-section">
+        <h3>{c.whatItDoes}</h3>
+        <p>{record.mandate[locale]}</p>
+        <div className="detail-grid">
+          <section>
+            <h4>{c.service}</h4>
+            {localizedList(record.serviceTargets, locale, c.noItems)}
+          </section>
+          <section>
+            <h4>{c.functions}</h4>
+            {localizedList(record.majorFunctions, locale, c.noItems)}
+          </section>
+        </div>
+      </section>
+      <section className="detail-section">
+        <h3>{c.framework}</h3>
+        <div className="detail-grid">
+          <section>
+            <h4>{c.legal}</h4>
+            <p>{displayValue(record.legalBasis, locale)}</p>
+          </section>
+          <section>
+            <h4>{c.authority}</h4>
+            <p>{displayValue(record.supervisingOrOversightAuthority, locale)}</p>
+          </section>
+          <section>
+            <h4>{c.governance}</h4>
+            <p>{displayValue(record.governanceType, locale)}</p>
+          </section>
+          <section>
+            <h4>{c.funding}</h4>
+            <p>{displayValue(record.fundingOrCapitalBasis, locale)}</p>
+          </section>
+          <section>
+            <h4>{c.scope}</h4>
+            <p>{displayValue(record.geographicScope, locale)}</p>
+          </section>
+        </div>
+      </section>
+      <section className="sources-block primary-sources">
+        <h3>{c.sources}</h3>
+        {primarySources.map((item) => (
+          <article key={item.sourceId} className="source-card">
+            <h4>{item.title}</h4>
+            <p>
+              {item.publisher} · {sourceTypeLabels[item.sourceType][locale]} · {item.accessedDate}
+            </p>
             <a href={item.url} target="_blank" rel="noreferrer">
               {c.openSource}
             </a>
           </article>
         ))}
       </section>
+      <details className="research-details">
+        <summary>{c.researchDetails}</summary>
+        <div className="detail-grid">
+          <section>
+            <h4>{c.level2}</h4>
+            <p>
+              {statusLabel(record.level2Status, locale)} · {record.level2Completion}%
+            </p>
+          </section>
+          <section>
+            <h4>{c.confidence}</h4>
+            <p>
+              {c[record.confidenceLevel]} · {record.confidenceScore}/100
+            </p>
+          </section>
+          <section>
+            <h4>{c.confidenceReason}</h4>
+            <p>{record.confidenceRationale[locale]}</p>
+          </section>
+          <section>
+            <h4>{c.nextPriority}</h4>
+            <p>{record.nextResearchPriority[locale]}</p>
+          </section>
+        </div>
+        <div className="evidence-grid">
+          <section>
+            <h4>{c.missingFields}</h4>
+            {localizedList(
+              record.missingFields.map(
+                (field) => level2FieldLabels[field] ?? { en: field, 'zh-TW': field },
+              ),
+              locale,
+              c.noItems,
+            )}
+          </section>
+          <section>
+            <h4>{c.notApplicable}</h4>
+            {record.notApplicableFields.length ? (
+              record.notApplicableFields.map((item) => (
+                <article key={item.field}>
+                  <strong>
+                    {
+                      (level2FieldLabels[item.field] ?? { en: item.field, 'zh-TW': item.field })[
+                        locale
+                      ]
+                    }
+                  </strong>
+                  <p>{item.reason[locale]}</p>
+                </article>
+              ))
+            ) : (
+              <p>{c.noItems}</p>
+            )}
+          </section>
+        </div>
+        <section className="sources-block">
+          <h3>{c.evidence}</h3>
+          {Object.entries(record.fieldEvidence).map(([field, entries]) => (
+            <article key={field} className="evidence-card">
+              <h4>{(level2FieldLabels[field] ?? { en: field, 'zh-TW': field })[locale]}</h4>
+              {entries.map((entry) => {
+                const item = source(entry.sourceId);
+                return (
+                  <div key={entry.evidenceId}>
+                    <p>{entry.evidenceSummary[locale]}</p>
+                    <p>
+                      <strong>{item?.title}</strong> · {entry.pageOrSection} · {entry.verifiedDate}
+                    </p>
+                    {item && (
+                      <a href={item.url} target="_blank" rel="noreferrer">
+                        {c.openSource}
+                      </a>
+                    )}
+                  </div>
+                );
+              })}
+            </article>
+          ))}
+        </section>
+        <section className="sources-block">
+          <h3>{c.claims}</h3>
+          <ul>
+            {record.verifiedFacts.map((claim) => (
+              <li key={claim.claimId}>{claim.statement[locale]}</li>
+            ))}
+          </ul>
+        </section>
+        <section className="sources-block">
+          <h3>{c.sources}</h3>
+          {record.sourceReferences.map((item, index) => (
+            <article key={item.sourceId} className="source-card">
+              <h4>
+                [{index + 1}] {item.title}
+              </h4>
+              <p>
+                {item.publisher} · {sourceTypeLabels[item.sourceType][locale]} ·{' '}
+                {item.originalLanguage} · {item.accessedDate}
+              </p>
+              <p>{item.notes[locale]}</p>
+              {(item.stalenessWarning || item.accessStatus === 'temporarily_unavailable') && (
+                <p className="warning">
+                  <strong>{c.sourceWarning}:</strong>{' '}
+                  {item.stalenessWarning ? c.stale : c.unavailable}
+                </p>
+              )}
+              <a href={item.url} target="_blank" rel="noreferrer">
+                {c.openSource}
+              </a>
+            </article>
+          ))}
+        </section>
+      </details>
     </section>
   );
 }
@@ -360,7 +397,6 @@ export function InstitutionsPage() {
   const [query, setQuery] = useState('');
   const [country, setCountry] = useState('all');
   const [type, setType] = useState('all');
-  const [status, setStatus] = useState('all');
   const [membership, setMembership] = useState('all');
   const [selected, setSelected] = useState<Institution | null>(null);
   const filtered = useMemo(
@@ -384,11 +420,10 @@ export function InstitutionsPage() {
           (!query || text.includes(query.toLocaleLowerCase())) &&
           (country === 'all' || record.countryCode === country) &&
           (type === 'all' || record.institutionRoleCategory === type) &&
-          (status === 'all' || record.level2Status === status) &&
           (membership === 'all' || record.acsicMembershipStatus === membership)
         );
       }),
-    [country, membership, query, status, type],
+    [country, membership, query, type],
   );
   const countries = [
     ...new Map(
@@ -404,7 +439,6 @@ export function InstitutionsPage() {
     setQuery('');
     setCountry('all');
     setType('all');
-    setStatus('all');
     setMembership('all');
   };
   return (
@@ -452,21 +486,6 @@ export function InstitutionsPage() {
           </select>
         </label>
         <label>
-          <span>{c.status}</span>
-          <select
-            aria-label={c.status}
-            value={status}
-            onChange={(event) => setStatus(event.target.value)}
-          >
-            <option value="all">{c.all}</option>
-            {(['complete', 'partial', 'insufficient', 'not_assessed'] as const).map((value) => (
-              <option key={value} value={value}>
-                {c[value]}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
           <span>{c.membership}</span>
           <select
             aria-label={c.membership}
@@ -497,13 +516,9 @@ export function InstitutionsPage() {
               <article key={record.id}>
                 <div className="record-title">
                   <div>
-                    <ResearchBadge />
                     <h2>{record.name[locale]}</h2>
                     <small>{record.name.en}</small>
                   </div>
-                  <span className={`status status-${record.confidenceLevel}`}>
-                    {statusLabel(record.level2Status, locale)}
-                  </span>
                 </div>
                 <p>
                   {record.countryName[locale]} · {record.type[locale]} · ACSIC{' '}
@@ -517,7 +532,7 @@ export function InstitutionsPage() {
                   </div>
                   <div>
                     <dt>{c.functions}</dt>
-                    <dd>{displayValue(record.majorFunctions, locale)}</dd>
+                    <dd>{displayValue(record.majorFunctions.slice(0, 2), locale)}</dd>
                   </div>
                   <div>
                     <dt>{c.level2}</dt>

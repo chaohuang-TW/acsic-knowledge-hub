@@ -38,35 +38,31 @@ const accessStatusLabels = {
 const pageCopy = {
   en: {
     home: {
-      title: 'Credit guarantee knowledge, connected across Asia',
+      title: 'Explore Asia’s credit guarantee systems',
       intro:
-        'Independent bilingual research on ACSIC member institutions, systems and public sources.',
+        'One place to explore ACSIC institutions, institutional models and source-traceable official data.',
       primary: 'Explore institutions',
-      secondary: 'How the platform works',
+      secondary: 'Compare institutions',
+      tertiary: 'About ACSIC',
       imageAlt:
         'Abstract knowledge flow connecting official sources, verification and research outputs',
       imageCaption:
         'Official sources become traceable knowledge through structured review and comparison.',
-      scopeTitle: 'A platform designed for the full ACSIC community',
+      scopeTitle: 'What you can do here',
       scope: [
+        ['Find institutions', 'Find ACSIC members and its observer by country, type and mandate.'],
         [
-          'Member institutions',
-          'Structured profiles preserve official names, evidence and research gaps.',
+          'Understand institutions',
+          'Read what each institution does, who it serves and how its framework is documented.',
         ],
         [
-          'Credit guarantee systems',
-          'A future comparison layer for legal mandates, tools and risk-sharing arrangements.',
+          'Compare institutions',
+          'Select two to four institutions and review their documented differences.',
         ],
         [
-          'Knowledge and practices',
-          'Reusable comparisons and reports generated from the same governed data.',
+          'Use official data',
+          'Explore quantitative records with sources, periods and definitions.',
         ],
-      ],
-      currentTitle: 'Current research foundation',
-      current: [
-        '9 institution profiles',
-        '18 official source records',
-        'English and Traditional Chinese interface',
       ],
       boundaryTitle: 'Independent and evidence-led',
       boundary:
@@ -75,12 +71,12 @@ const pageCopy = {
     overview: {
       title: 'ACSIC Overview',
       intro:
-        'A neutral entry point for future public information about ACSIC, its membership scope and knowledge network.',
-      headings: ['Scope', 'Evidence boundary', 'Next research stage'],
+        'A concise introduction to the Asian network behind this knowledge hub and its member institutions.',
+      headings: ['What is ACSIC?', 'ACSIC in brief', 'Purpose and exchange'],
       text: [
-        'The platform covers member institutions and observers only when their status is supported by an official public source.',
-        'Membership evidence, institution facts, research translations and pending items remain separate.',
-        'The next stage will validate the complete membership list before expanding institution-level detail.',
+        'Asian Credit Supplementation Institution Confederation (ACSIC) is an international exchange network for credit supplementation and credit guarantee related institutions in Asia.',
+        'This hub presents the current public membership scope with the underlying institution data kept separate from research metadata.',
+        'Established on 20 October 1987, ACSIC promotes sound development through information exchange, discussion and personnel interchange among participating institutions.',
       ],
     },
     systems: {
@@ -99,12 +95,13 @@ const pageCopy = {
       governance: 'Review data governance',
     },
     resources: {
-      title: 'Events & Resources',
-      intro: 'A future home for verified ACSIC event materials and official public resources.',
+      title: 'Resources',
+      intro:
+        'A practical starting point for source materials, methodology and comparative research.',
       source: 'Browse official sources',
-      emptyTitle: 'No event archive has been added',
+      emptyTitle: 'ACSIC event archive - planned',
       emptyText:
-        'Resources will appear only after official provenance, date and original language are recorded.',
+        'Event materials are listed only after official provenance, date and original language are recorded.',
     },
     governance: {
       title: 'Data Governance',
@@ -165,31 +162,31 @@ const pageCopy = {
   },
   'zh-TW': {
     home: {
-      title: '串聯亞洲信用保證知識',
-      intro: '以雙語、獨立且可查證的方式研究 ACSIC 會員機構、制度與公開來源。',
+      title: '探索亞洲信用保證制度',
+      intro: '從 ACSIC 會員機構、制度特色到官方數據，用一個入口理解亞洲信用補充體系。',
       primary: '探索會員機構',
-      secondary: '了解平台方法',
+      secondary: '比較制度',
+      tertiary: '認識 ACSIC',
       imageAlt: '抽象知識流程圖，連結官方來源、查證程序與研究成果',
       imageCaption: '官方來源經結構化、查證與比較後，形成可追溯的研究知識。',
-      scopeTitle: '為 ACSIC 全體會員設計的知識平台',
+      scopeTitle: '你可以在這裡做什麼',
       scope: [
-        ['會員機構', '結構化機構檔案保留官方名稱、會員證據與研究缺口。'],
-        ['信用保證制度', '未來可比較法定任務、政策工具與風險分擔安排。'],
-        ['知識與實務', '由同一套治理資料產生比較與可重用報告。'],
+        ['找機構', '依國家、類型與任務快速查找 ACSIC 會員及觀察員。'],
+        ['看制度', '了解各機構的任務、服務對象與可查證的制度架構。'],
+        ['做比較', '選擇二至四家機構，查看已記錄的制度差異。'],
+        ['查官方數據', '查看具有官方出處、期間與資料定義的量化資訊。'],
       ],
-      currentTitle: '目前研究基礎',
-      current: ['9 筆機構檔案', '18 筆官方來源紀錄', '英文與繁體中文介面'],
       boundaryTitle: '獨立且以證據為本',
       boundary: '本平台不是 ACSIC 經營或授權的網站。未知資料維持清楚標記，不由系統捏造補齊。',
     },
     overview: {
       title: 'ACSIC 概覽',
-      intro: '作為未來整理 ACSIC 公開資訊、會員範圍與知識網絡的中立入口。',
-      headings: ['研究範圍', '證據邊界', '下一階段'],
+      intro: '認識亞洲信用補充機構聯盟，以及本平台所整理的會員機構脈絡。',
+      headings: ['什麼是 ACSIC？', 'ACSIC 一覽', '成立背景與宗旨'],
       text: [
-        '只有在官方公開來源支持其身分時，才將會員機構與 Observer 納入平台。',
-        '會員證據、機構事實、研究翻譯與待查證事項分開保存。',
-        '下一階段將先驗證完整會員名冊，再逐步擴充機構制度細節。',
+        '亞洲地區信用補充機構聯盟（Asian Credit Supplementation Institution Confederation, ACSIC）是亞洲信用補充與信用保證相關機構的國際交流網絡。',
+        '本平台以現有公開會員資料呈現機構範圍，並將機構資訊與研究治理資料分開處理。',
+        'ACSIC 於 1987 年 10 月 20 日成立，透過資訊交換、討論及人員交流，促進會員地區信用補充制度的健全發展。',
       ],
     },
     systems: {
@@ -207,11 +204,11 @@ const pageCopy = {
       governance: '檢視資料治理',
     },
     resources: {
-      title: '活動與資源',
-      intro: '未來集中收錄可查證的 ACSIC 活動材料與官方公開資源。',
+      title: '資源',
+      intro: '從官方來源、研究方法到比較框架，快速找到可用的公開研究資源。',
       source: '瀏覽官方來源',
-      emptyTitle: '尚未建立活動資料庫',
-      emptyText: '只有完成官方出處、日期與原始語言登錄的資源才會刊登。',
+      emptyTitle: 'ACSIC 活動資料庫 - 規劃中',
+      emptyText: '只有完成官方出處、日期與原始語言登錄的活動材料才會刊登。',
     },
     governance: {
       title: '資料治理',
@@ -279,10 +276,13 @@ export function HomePage() {
             <a className="button primary" href={`#${routePath(locale, 'members')}`}>
               {c.primary}
             </a>
-            <a className="button secondary" href={`#${routePath(locale, 'overview')}`}>
+            <a className="button secondary" href={`#${routePath(locale, 'compare')}`}>
               {c.secondary}
             </a>
           </div>
+          <a className="text-link" href={`#${routePath(locale, 'overview')}`}>
+            {c.tertiary}
+          </a>
         </div>
         <figure className="hero-visual">
           <img
@@ -306,7 +306,7 @@ export function HomePage() {
         </div>
       </section>
       <section className="section-shell outcomes-section">
-        <h2>{locale === 'en' ? 'Membership Coverage' : '會員涵蓋情形'}</h2>
+        <h2>{locale === 'en' ? 'ACSIC at a glance' : 'ACSIC 一覽'}</h2>
         <div className="problem-grid coverage-grid">
           {[
             [locale === 'en' ? 'Formal Members' : '正式會員', membershipStats.formalMembers],
@@ -319,24 +319,6 @@ export function HomePage() {
               locale === 'en' ? 'Institutions Covered' : '涵蓋機構',
               membershipStats.institutionsCovered,
             ],
-            [locale === 'en' ? 'Level 1 Complete' : 'Level 1 完成', membershipStats.level1Complete],
-            [locale === 'en' ? 'Level 2 Complete' : 'Level 2 完成', membershipStats.level2Complete],
-            [
-              locale === 'en' ? 'Level 2 Partial' : 'Level 2 部分完成',
-              membershipStats.level2Partial,
-            ],
-            [
-              locale === 'en' ? 'Level 2 Insufficient' : 'Level 2 證據不足',
-              membershipStats.level2Insufficient,
-            ],
-            [
-              locale === 'en' ? 'Source references' : '來源引用紀錄',
-              membershipStats.sourceReferences,
-            ],
-            [
-              locale === 'en' ? 'Unique official sources' : '不重複官方來源',
-              membershipStats.uniqueOfficialSources,
-            ],
           ].map(([label, value]) => (
             <article key={label}>
               <strong className="coverage-number">{value}</strong>
@@ -344,38 +326,26 @@ export function HomePage() {
             </article>
           ))}
         </div>
-        <p>
-          {locale === 'en' ? 'Last membership verification' : '名冊最後查核日'}:{' '}
-          {membershipStats.lastMembershipVerificationDate}
-        </p>
-        <h2>{c.currentTitle}</h2>
-        <div className="outcome-layout">
-          <ol className="numbered-list">
-            {[
-              locale === 'en' ? '21 institution profiles' : '21 筆機構檔案',
-              locale === 'en'
-                ? `${membershipStats.sourceReferences} references to ${membershipStats.uniqueOfficialSources} unique official sources`
-                : `${membershipStats.sourceReferences} 筆引用紀錄，連結 ${membershipStats.uniqueOfficialSources} 個不重複官方來源`,
-              locale === 'en' ? 'English and Traditional Chinese interface' : '英文與繁體中文介面',
-            ].map((item) => (
-              <li key={item}>
-                <strong>{item}</strong>
-              </li>
-            ))}
-          </ol>
-          <div className="outcome-callout">
-            <h3>{c.boundaryTitle}</h3>
-            <p>{c.boundary}</p>
-          </div>
+        <div className="outcome-callout">
+          <h3>{c.boundaryTitle}</h3>
+          <p>{c.boundary}</p>
         </div>
       </section>
     </>
   );
 }
 
-function ThreePartPage({ type }: { type: 'overview' }) {
+export function OverviewPage() {
   const { locale } = useLocale();
-  const c = pageCopy[locale][type];
+  const c = pageCopy[locale].overview;
+  const countryGroups = [
+    ...new Map(institutions.map((record) => [record.countryCode, record.countryName])).entries(),
+  ];
+  const roleGroups = [
+    ...new Map(
+      institutions.map((record) => [record.institutionRoleCategory, record.type]),
+    ).entries(),
+  ];
   return (
     <section className="section-shell page-section">
       <PageHeader title={c.title} intro={c.intro} />
@@ -387,11 +357,87 @@ function ThreePartPage({ type }: { type: 'overview' }) {
           </article>
         ))}
       </div>
+      <dl
+        className="overview-facts"
+        aria-label={locale === 'en' ? 'ACSIC key facts' : 'ACSIC 一覽'}
+      >
+        {[
+          [locale === 'en' ? 'Formal members' : '正式會員', membershipStats.formalMembers],
+          [locale === 'en' ? 'Observer' : '觀察員', membershipStats.observers],
+          [
+            locale === 'en' ? 'Countries / economies' : '國家／經濟體',
+            membershipStats.countriesEconomies,
+          ],
+          [
+            locale === 'en' ? 'Institutions covered' : '涵蓋機構',
+            membershipStats.institutionsCovered,
+          ],
+        ].map(([label, value]) => (
+          <div key={String(label)}>
+            <dt>{label}</dt>
+            <dd>{value}</dd>
+          </div>
+        ))}
+      </dl>
+      <div className="overview-columns">
+        <section>
+          <h2>{locale === 'en' ? 'Members across Asia' : '亞洲會員分布'}</h2>
+          <div className="country-groups">
+            {countryGroups.map(([countryCode, country]) => (
+              <article key={countryCode}>
+                <h3>{country[locale]}</h3>
+                <ul>
+                  {institutions
+                    .filter((record) => record.countryCode === countryCode)
+                    .map((record) => (
+                      <li key={record.id}>
+                        {record.institutionAbbreviation} -{' '}
+                        {record.acsicMembershipStatus === 'member'
+                          ? locale === 'en'
+                            ? 'Member'
+                            : '正式會員'
+                          : locale === 'en'
+                            ? 'Observer'
+                            : '觀察員'}
+                      </li>
+                    ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </section>
+        <section>
+          <h2>{locale === 'en' ? 'Institutional diversity' : '制度多樣性'}</h2>
+          <p>
+            {locale === 'en'
+              ? 'ACSIC members do not all share one institutional model.'
+              : 'ACSIC 會員並不都是同一種信用保證機構。'}
+          </p>
+          <ul className="role-list">
+            {roleGroups.map(([role, label]) => (
+              <li key={role}>{label[locale]}</li>
+            ))}
+          </ul>
+        </section>
+      </div>
+      <p className="official-source-link">
+        <a href="https://www.smeg.org.tw/en/basic/?node=10104" target="_blank" rel="noreferrer">
+          {locale === 'en' ? 'Official source' : '官方來源'}
+        </a>
+      </p>
+      <div className="knowledge-actions">
+        <a className="button primary" href={`#${routePath(locale, 'members')}`}>
+          {locale === 'en' ? 'Explore institutions' : '探索 21 家機構'}
+        </a>
+        <a className="button secondary" href={`#${routePath(locale, 'compare')}`}>
+          {locale === 'en' ? 'Compare institutions' : '比較會員機構'}
+        </a>
+        <a className="button secondary" href={`#${routePath(locale, 'data-pilot')}`}>
+          {locale === 'en' ? 'View verified data' : '查看官方量化資料'}
+        </a>
+      </div>
     </section>
   );
-}
-export function OverviewPage() {
-  return <ThreePartPage type="overview" />;
 }
 
 export function SystemsPage() {
@@ -615,15 +661,60 @@ export function KnowledgePracticesPage() {
 export function ResourcesPage() {
   const { locale } = useLocale();
   const c = pageCopy[locale].resources;
+  const resources = [
+    [
+      'sources',
+      locale === 'en' ? 'Official Sources' : '官方來源',
+      locale === 'en'
+        ? 'Browse the official webpages and documents used by this hub.'
+        : '瀏覽本平台使用的官方網頁與文件。',
+    ],
+    [
+      'governance',
+      locale === 'en' ? 'Research Methodology' : '研究方法',
+      locale === 'en'
+        ? 'Understand source handling, translations and publication checks.'
+        : '了解來源處理、翻譯與發布檢核方式。',
+    ],
+    [
+      'framework',
+      locale === 'en' ? 'Comparative Indicator Framework' : '比較指標框架',
+      locale === 'en'
+        ? 'Review the governed definitions used for comparative research.'
+        : '檢視比較研究所使用的治理定義。',
+    ],
+    [
+      'reference',
+      locale === 'en' ? 'Reference Institutions' : '標竿研究機構',
+      locale === 'en'
+        ? 'See the seven evidence-led reference cases.'
+        : '查看七個以證據為本的參考案例。',
+    ],
+    [
+      'reports',
+      locale === 'en' ? 'Reports' : '研究報告',
+      locale === 'en'
+        ? 'Create bilingual, source-aware research outputs.'
+        : '建立雙語且保留來源脈絡的研究輸出。',
+    ],
+  ] as const;
   return (
     <section className="section-shell page-section">
       <PageHeader title={c.title} intro={c.intro} />
-      <div className="state-message">
+      <div className="resource-grid">
+        {resources.map(([page, title, text]) => (
+          <article key={page}>
+            <h2>{title}</h2>
+            <p>{text}</p>
+            <a href={`#${routePath(locale, page)}`}>
+              {locale === 'en' ? 'Open resource' : '開啟資源'}
+            </a>
+          </article>
+        ))}
+      </div>
+      <div className="state-message resource-planned">
         <h2>{c.emptyTitle}</h2>
         <p>{c.emptyText}</p>
-        <a className="button secondary" href={`#${routePath(locale, 'sources')}`}>
-          {c.source}
-        </a>
       </div>
     </section>
   );

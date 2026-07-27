@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { PageHeader, ResearchBadge } from '../../components/Layout';
+import { PageHeader } from '../../components/Layout';
 import { institutions } from '../../data/institutions';
 import { useLocale } from '../../i18n';
 import type { Locale } from '../../types';
@@ -7,7 +7,6 @@ import {
   COMPARISON_LIMITATION,
   COMPARISON_LIMITATION_EN,
   comparisonCsv,
-  comparisonRows,
   comparisonJson,
   comparisonMarkdown,
   displayValue,
@@ -25,29 +24,29 @@ const ui = {
   en: {
     title: 'Compare Member Institutions',
     intro:
-      'Select two to four institutions and retain sources, dates, language and verification context.',
+      'Select two to four institutions, then review the documented differences that matter most to users.',
     select: 'Select institutions',
     minimum: 'Select at least two institutions',
     maximum: 'The table supports up to four institutions.',
     table: 'Public-data comparison',
     limit: 'Comparison limitations:',
     field: 'Field',
-    source: 'Sources',
-    accessed: 'Accessed',
+    sourcesTitle: 'Sources for this comparison',
+    openSource: 'Open official source',
     exportLanguage: 'Export language',
     export: 'Export',
   },
   'zh-TW': {
     title: '會員機構比較',
-    intro: '選擇二至四個機構，以一致欄位比較並保留來源、日期、語言與查證脈絡。',
+    intro: '先選擇二至四個機構，再查看使用者真正關心的制度差異。',
     select: '選擇機構',
     minimum: '請至少選擇兩筆資料',
     maximum: '比較表最多同時呈現四個機構。',
     table: '公開資料比較表',
     limit: '比較限制：',
     field: '比較項目',
-    source: '來源與編號',
-    accessed: '查閱',
+    sourcesTitle: '本次比較資料來源',
+    openSource: '開啟官方來源',
     exportLanguage: '匯出語言',
     export: '匯出',
   },
@@ -72,6 +71,58 @@ export function ComparisonPage() {
           : current,
     );
   const fileBase = `acsic-knowledge-hub-comparison-${exportLocale}`;
+  const rows = [
+    [
+      'Country / Economy',
+      '國家／經濟體',
+      (record: (typeof selected)[number]) => record.countryName[locale],
+    ],
+    [
+      'ACSIC status',
+      'ACSIC 身分',
+      (record: (typeof selected)[number]) =>
+        record.acsicMembershipStatus === 'member'
+          ? locale === 'en'
+            ? 'Member'
+            : '正式會員'
+          : locale === 'en'
+            ? 'Observer'
+            : '觀察員',
+    ],
+    ['Institution type', '機構類型', (record: (typeof selected)[number]) => record.type[locale]],
+    [
+      'Established',
+      '設立年份',
+      (record: (typeof selected)[number]) => displayValue(record.establishedYear, locale),
+    ],
+    ['Mandate', '機構任務', (record: (typeof selected)[number]) => record.mandate[locale]],
+    [
+      'Service targets',
+      '服務對象',
+      (record: (typeof selected)[number]) => displayValue(record.serviceTargets, locale),
+    ],
+    [
+      'Major functions',
+      '主要功能',
+      (record: (typeof selected)[number]) => displayValue(record.majorFunctions, locale),
+    ],
+    [
+      'Legal basis',
+      '法源依據',
+      (record: (typeof selected)[number]) => displayValue(record.legalBasis, locale),
+    ],
+    [
+      'Oversight',
+      '監督關係',
+      (record: (typeof selected)[number]) =>
+        displayValue(record.supervisingOrOversightAuthority, locale),
+    ],
+    [
+      'Funding / capital basis',
+      '資金／資本基礎',
+      (record: (typeof selected)[number]) => displayValue(record.fundingOrCapitalBasis, locale),
+    ],
+  ] as const;
   return (
     <section className="section-shell page-section">
       <PageHeader title={c.title} intro={c.intro} />
@@ -90,7 +141,6 @@ export function ComparisonPage() {
                 onChange={() => toggle(record.id)}
               />
               <span>
-                <ResearchBadge />
                 <strong>{record.name[locale]}</strong>
                 <small>
                   {locale === 'en' ? record.countryNameEn : record.countryNameZhTw} |{' '}
@@ -185,36 +235,36 @@ export function ComparisonPage() {
                 </tr>
               </thead>
               <tbody>
-                {comparisonRows(selected, locale).map((row) => (
-                  <tr key={row.key}>
-                    <th scope="row">{row.label}</th>
-                    {row.values.map((value, index) => (
-                      <td key={selected[index]!.id}>{displayValue(value, locale)}</td>
+                {rows.map(([enLabel, zhLabel, value]) => (
+                  <tr key={enLabel}>
+                    <th scope="row">{locale === 'en' ? enLabel : zhLabel}</th>
+                    {selected.map((record) => (
+                      <td key={record.id}>{value(record)}</td>
                     ))}
                   </tr>
                 ))}
-                <tr>
-                  <th scope="row">{c.source}</th>
-                  {selected.map((record) => (
-                    <td key={record.id}>
-                      {record.sourceReferences.map((source, index) => (
-                        <div key={source.sourceId}>
-                          [{index + 1}]{' '}
-                          <a href={source.url} target="_blank" rel="noreferrer">
-                            {source.title}
-                          </a>
-                          <br />
-                          <small>
-                            {c.accessed}: {source.accessedDate} | {source.originalLanguage}
-                          </small>
-                        </div>
-                      ))}
-                    </td>
-                  ))}
-                </tr>
               </tbody>
             </table>
           </div>
+          <section className="comparison-sources">
+            <h3>{c.sourcesTitle}</h3>
+            {selected.map((record) => (
+              <details key={record.id}>
+                <summary>{record.name[locale]}</summary>
+                {record.sourceReferences.map((source) => (
+                  <article key={source.sourceId}>
+                    <strong>{source.title}</strong>
+                    <p>
+                      {source.publisher} · {source.accessedDate} · {source.originalLanguage}
+                    </p>
+                    <a href={source.url} target="_blank" rel="noreferrer">
+                      {c.openSource}
+                    </a>
+                  </article>
+                ))}
+              </details>
+            ))}
+          </section>
         </section>
       )}
     </section>
