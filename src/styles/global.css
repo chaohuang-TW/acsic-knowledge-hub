@@ -893,6 +893,36 @@ dd {
 .resource-grid p {
   color: var(--muted);
 }
+.system-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.system-card {
+  padding: clamp(1.2rem, 3vw, 1.8rem);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: var(--surface);
+}
+.system-card h2 {
+  margin-top: 0.25rem;
+}
+.system-card-items {
+  display: grid;
+  gap: 0.85rem;
+}
+.system-card-items section {
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--line);
+}
+.system-card-items h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+.system-card-items p {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+}
 .resource-planned {
   margin-top: 1.5rem;
 }
@@ -1427,7 +1457,8 @@ tbody th {
     grid-column: auto;
   }
   .country-groups,
-  .resource-grid {
+  .resource-grid,
+  .system-grid {
     grid-template-columns: 1fr;
   }
   .resource-grid article:last-child {

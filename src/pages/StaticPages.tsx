@@ -85,10 +85,7 @@ const pageCopy = {
     systems: {
       title: 'Credit Guarantee Systems',
       intro:
-        'A bilingual structure for future country and system research. Detailed content will be added only after source verification.',
-      emptyTitle: 'System profiles are being prepared',
-      emptyText:
-        'No placeholder country systems are published. The schema is ready for legal basis, risk sharing, coverage and fee evidence.',
+        'Source-traceable entry points to selected public system practices. Details are shown only where an official source supports them.',
     },
     practices: {
       title: 'Knowledge & Practices',
@@ -199,10 +196,7 @@ const pageCopy = {
     },
     systems: {
       title: '信用保證制度',
-      intro: '為未來國別與制度研究建立雙語架構，詳細內容只在完成來源查證後加入。',
-      emptyTitle: '制度檔案準備中',
-      emptyText:
-        '平台不刊登占位式虛構國別資料。資料契約已可承接法源、風險分擔、保證範圍與費率證據。',
+      intro: '從已查證的官方資料，認識部分制度作法；僅刊登有官方來源支持的細節。',
     },
     practices: {
       title: '知識與實務',
@@ -452,15 +446,156 @@ export function OverviewPage() {
   );
 }
 
+const systemCards = [
+  {
+    id: 'taiwan',
+    title: {
+      en: 'Taiwan: lender-led guarantee pathways',
+      'zh-TW': '臺灣：由金融機構主導的保證途徑',
+    },
+    institution: { en: 'TSMEG', 'zh-TW': '中小企業信用保證基金（TSMEG）' },
+    items: [
+      {
+        title: { en: 'Indirect guarantee', 'zh-TW': '間接保證' },
+        text: {
+          en: 'An SME applies through a lending institution. The institution performs its review and submits the case to TSMEG for a guarantee letter.',
+          'zh-TW':
+            '中小企業向金融機構申請融資；金融機構完成審查後，將案件送交 TSMEG 辦理保證並取得保證書。',
+        },
+      },
+      {
+        title: { en: 'Batch guarantee', 'zh-TW': '批次保證' },
+        text: {
+          en: 'The official scheme page distinguishes this route from indirect guarantee: lending is granted before the guarantee referral is submitted.',
+          'zh-TW': '官方制度頁面區分此途徑與間接保證：金融機構先核貸，再送交保證。',
+        },
+      },
+      {
+        title: { en: 'Other documented models', 'zh-TW': '其他已記錄模式' },
+        text: {
+          en: 'Direct and co-guarantee remain recorded in TSMEG’s governed institution profile; detailed process claims are withheld pending source-specific verification.',
+          'zh-TW':
+            '直接保證與共同保證仍保留於 TSMEG 的治理後機構檔案；個別流程細節待取得對應官方來源後才刊登。',
+        },
+      },
+    ],
+    sourceIds: ['tsmeg-indirect-guarantee'],
+  },
+  {
+    id: 'japan',
+    title: { en: 'Japan: differentiated institutional roles', 'zh-TW': '日本：分工明確的機構角色' },
+    institution: { en: 'JFG and JFC', 'zh-TW': 'JFG 與 JFC' },
+    items: [
+      {
+        title: { en: 'Credit guarantee network', 'zh-TW': '信用保證網絡' },
+        text: {
+          en: 'JFG coordinates and supports Japan’s nationwide network of 51 credit guarantee corporations.',
+          'zh-TW': 'JFG 協調並支援日本全國 51 家信用保證協會網絡。',
+        },
+      },
+      {
+        title: { en: 'Credit insurance role', 'zh-TW': '信用保險角色' },
+        text: {
+          en: 'JFC’s SME Unit includes credit insurance programmes within its policy-finance functions. Direct lending is not used as a comparison value in this hub.',
+          'zh-TW':
+            'JFC 的中小企業事業設有信用保險方案，屬其政策金融職能的一部分；本平台不以直接融資作為比較數值。',
+        },
+      },
+    ],
+    sourceIds: ['jfg-credit-guarantee-system-2025', 'jfc-operational-performance-2025'],
+  },
+  {
+    id: 'korea-kodit',
+    title: {
+      en: 'Republic of Korea: KODIT programme categories',
+      'zh-TW': '韓國：KODIT 的方案類別',
+    },
+    institution: {
+      en: 'Korea Credit Guarantee Fund (KODIT)',
+      'zh-TW': '韓國信用保證基金（KODIT）',
+    },
+    items: [
+      {
+        title: { en: 'Publicly documented scope', 'zh-TW': '已公開記錄的範圍' },
+        text: {
+          en: 'The governed profile identifies credit guarantee, credit insurance, infrastructure guarantee and P-CBO guarantee among KODIT’s documented functions and categories.',
+          'zh-TW':
+            '治理後檔案記錄 KODIT 的信用保證、信用保險、基礎建設保證與 P-CBO 保證等職能與類別。',
+        },
+      },
+      {
+        title: { en: 'Comparability boundary', 'zh-TW': '可比性界線' },
+        text: {
+          en: 'Coverage ratios, guarantee fees and loss-related metrics are not presented here without directly verified, comparable official evidence.',
+          'zh-TW':
+            '未取得可直接查證且可比較的官方證據前，本頁不刊登保證成數、保證費或損失相關指標。',
+        },
+      },
+    ],
+    sourceIds: ['kodit-kr-profile'],
+  },
+  {
+    id: 'korea-kotec',
+    title: {
+      en: 'Republic of Korea: technology appraisal in guarantee review',
+      'zh-TW': '韓國：保證審查中的技術評價',
+    },
+    institution: { en: 'KOTEC (Kibo)', 'zh-TW': 'KOTEC（Kibo）' },
+    items: [
+      {
+        title: { en: 'Individual approach', 'zh-TW': '逐案審查' },
+        text: {
+          en: 'KOTEC describes a case-by-case guarantee review that assesses a technology project’s commercial viability and risks before a decision.',
+          'zh-TW': 'KOTEC 說明其逐案保證審查：在決定前評估技術專案的商業可行性與風險。',
+        },
+      },
+      {
+        title: { en: 'AIRATE technology appraisal', 'zh-TW': 'AIRATE 技術評價' },
+        text: {
+          en: 'AIRATE is described as a structured, quantitative and data-driven approach that considers future potential and non-financial factors.',
+          'zh-TW': 'AIRATE 被說明為結構化、量化且資料導向的方法，並納入未來潛力與非財務因素。',
+        },
+      },
+    ],
+    sourceIds: ['kotec-guarantee-key-features', 'kotec-airate-main-features'],
+  },
+] as const;
+
 export function SystemsPage() {
   const { locale } = useLocale();
   const c = pageCopy[locale].systems;
   return (
     <section className="section-shell page-section">
       <PageHeader title={c.title} intro={c.intro} />
-      <div className="state-message">
-        <h2>{c.emptyTitle}</h2>
-        <p>{c.emptyText}</p>
+      <div className="system-grid">
+        {systemCards.map((card) => (
+          <article className="system-card" key={card.id}>
+            <p className="eyebrow">{card.institution[locale]}</p>
+            <h2>{card.title[locale]}</h2>
+            <div className="system-card-items">
+              {card.items.map((item) => (
+                <section key={item.title.en}>
+                  <h3>{item.title[locale]}</h3>
+                  <p>{item.text[locale]}</p>
+                </section>
+              ))}
+            </div>
+            <p className="official-source-link">
+              {card.sourceIds.map((sourceId, index) => {
+                const source = sourceRegistry.find((item) => item.sourceId === sourceId);
+                if (!source) return null;
+                return (
+                  <span key={sourceId}>
+                    {index > 0 ? ' · ' : ''}
+                    <a href={source.finalResolvedUrl} target="_blank" rel="noreferrer">
+                      {locale === 'en' ? 'Official source' : '官方來源'}
+                    </a>
+                  </span>
+                );
+              })}
+            </p>
+          </article>
+        ))}
       </div>
     </section>
   );
