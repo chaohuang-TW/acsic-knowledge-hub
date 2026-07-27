@@ -534,22 +534,6 @@ export function InstitutionsPage() {
                     <dt>{c.functions}</dt>
                     <dd>{displayValue(record.majorFunctions.slice(0, 2), locale)}</dd>
                   </div>
-                  <div>
-                    <dt>{c.level2}</dt>
-                    <dd>
-                      {statusLabel(record.level2Status, locale)} · {record.level2Completion}%
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>{c.missingFields}</dt>
-                    <dd>{record.missingFields.length}</dd>
-                  </div>
-                  <div>
-                    <dt>{c.confidence}</dt>
-                    <dd>
-                      {c[record.confidenceLevel]} · {record.confidenceScore}/100
-                    </dd>
-                  </div>
                 </dl>
                 <div className="record-footer">
                   <button className="button secondary" onClick={() => setSelected(record)}>

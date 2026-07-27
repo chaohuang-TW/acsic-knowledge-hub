@@ -73,6 +73,10 @@ test('production member page has no development-state controls', async ({ page }
   await expect(page.getByText('Interface state preview')).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Empty', exact: true })).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Error', exact: true })).toHaveCount(0);
+  await expect(page.locator('.institution-list article').first()).not.toContainText(
+    'Strict Level 2 status',
+  );
+  await expect(page.locator('.institution-list article').first()).not.toContainText('Confidence');
 });
 
 test('search and all member filter classes use readable bilingual labels', async ({ page }) => {
