@@ -337,6 +337,7 @@ test('provenance viewer links each displayed value to its official source and pa
 
 test('pilot JSON and readiness CSV export in both languages', async ({ page }) => {
   await page.goto('./#/en/data-pilot');
+  await page.locator('.download-details summary').click();
   let pending = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Export pilot JSON' }).click();
   expect((await pending).suggestedFilename()).toBe('acsic-level3-pilot-v1-en.json');
