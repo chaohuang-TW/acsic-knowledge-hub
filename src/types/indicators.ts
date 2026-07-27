@@ -92,7 +92,9 @@ export interface Level3IndicatorRecord {
     unit: string;
     currency: 'JPY' | 'TWD' | null;
     periodLabel: string;
+    originalPeriodLabel: string | null;
     population: string;
+    originalPopulation?: string;
     definition: LocalizedText;
   };
   normalized: {

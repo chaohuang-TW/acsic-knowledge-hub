@@ -10,6 +10,7 @@
       "unit": "billion yen",
       "currency": "JPY",
       "periodLabel": "FY2024",
+      "originalPeriodLabel": "FY2024",
       "population": "Small Business Credit Insurance",
       "definition": {
         "en": "Insurance acceptances recognised under JFC's Small Business Credit Insurance programmes during FY2024.",
@@ -49,7 +50,7 @@
       "pageOrSection": "Printed p. 79; PDF page index 12",
       "tableOrFigure": "II. Credit Insurance Programs",
       "pdfPageIndex": 12,
-      "publicationDate": "2025-09-25",
+      "publicationDate": null,
       "verifiedDate": "2026-07-26"
     },
     "comparability": {
@@ -97,7 +98,8 @@
       "value": 34525.9,
       "unit": "billion yen",
       "currency": "JPY",
-      "periodLabel": "As of 31 March 2025",
+      "periodLabel": "As of 31 Mar 2025",
+      "originalPeriodLabel": "As of 31 March 2025",
       "population": "Small Business Credit Insurance",
       "definition": {
         "en": "Outstanding insurance obligations under JFC's Small Business Credit Insurance programmes at 31 March 2025.",
@@ -137,7 +139,7 @@
       "pageOrSection": "Printed p. 79; PDF page index 12",
       "tableOrFigure": "II. Credit Insurance Programs",
       "pdfPageIndex": 12,
-      "publicationDate": "2025-09-25",
+      "publicationDate": null,
       "verifiedDate": "2026-07-26"
     },
     "comparability": {
@@ -185,8 +187,10 @@
       "value": 19407404,
       "unit": "新臺幣千元",
       "currency": "TWD",
-      "periodLabel": "113 年",
-      "population": "113 年度承保保證案件",
+      "periodLabel": "2024",
+      "originalPeriodLabel": "113 年",
+      "population": "2024 年度承保保證案件",
+      "originalPopulation": "113 年度承保保證案件",
       "definition": {
         "en": "Guarantee amount recorded for guarantee cases accepted during CY2024.",
         "zh-TW": "2024 年度承保保證案件所認列之保證金額。"
@@ -222,7 +226,7 @@
       "pageOrSection": "Printed p. 23; PDF page index 25",
       "tableOrFigure": "5-1 最近五年保證情形",
       "pdfPageIndex": 25,
-      "publicationDate": "2025-01-01",
+      "publicationDate": null,
       "verifiedDate": "2026-07-26"
     },
     "comparability": {
@@ -270,7 +274,8 @@
       "value": 63380511,
       "unit": "新臺幣千元",
       "currency": "TWD",
-      "periodLabel": "113 年底",
+      "periodLabel": "As of 31 Dec 2024",
+      "originalPeriodLabel": "113 年底",
       "population": "仍存續之保證責任",
       "definition": {
         "en": "Outstanding guarantee liability at the end of CY2024.",
@@ -307,7 +312,7 @@
       "pageOrSection": "Printed p. 23; PDF page index 25",
       "tableOrFigure": "5-1 最近五年保證情形",
       "pdfPageIndex": 25,
-      "publicationDate": "2025-01-01",
+      "publicationDate": null,
       "verifiedDate": "2026-07-26"
     },
     "comparability": {
@@ -352,7 +357,8 @@
       "value": 19638,
       "unit": "件",
       "currency": null,
-      "periodLabel": "113 年",
+      "periodLabel": "2024",
+      "originalPeriodLabel": "113 年",
       "population": "保證案件",
       "definition": {
         "en": "Guarantee cases accepted during CY2024.",
@@ -389,7 +395,7 @@
       "pageOrSection": "Printed p. 23; PDF page index 25",
       "tableOrFigure": "5-1 最近五年保證情形",
       "pdfPageIndex": 25,
-      "publicationDate": "2025-01-01",
+      "publicationDate": null,
       "verifiedDate": "2026-07-26"
     },
     "comparability": {
@@ -436,7 +442,8 @@
       "value": 10818942,
       "unit": "新臺幣千元",
       "currency": "TWD",
-      "periodLabel": "截至 113 年 12 月 31 日",
+      "periodLabel": "1983–2024",
+      "originalPeriodLabel": "截至 113 年 12 月 31 日",
       "population": "中央與地方政府及各簽約金融機構累計捐助款",
       "definition": {
         "en": "Cumulative contributions from government bodies and contracted financial institutions through 31 December 2024.",
@@ -473,7 +480,7 @@
       "pageOrSection": "Printed p. 7; PDF page index 9",
       "tableOrFigure": "各單位捐助基金統計表",
       "pdfPageIndex": 9,
-      "publicationDate": "2025-01-01",
+      "publicationDate": null,
       "verifiedDate": "2026-07-26"
     },
     "comparability": {
@@ -521,8 +528,10 @@
       "value": 1487527,
       "unit": "新臺幣百萬元",
       "currency": "TWD",
-      "periodLabel": "114 年",
-      "population": "114 年度承保信用保證",
+      "periodLabel": "2025",
+      "originalPeriodLabel": "114 年",
+      "population": "2025 年度承保信用保證",
+      "originalPopulation": "114 年度承保信用保證",
       "definition": {
         "en": "Amount of guarantees provided during CY2025.",
         "zh-TW": "2025 年度承保信用保證金額。"
@@ -603,7 +612,8 @@
       "value": 1485949.1,
       "unit": "新臺幣百萬元",
       "currency": "TWD",
-      "periodLabel": "114 年底",
+      "periodLabel": "As of 31 Dec 2025",
+      "originalPeriodLabel": "114 年底",
       "population": "年末存續保證責任，不含年報附註所列委辦貸款",
       "definition": {
         "en": "Outstanding guarantee liability at the end of CY2025, subject to the exclusions stated in the annual-report table.",
@@ -685,7 +695,8 @@
       "value": 371159,
       "unit": "件",
       "currency": null,
-      "periodLabel": "114 年",
+      "periodLabel": "2025",
+      "originalPeriodLabel": "114 年",
       "population": "信用保證案件",
       "definition": {
         "en": "Guarantee cases provided during CY2025.",
@@ -770,7 +781,8 @@
       "value": 276260,
       "unit": "戶企業",
       "currency": null,
-      "periodLabel": "114 年度",
+      "periodLabel": "2025",
+      "originalPeriodLabel": "114 年度",
       "population": "年報所稱獲協助取得融資之企業戶",
       "definition": {
         "en": "Enterprise accounts described by TSMEG as assisted in obtaining financing during CY2025.",
@@ -855,7 +867,8 @@
       "value": null,
       "unit": "官方具名機構清單",
       "currency": null,
-      "periodLabel": "114 年底",
+      "periodLabel": "As of 31 Dec 2025",
+      "originalPeriodLabel": "114 年底",
       "population": "年報金融機構別表具名列出且有保證餘額之機構；排除「其他非簽約金融機構」彙總列",
       "definition": {
         "en": "Named financial institutions with a reported guarantee balance in the year-end annual-report table, excluding the aggregate other-non-contracted row.",
@@ -943,7 +956,8 @@
       "value": 1777.09,
       "unit": "新臺幣億元",
       "currency": "TWD",
-      "periodLabel": "自 63 年設立至 114 年底",
+      "periodLabel": "1974–2025",
+      "originalPeriodLabel": "自 63 年設立至 114 年底",
       "population": "政府及金融機構累計捐助款",
       "definition": {
         "en": "Cumulative contributions from government and financial institutions from establishment through the end of CY2025.",
