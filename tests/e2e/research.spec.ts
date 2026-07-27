@@ -192,8 +192,8 @@ test('all 21 institution details can be opened and closed', async ({ page }) => 
 
 test('source registry statistics, metadata and filters are functional', async ({ page }) => {
   await page.goto('./#/en/sources');
-  await expect(page.getByText('67', { exact: true }).first()).toBeVisible();
-  await expect(page.getByText('48', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('70', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('51', { exact: true }).first()).toBeVisible();
   await expect(page.getByText('Annual or integrated reports')).toBeVisible();
   await expect(page.getByText('Scheme or programme documents')).toBeVisible();
   await page.getByLabel('Institution', { exact: true }).selectOption('askrindo-id');
@@ -206,6 +206,42 @@ test('source registry statistics, metadata and filters are functional', async ({
   await page.getByLabel('Document type').selectOption('official_law_or_regulation');
   await expect(page.locator('.institution-list article')).toHaveCount(5);
   await expect(page.locator('.institution-list')).not.toContainText('official_law_or_regulation');
+});
+
+test('systems publish only source-supported public system knowledge in both languages', async ({
+  page,
+}) => {
+  await page.goto('./#/en/systems');
+  await expect(
+    page.getByRole('heading', { name: 'Taiwan: lender-led guarantee pathways' }),
+  ).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Indirect guarantee' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Batch guarantee' })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Japan: differentiated institutional roles' }),
+  ).toBeVisible();
+  await expect(page.getByText('51 credit guarantee corporations')).toBeVisible();
+  await expect(
+    page.getByRole('heading', {
+      name: 'Republic of Korea: technology appraisal in guarantee review',
+    }),
+  ).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'AIRATE technology appraisal' })).toBeVisible();
+  await expect(page.locator('main')).not.toContainText('70%');
+  await page.getByLabel('Language').selectOption('zh-TW');
+  await expect(page).toHaveURL(/#\/zh-TW\/systems$/);
+  await expect(page.getByRole('heading', { name: '信用保證制度' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '間接保證' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'AIRATE 技術評價' })).toBeVisible();
+});
+
+test('resources retain an official-verification gate for ACSIC event records', async ({ page }) => {
+  await page.goto('./#/en/resources');
+  await expect(page.getByRole('heading', { name: 'ACSIC event archive - planned' })).toBeVisible();
+  await expect(
+    page.getByText('Event materials are listed only after official provenance'),
+  ).toBeVisible();
+  await expect(page.locator('main')).not.toContainText('2027');
 });
 
 test('cross-role comparison shows warning and user-first comparison fields', async ({ page }) => {

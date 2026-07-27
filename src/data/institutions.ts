@@ -92,13 +92,17 @@ const evidenceSourceOverrides: Record<string, Record<string, string>> = {
   'kotec-kr': {
     legalBasis: 'kotec-act-current',
     fundingOrCapitalBasis: 'kotec-act-current',
-    guaranteeRole: 'kotec-act-current',
     fundingSources: 'kotec-act-current',
     supervisingOrOversightAuthority: 'kotec-company-overview',
     officialPublications: 'kotec-annual-report-2023',
     investmentRole: 'kotec-company-overview',
     technologyTransferRole: 'kotec-company-overview',
     geographicScope: 'kotec-company-overview',
+    technologyAppraisalRole: 'kotec-airate-main-features',
+    guaranteeRole: 'kotec-guarantee-key-features',
+  },
+  'tsmeg-tw': {
+    guaranteeDeliveryModel: 'tsmeg-indirect-guarantee',
   },
   'philguarantee-ph': { legalBasis: 'philguarantee-eo58-2018' },
   'dcgf-np': {

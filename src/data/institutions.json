@@ -517,7 +517,9 @@
       "kotec-act-current",
       "kotec-korean-site-map",
       "kotec-company-overview",
-      "kotec-annual-report-2023"
+      "kotec-annual-report-2023",
+      "kotec-guarantee-key-features",
+      "kotec-airate-main-features"
     ],
     "verifiedFieldKeys": [
       "establishedYear",
@@ -1094,7 +1096,8 @@
       "acsic-2026-member-roster",
       "tsmeg-tw-profile",
       "tsmeg-annual-report-2025",
-      "tsmeg-performance-2025"
+      "tsmeg-performance-2025",
+      "tsmeg-indirect-guarantee"
     ],
     "verifiedFieldKeys": [
       "establishedYear",

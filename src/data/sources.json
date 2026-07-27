@@ -1,5 +1,71 @@
 [
   {
+    "sourceId": "tsmeg-indirect-guarantee",
+    "institutionIds": ["tsmeg-tw"],
+    "title": "間接保證",
+    "publisher": "財團法人中小企業信用保證基金",
+    "sourceType": "official_scheme_document",
+    "tier": "tier_1",
+    "url": "https://www.smeg.org.tw/basic/?node=10183",
+    "finalResolvedUrl": "https://www.smeg.org.tw/basic/?node=10183",
+    "originalLanguage": "zh-TW",
+    "publicationDate": null,
+    "documentDate": null,
+    "accessedDate": "2026-07-27",
+    "pageOrSection": "間接保證；送保方式；間接保證案件之辦理程序",
+    "accessStatus": "accessible",
+    "stalenessWarning": false,
+    "isPrimarySource": true,
+    "notes": {
+      "en": "Official scheme page describing lender-led indirect guarantee processing and the distinction between indirect and batch guarantee referrals.",
+      "zh-TW": "官方制度頁面，說明由金融機構主導的間接保證流程，以及間接保證與批次保證送保方式的差異。"
+    }
+  },
+  {
+    "sourceId": "kotec-guarantee-key-features",
+    "institutionIds": ["kotec-kr"],
+    "title": "Key Features",
+    "publisher": "Korea Technology Finance Corporation",
+    "sourceType": "official_scheme_document",
+    "tier": "tier_1",
+    "url": "https://www.kibo.or.kr/english/work/work010200.do",
+    "finalResolvedUrl": "https://www.kibo.or.kr/english/work/work010200.do",
+    "originalLanguage": "en",
+    "publicationDate": null,
+    "documentDate": null,
+    "accessedDate": "2026-07-27",
+    "pageOrSection": "Key Features; Individual Approach in Guarantee Assignment",
+    "accessStatus": "accessible",
+    "stalenessWarning": false,
+    "isPrimarySource": true,
+    "notes": {
+      "en": "Official description of case-by-case guarantee review, technology-project assessment and AIRATE use in guarantee assignment.",
+      "zh-TW": "官方說明逐案保證審查、技術專案評估，以及 AIRATE 在保證核定中的使用。"
+    }
+  },
+  {
+    "sourceId": "kotec-airate-main-features",
+    "institutionIds": ["kotec-kr"],
+    "title": "Main Features",
+    "publisher": "Korea Technology Finance Corporation",
+    "sourceType": "official_scheme_document",
+    "tier": "tier_1",
+    "url": "https://www.kibo.or.kr/english/work/work020602.do",
+    "finalResolvedUrl": "https://www.kibo.or.kr/english/work/work020602.do",
+    "originalLanguage": "en",
+    "publicationDate": null,
+    "documentDate": null,
+    "accessedDate": "2026-07-27",
+    "pageOrSection": "Main Features",
+    "accessStatus": "accessible",
+    "stalenessWarning": false,
+    "isPrimarySource": true,
+    "notes": {
+      "en": "Official AIRATE description covering its structured, quantitative, data-driven and future-oriented technology appraisal approach.",
+      "zh-TW": "官方 AIRATE 說明，涵蓋其結構化、量化、資料導向與前瞻取向的技術評價方法。"
+    }
+  },
+  {
     "sourceId": "acsic-2026-member-roster",
     "title": "List of ACSIC Members",
     "publisher": "Credit Guarantee Fund Trust for Micro and Small Enterprises",

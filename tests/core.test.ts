@@ -137,6 +137,14 @@ describe('deduplicated source registry and evidence', () => {
       expect(s.accessedDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
       expect(bilingual(s.notes)).toBe(true);
     }));
+  it('keeps the production source registry free of private-workspace hosts', () => {
+    const serializedRegistry = JSON.stringify(sourceRegistry).toLowerCase();
+    expect(serializedRegistry).not.toContain('notion.so');
+    expect(serializedRegistry).not.toContain('notion.site');
+    expect(serializedRegistry).not.toContain('notion.com');
+    expect(serializedRegistry).not.toContain('docs.google.com');
+    expect(serializedRegistry).not.toContain('drive.google.com');
+  });
   it('gives every evidence object a valid source', () =>
     institutions.forEach((r) =>
       Object.values(r.fieldEvidence)
