@@ -251,7 +251,8 @@
       "jfc-guide-2024",
       "jfc-japanese-profile",
       "jfc-governance",
-      "jfc-operational-performance-2025"
+      "jfc-operational-performance-2025",
+      "jfc-credit-insurance-outline"
     ],
     "verifiedFieldKeys": [
       "establishedYear",
@@ -387,11 +388,23 @@
       "Guarantee-aligned equity investment"
     ],
     "typeSpecificProfile": {
-      "mainGuaranteeCategories": ["Credit guarantee", "Infrastructure guarantee", "P-CBO guarantee"]
+      "mainGuaranteeCategories": [
+        "Credit guarantee",
+        "Infrastructure guarantee",
+        "P-CBO guarantee"
+      ],
+      "guaranteeDeliveryModel": "Direct application to KODIT with institution-led credit review and guarantee evaluation",
+      "riskSharingOverview": "General partial guarantees typically cover 70%–85%; special policy guarantees may cover 90%–100% subject to programme rules and eligibility"
     },
     "supervisingOrOversightAuthority": null,
     "profileSourceId": "kodit-kr-profile",
-    "sourceIds": ["acsic-2026-member-roster", "kodit-kr-profile", "kodit-korean-home"],
+    "sourceIds": [
+      "acsic-2026-member-roster",
+      "kodit-kr-profile",
+      "kodit-korean-home",
+      "kodit-credit-guarantee-process",
+      "kodit-p-cbo-guarantee"
+    ],
     "verifiedFieldKeys": [
       "establishedYear",
       "legalBasis",
@@ -399,7 +412,9 @@
       "mandate",
       "serviceTargets",
       "majorFunctions",
-      "mainGuaranteeCategories"
+      "mainGuaranteeCategories",
+      "guaranteeDeliveryModel",
+      "riskSharingOverview"
     ],
     "nativeName": {
       "value": "신용보증기금",

@@ -52,6 +52,8 @@ const zh: Record<string, string> = {
   'Designated under the Credit Guarantee Corporation Law in November 2008':
     '2008 年 11 月依《信用保證協會法》指定',
   Direct: '直接保證',
+  'Direct application to KODIT with institution-led credit review and guarantee evaluation':
+    '直接向 KODIT 申請，由機構辦理信用審查與保證評估',
   'Direct guarantee': '直接保證',
   'Eligible NBFCs': '符合資格的非銀行金融公司',
   'Eligible SMEs': '符合資格的中小企業',
@@ -192,6 +194,8 @@ const zh: Record<string, string> = {
   'Training programmes': '培訓方案',
   Publications: '出版品',
   'Group credit life insurance administration': '團體信用生命保險制度營運',
+  'General partial guarantees typically cover 70%–85%; special policy guarantees may cover 90%–100% subject to programme rules and eligibility':
+    '一般部分保證通常涵蓋 70%–85%；特定政策性保證依方案規定及資格條件可能涵蓋 90%–100%',
   'Represents and coordinates the nationwide network of 51 credit guarantee corporations':
     '代表並協調全國 51 家信用保證協會網絡',
   'Plans and operates training for the credit guarantee network': '規劃並辦理信用保證網絡培訓',

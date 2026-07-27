@@ -140,6 +140,7 @@ const sourceTypeLabels: Record<SourceType, LocalizedText> = {
   official_governance_document: { en: 'Official governance document', 'zh-TW': '官方治理文件' },
   official_government_source: { en: 'Official government source', 'zh-TW': '政府官方來源' },
   official_press_release: { en: 'Official press release', 'zh-TW': '官方新聞稿' },
+  official_event_announcement: { en: 'Official event announcement', 'zh-TW': '官方活動公告' },
   official_strategy_document: { en: 'Official strategy document', 'zh-TW': '官方策略文件' },
 };
 
