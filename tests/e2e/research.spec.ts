@@ -414,7 +414,9 @@ test('Traditional Chinese pilot route, filters and bilingual statuses work', asy
   expect(primaryPeriodText).not.toContain('113 年');
   expect(primaryPeriodText).not.toContain('114 年');
   expect(primaryPeriodText).not.toContain('民國');
-  await expect(page.getByText('2025 年', { exact: true }).first()).toBeVisible();
+  await expect(
+    page.locator('.pilot-record-card').filter({ hasText: '2025 年' }).first(),
+  ).toBeVisible();
   await expect(page.getByText('截至 2025 年 12 月 31 日', { exact: true })).toHaveCount(2);
   await expect(page.getByText('1974–2025', { exact: true })).toBeVisible();
   await page.locator('.historical-series summary').click();
