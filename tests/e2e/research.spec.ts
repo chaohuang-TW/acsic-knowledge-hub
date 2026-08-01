@@ -217,7 +217,7 @@ test('systems publish only source-supported public system knowledge in both lang
   ).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Indirect guarantee' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Batch guarantee' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Direct guarantee' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Direct guarantee', exact: true })).toBeVisible();
   await expect(page.getByText('commitment letter')).toBeVisible();
   await expect(
     page.getByRole('heading', { name: 'Japan: differentiated institutional roles' }),
@@ -256,7 +256,9 @@ test('resources publish only ACSIC events with verified official sources', async
   ).toBeVisible();
   await expect(page.getByText('23–24 April 2026')).toBeVisible();
   await expect(page.getByText('The Taj Mahal Palace, Mumbai, India')).toBeVisible();
-  await expect(page.getByText('CGTMSE')).toBeVisible();
+  await expect(
+    page.getByText('Credit Guarantee Fund Trust for Micro and Small Enterprises', { exact: true }),
+  ).toBeVisible();
   await expect(page.locator('.event-card a[href="https://globalacsic2026.in/"]')).toHaveCount(1);
   await expect(page.getByRole('heading', { name: '37th ACSIC Conference 2025' })).toBeVisible();
   await expect(page.getByText('10–14 November 2025')).toBeVisible();
