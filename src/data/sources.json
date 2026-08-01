@@ -110,6 +110,50 @@
     }
   },
   {
+    "sourceId": "tsmeg-direct-guarantee",
+    "institutionIds": ["tsmeg-tw"],
+    "title": "直接保證",
+    "publisher": "財團法人中小企業信用保證基金",
+    "sourceType": "official_scheme_document",
+    "tier": "tier_1",
+    "url": "https://www.smeg.org.tw/basic/?node=10184",
+    "finalResolvedUrl": "https://www.smeg.org.tw/basic/?node=10184",
+    "originalLanguage": "zh-TW",
+    "publicationDate": null,
+    "documentDate": null,
+    "accessedDate": "2026-08-01",
+    "pageOrSection": "直接保證；直接保證案件之辦理程序",
+    "accessStatus": "accessible",
+    "stalenessWarning": false,
+    "isPrimarySource": true,
+    "notes": {
+      "en": "Official TSMEG page describing direct guarantee: an enterprise applies to TSMEG, receives a commitment letter after review, then applies for financing with a lending institution.",
+      "zh-TW": "TSMEG 官方頁面說明直接保證：企業向基金申請，經審查並取得承諾書後，再向授信單位申請融資。"
+    }
+  },
+  {
+    "sourceId": "acsic-37th-conference-2025",
+    "institutionIds": ["tsmeg-tw"],
+    "title": "2025 ACSIC 37th Conference closing announcement",
+    "publisher": "財團法人中小企業信用保證基金",
+    "sourceType": "official_event_announcement",
+    "tier": "tier_1",
+    "url": "https://www.smeg.org.tw/basic/?mode=detail&node=4734",
+    "finalResolvedUrl": "https://www.smeg.org.tw/basic/?mode=detail&node=4734",
+    "originalLanguage": "zh-TW",
+    "publicationDate": null,
+    "documentDate": "2025-11-14",
+    "accessedDate": "2026-08-01",
+    "pageOrSection": "第 37 屆 ACSIC 國際年會；臺北君悅酒店；運用金融創新提升信用補充機制效率；13 國、18 個信保機構、逾 200 人",
+    "accessStatus": "accessible",
+    "stalenessWarning": false,
+    "isPrimarySource": true,
+    "notes": {
+      "en": "Official TSMEG announcement recording the 37th ACSIC Conference in Taipei, 10–14 November 2025, the host, attendance and published themes.",
+      "zh-TW": "TSMEG 官方公告，記錄 2025 年 11 月 10–14 日在臺北舉行的第 37 屆 ACSIC 年會、主辦單位、參與規模及公開主題。"
+    }
+  },
+  {
     "sourceId": "kotec-guarantee-key-features",
     "institutionIds": ["kotec-kr"],
     "title": "Key Features",

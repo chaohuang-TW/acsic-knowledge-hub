@@ -6,7 +6,7 @@
 
 - Formal members: 20; observers: 1; countries/economies: 14; institutions: 21.
 - Level 1 complete: 21; strict Level 2 complete: 4; partial: 16; insufficient: 1; verified Level 3 pilot records: 12.
-- Source references: 73; unique official sources: 55; field-level evidence objects: 224.
+- Source references: 75; unique official sources: 57; field-level evidence objects: 224.
 - User-visible governed content bilingual coverage: 100%; official native-language names: 11/21.
 
 <!-- GENERATED:COVERAGE:END -->
@@ -33,14 +33,14 @@ Level 2 is calculated from the central versioned standard. Missing applicable fi
 | Philippines       | Philippine Guarantee Corporation                            | PHILGUARANTEE | Member       | credit_guarantee_corporation             |    100% | partial (56%)      |                 3 |                         8 | pending     | 2026-07-16    |
 | Sri Lanka         | Central Bank of Sri Lanka                                   | CBSL          | Member       | central_bank                             |    100% | partial (63%)      |                 2 |                         6 | pending     | 2026-07-16    |
 | Sri Lanka         | Sri Lanka Export Credit Insurance Corporation               | SLECIC        | Member       | export_credit_insurer_and_guarantor      |    100% | complete (100%)    |                 5 |                         0 | pending     | 2026-07-26    |
-| Taiwan            | Small and Medium Enterprise Credit Guarantee Fund of Taiwan | TSMEG         | Member       | credit_guarantee_fund                    |    100% | partial (44%)      |                 5 |                        10 | official    | 2026-07-27    |
+| Taiwan            | Small and Medium Enterprise Credit Guarantee Fund of Taiwan | TSMEG         | Member       | credit_guarantee_fund                    |    100% | partial (44%)      |                 7 |                        10 | official    | 2026-08-01    |
 | Thailand          | Thai Credit Guarantee Corporation                           | TCG           | Member       | credit_guarantee_corporation             |    100% | partial (50%)      |                 2 |                         9 | official    | 2026-07-16    |
 | Taiwan            | Agricultural Credit Guarantee Fund                          | ACGF          | Observer     | agricultural_credit_guarantee_fund       |    100% | complete (100%)    |                 4 |                         0 | official    | 2026-07-26    |
 
 ## Unique source types
 
-- official_scheme_document: 6
-- official_event_announcement: 1
+- official_scheme_document: 7
+- official_event_announcement: 2
 - official_membership_roster: 2
 - official_institution_profile: 28
 - official_governance_document: 3

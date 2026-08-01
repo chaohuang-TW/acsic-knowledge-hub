@@ -103,7 +103,7 @@ const evidenceSourceOverrides: Record<string, Record<string, string>> = {
     guaranteeRole: 'kotec-guarantee-key-features',
   },
   'tsmeg-tw': {
-    guaranteeDeliveryModel: 'tsmeg-indirect-guarantee',
+    guaranteeDeliveryModel: 'tsmeg-direct-guarantee',
   },
   'kodit-kr': {
     guaranteeDeliveryModel: 'kodit-credit-guarantee-process',

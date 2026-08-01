@@ -30,7 +30,7 @@
 
 - Membership remains 20 formal members plus 1 observer across 14 countries/economies.
 - Strict Level 2: 4 complete, 16 partial and 1 insufficient. Verified Level 3 pilot records: 12.
-- 73 source-reference relationships resolve to 55 unique official sources and 224 field-evidence objects.
+- 75 source-reference relationships resolve to 57 unique official sources and 224 field-evidence objects.
 - Governed user-visible data content has 100% English/Traditional-Chinese coverage; 11 official native-language names are confirmed.
 - Confidence distribution: high 4, medium 16, low 1.
 
