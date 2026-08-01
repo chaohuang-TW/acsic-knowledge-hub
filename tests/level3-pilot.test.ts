@@ -101,6 +101,36 @@ describe('period rules', () => {
       }));
 });
 
+describe('ACGF historical series', () => {
+  it('keeps the four governed ACGF indicators for both 2024 and 2025', () => {
+    const acgf = productionLevel3Values.filter((record) => record.institutionId === 'acgf-tw');
+    expect(acgf).toHaveLength(8);
+    expect(acgf.map((record) => record.period.calendarYear).sort()).toEqual([
+      2024, 2024, 2024, 2024, 2025, 2025, 2025, 2025,
+    ]);
+    expect(new Set(acgf.map((record) => record.indicatorId))).toEqual(
+      new Set([
+        'number_of_guarantees',
+        'new_guarantee_volume',
+        'outstanding_guarantee_balance',
+        'capital_or_fund_size',
+      ]),
+    );
+  });
+  it('binds 2025 ACGF values to the official 2025 report and keeps publication year explicit', () => {
+    const latest = productionLevel3Values.filter(
+      (record) => record.institutionId === 'acgf-tw' && record.period.calendarYear === 2025,
+    );
+    expect(latest).toHaveLength(4);
+    latest.forEach((record) => {
+      expect(record.source.sourceId).toBe('acgf-annual-report-2025');
+      expect(record.source.publicationDate).toBe('2026-06-02');
+      expect(record.source.verifiedDate).toBe('2026-08-01');
+      expect(record.indicatorDefinitionVersion).toBe('1.0');
+    });
+  });
+});
+
 describe('official source requirements', () => {
   it('gives every verified record a source ID', () =>
     productionLevel3Values.forEach((item) => expect(item.source.sourceId).toBeTruthy()));

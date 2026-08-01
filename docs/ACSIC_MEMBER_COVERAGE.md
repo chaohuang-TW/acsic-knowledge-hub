@@ -5,8 +5,8 @@
 ## Current governed coverage
 
 - Formal members: 20; observers: 1; countries/economies: 14; institutions: 21.
-- Level 1 complete: 21; strict Level 2 complete: 4; partial: 16; insufficient: 1; verified Level 3 pilot records: 12.
-- Source references: 75; unique official sources: 57; field-level evidence objects: 224.
+- Level 1 complete: 21; strict Level 2 complete: 4; partial: 16; insufficient: 1; verified Level 3 pilot records: 16.
+- Source references: 76; unique official sources: 58; field-level evidence objects: 224.
 - User-visible governed content bilingual coverage: 100%; official native-language names: 11/21.
 
 <!-- GENERATED:COVERAGE:END -->
@@ -35,7 +35,7 @@ Level 2 is calculated from the central versioned standard. Missing applicable fi
 | Sri Lanka         | Sri Lanka Export Credit Insurance Corporation               | SLECIC        | Member       | export_credit_insurer_and_guarantor      |    100% | complete (100%)    |                 5 |                         0 | pending     | 2026-07-26    |
 | Taiwan            | Small and Medium Enterprise Credit Guarantee Fund of Taiwan | TSMEG         | Member       | credit_guarantee_fund                    |    100% | partial (44%)      |                 7 |                        10 | official    | 2026-08-01    |
 | Thailand          | Thai Credit Guarantee Corporation                           | TCG           | Member       | credit_guarantee_corporation             |    100% | partial (50%)      |                 2 |                         9 | official    | 2026-07-16    |
-| Taiwan            | Agricultural Credit Guarantee Fund                          | ACGF          | Observer     | agricultural_credit_guarantee_fund       |    100% | complete (100%)    |                 4 |                         0 | official    | 2026-07-26    |
+| Taiwan            | Agricultural Credit Guarantee Fund                          | ACGF          | Observer     | agricultural_credit_guarantee_fund       |    100% | complete (100%)    |                 5 |                         0 | official    | 2026-08-01    |
 
 ## Unique source types
 
@@ -45,6 +45,6 @@ Level 2 is calculated from the central versioned standard. Missing applicable fi
 - official_institution_profile: 28
 - official_governance_document: 3
 - official_law_or_regulation: 5
-- official_annual_report: 8
+- official_annual_report: 9
 - official_strategy_document: 1
 - official_government_source: 1

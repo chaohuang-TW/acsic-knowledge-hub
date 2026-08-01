@@ -86,8 +86,8 @@ The repository was renamed from `acgf-strategy-os-demo` on 2026-07-16. See [Repo
 ## Current governed coverage
 
 - Formal members: 20; observers: 1; countries/economies: 14; institutions: 21.
-- Level 1 complete: 21; strict Level 2 complete: 4; partial: 16; insufficient: 1; verified Level 3 pilot records: 12.
-- Source references: 75; unique official sources: 57; field-level evidence objects: 224.
+- Level 1 complete: 21; strict Level 2 complete: 4; partial: 16; insufficient: 1; verified Level 3 pilot records: 16.
+- Source references: 76; unique official sources: 58; field-level evidence objects: 224.
 - User-visible governed content bilingual coverage: 100%; official native-language names: 11/21.
 
 <!-- GENERATED:COVERAGE:END -->

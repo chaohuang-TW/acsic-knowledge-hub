@@ -122,7 +122,7 @@ describe('comparative indicator dictionary', () => {
     expect(forbiddenIndicatorComparisons.length).toBeGreaterThanOrEqual(5));
   it('freezes dictionary version 1.0', () => expect(indicatorDictionaryVersion).toBe('1.0'));
   it('publishes only the approved pilot records', () =>
-    expect(productionLevel3Values).toHaveLength(12));
+    expect(productionLevel3Values).toHaveLength(16));
 });
 
 describe('Level 3 pilot readiness and official sources', () => {

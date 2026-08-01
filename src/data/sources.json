@@ -1155,6 +1155,28 @@
     }
   },
   {
+    "sourceId": "acgf-annual-report-2025",
+    "institutionIds": ["acgf-tw"],
+    "title": "2025 Agricultural Credit Guarantee Fund Annual Report",
+    "publisher": "Agricultural Credit Guarantee Fund",
+    "sourceType": "official_annual_report",
+    "tier": "tier_1",
+    "url": "https://www.acgf.org.tw/Upload/Files/2025%E8%BE%B2%E6%A5%AD%E4%BF%A1%E4%BF%9D%E5%B9%B4%E5%A0%B1.pdf",
+    "finalResolvedUrl": "https://www.acgf.org.tw/Upload/Files/2025%E8%BE%B2%E6%A5%AD%E4%BF%A1%E4%BF%9D%E5%B9%B4%E5%A0%B1.pdf",
+    "originalLanguage": "zh-TW",
+    "publicationDate": "2026-06-02",
+    "documentDate": "2025",
+    "accessedDate": "2026-08-01",
+    "pageOrSection": "Annual report; 2025 guarantee operations and financial reports",
+    "accessStatus": "accessible",
+    "stalenessWarning": false,
+    "isPrimarySource": true,
+    "notes": {
+      "en": "Official 2025 ACGF annual report (published in 2026) supporting the 2025 guarantee-business statistics and fund-contribution table used in this historical series.",
+      "zh-TW": "ACGF 官方 2025 年年報（2026 年發布），用以支持本歷史序列的 2025 年保證業務統計與捐助基金統計表。"
+    }
+  },
+  {
     "sourceId": "acgf-budget-2026",
     "institutionIds": ["acgf-tw"],
     "title": "2026 Approved Budget",

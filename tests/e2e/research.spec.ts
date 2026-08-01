@@ -192,8 +192,8 @@ test('all 21 institution details can be opened and closed', async ({ page }) => 
 
 test('source registry statistics, metadata and filters are functional', async ({ page }) => {
   await page.goto('./#/en/sources');
-  await expect(page.getByText('75', { exact: true }).first()).toBeVisible();
-  await expect(page.getByText('57', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('76', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('58', { exact: true }).first()).toBeVisible();
   await expect(page.getByText('Annual or integrated reports')).toBeVisible();
   await expect(page.getByText('Scheme or programme documents')).toBeVisible();
   await page.getByLabel('Institution', { exact: true }).selectOption('askrindo-id');
@@ -390,7 +390,13 @@ test('English data route publishes 12 records and keeps readiness behind methodo
 }) => {
   await page.goto('./#/en/data-pilot');
   await expect(page.getByRole('heading', { name: 'Verified Data' })).toBeVisible();
+  await expect(page.getByText('16', { exact: true }).first()).toBeVisible();
   await expect(page.locator('.pilot-record-card')).toHaveCount(12);
+  await expect(page.locator('.historical-series')).toBeVisible();
+  await page.locator('.historical-series summary').click();
+  await expect(page.locator('.historical-series tbody tr')).toHaveCount(8);
+  await expect(page.locator('.historical-series')).toContainText('2025');
+  await expect(page.locator('.historical-series')).toContainText('2024');
   await expect(page.locator('.readiness-section')).not.toHaveAttribute('open', '');
   await page.locator('.readiness-section summary').click();
   await expect(page.locator('.readiness-section tbody tr')).toHaveCount(21);
@@ -408,10 +414,14 @@ test('Traditional Chinese pilot route, filters and bilingual statuses work', asy
   expect(primaryPeriodText).not.toContain('113 年');
   expect(primaryPeriodText).not.toContain('114 年');
   expect(primaryPeriodText).not.toContain('民國');
-  await expect(page.getByText('2024 年', { exact: true }).first()).toBeVisible();
-  await expect(page.getByText('2025 年', { exact: true }).first()).toBeVisible();
-  await expect(page.getByText('截至 2025 年 12 月 31 日', { exact: true })).toHaveCount(2);
+  await expect(
+    page.locator('.pilot-record-card').filter({ hasText: '2025 年' }).first(),
+  ).toBeVisible();
+  await expect(page.getByText('截至 2025 年 12 月 31 日', { exact: true })).toHaveCount(4);
   await expect(page.getByText('1974–2025', { exact: true })).toBeVisible();
+  await page.locator('.historical-series summary').click();
+  await expect(page.locator('.historical-series tbody tr')).toHaveCount(8);
+  await expect(page.locator('.historical-series')).toContainText('2024 年');
   await page.locator('.pilot-toolbar').getByLabel('機構', { exact: true }).selectOption('jfc-jp');
   await expect(page.locator('.pilot-record-card')).toHaveCount(2);
   await expect(page.getByText('已查證但有限制').first()).toBeVisible();
