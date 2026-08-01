@@ -17,6 +17,21 @@ import type {
 } from '../../types/indicators';
 
 const pilotInstitutionIds = ['jfc-jp', 'acgf-tw', 'tsmeg-tw'] as const;
+const acgfSeriesIndicatorIds = [
+  'number_of_guarantees',
+  'new_guarantee_volume',
+  'outstanding_guarantee_balance',
+  'capital_or_fund_size',
+] as const;
+const isAcgfSeriesRecord = (record: (typeof productionLevel3Values)[number]) =>
+  record.institutionId === 'acgf-tw' &&
+  acgfSeriesIndicatorIds.includes(record.indicatorId as (typeof acgfSeriesIndicatorIds)[number]);
+const acgfHistoricalRecords = productionLevel3Values.filter(isAcgfSeriesRecord);
+const acgfLatestCompleteYear = Math.max(
+  ...acgfHistoricalRecords
+    .map((record) => record.period.calendarYear)
+    .filter((year): year is number => year !== null),
+);
 
 const statusLabels: Record<
   IndicatorReadinessStatus | ProductionVerificationStatus,
@@ -45,7 +60,7 @@ const copy = {
       'Explore quantitative data with traceable official sources, reporting periods and definitions.',
     boundary: 'Data boundary',
     boundaryText:
-      'Twelve official records cover JFC, ACGF and TSMEG only. Missing values remain governed readiness outcomes; no USD conversion, chart or performance ranking is produced.',
+      'The four ACGF indicators show the latest complete year first (2025), with 2024 retained as a historical series. JFC and TSMEG records remain available for reference; no USD conversion, chart or performance ranking is produced.',
     records: 'verified data records',
     institutions: 'institutions',
     indicators: 'indicators',
@@ -67,6 +82,14 @@ const copy = {
     source: 'Official source',
     page: 'Page / section',
     verifiedDate: 'Verification date',
+    dataYear: 'Data year',
+    publicationYear: 'Publication year',
+    latestCompleteYear: 'Latest complete year',
+    historicalSeriesTitle: 'ACGF historical series',
+    historicalSeriesIntro:
+      'The latest complete year is shown in the cards above. Expand this table to review both 2024 and 2025 without replacing the historical record.',
+    historicalIndicator: 'Indicator',
+    historicalValue: 'Reported value',
     viewProvenance: 'View source & methodology',
     officialSource: 'Official source',
     sourceLocation: 'Page / table',
@@ -102,7 +125,7 @@ const copy = {
     intro: '查看具有官方來源、報告期間與資料定義的量化資訊。',
     boundary: '資料範圍',
     boundaryText:
-      '12 筆官方資料僅涵蓋 JFC、ACGF 與 TSMEG。缺漏維持治理狀態；不轉換美元、不建立圖表或績效排名。',
+      'ACGF 四項指標先顯示最新完整年度（2025），並保留 2024 歷史序列。JFC 與 TSMEG 資料仍供參考；不轉換美元、不建立圖表或績效排名。',
     records: '筆已查證資料',
     institutions: '家機構',
     indicators: '個指標',
@@ -124,6 +147,14 @@ const copy = {
     source: '官方來源',
     page: '頁碼／章節',
     verifiedDate: '查證日期',
+    dataYear: '資料年度',
+    publicationYear: '發布年度',
+    latestCompleteYear: '最新完整年度',
+    historicalSeriesTitle: 'ACGF 歷史序列',
+    historicalSeriesIntro:
+      '上方卡片先顯示最新完整年度；展開此表可同時檢視 2024 與 2025，歷史資料不會被覆蓋。',
+    historicalIndicator: '指標',
+    historicalValue: '官方原始值',
     viewProvenance: '查看來源與資料處理',
     officialSource: '官方來源',
     sourceLocation: '頁碼／表格',
@@ -178,21 +209,29 @@ export function DataPilotPage() {
   const c = copy[locale];
   const [institutionFilter, setInstitutionFilter] = useState('all');
   const [indicatorFilter, setIndicatorFilter] = useState('all');
-  const records = useMemo(
-    () =>
-      productionLevel3Values.filter(
+  const records = useMemo(() => {
+    const filtered = productionLevel3Values.filter(
+      (record) =>
+        (institutionFilter === 'all' || record.institutionId === institutionFilter) &&
+        (indicatorFilter === 'all' || record.indicatorId === indicatorFilter),
+    );
+    if (institutionFilter === 'all' || institutionFilter === 'acgf-tw') {
+      return filtered.filter(
         (record) =>
-          (institutionFilter === 'all' || record.institutionId === institutionFilter) &&
-          (indicatorFilter === 'all' || record.indicatorId === indicatorFilter),
-      ),
-    [indicatorFilter, institutionFilter],
-  );
+          record.institutionId !== 'acgf-tw' ||
+          record.period.calendarYear === acgfLatestCompleteYear,
+      );
+    }
+    return filtered;
+  }, [indicatorFilter, institutionFilter]);
   const institutionName = (id: string) =>
     institutions.find((institution) => institution.id === id)?.name[locale] ?? id;
   const indicatorName = (id: string) => indicatorById.get(id)?.name[locale] ?? id;
   const displayRecord = (record: (typeof productionLevel3Values)[number]) => ({
     ...record,
     displayPeriod: formatDisplayPeriod(record.period, locale),
+    dataYear: record.period.calendarYear,
+    publicationYear: record.source.publicationDate?.slice(0, 4) ?? null,
   });
 
   const exportJson = () =>
@@ -244,6 +283,8 @@ export function DataPilotPage() {
       c.indicator,
       c.period,
       c.originalPeriod,
+      c.dataYear,
+      c.publicationYear,
       c.reportedValue,
       c.originalCurrency,
       c.source,
@@ -253,6 +294,8 @@ export function DataPilotPage() {
       indicatorName(record.indicatorId),
       formatDisplayPeriod(record.period, locale),
       record.reported.originalPeriodLabel ?? '',
+      record.period.calendarYear ?? '',
+      record.source.publicationDate?.slice(0, 4) ?? '',
       `${formatNumber(record.reported.value, locale)} ${record.reported.unit}`,
       record.reported.currency ?? '',
       sourceRegistry.find((source) => source.sourceId === record.source.sourceId)?.title ?? '',
@@ -281,6 +324,9 @@ export function DataPilotPage() {
           <span>{c.indicators}</span>
         </div>
       </div>
+      <p className="pilot-boundary">
+        <strong>{c.boundary}:</strong> {c.boundaryText}
+      </p>
 
       <div className="pilot-toolbar">
         <label>
@@ -329,6 +375,67 @@ export function DataPilotPage() {
         </div>
       </details>
 
+      {(institutionFilter === 'all' || institutionFilter === 'acgf-tw') && (
+        <details className="research-details historical-series">
+          <summary>
+            {c.historicalSeriesTitle} · {c.latestCompleteYear} {acgfLatestCompleteYear}
+          </summary>
+          <p>{c.historicalSeriesIntro}</p>
+          <div className="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>{c.historicalIndicator}</th>
+                  <th>{c.dataYear}</th>
+                  <th>{c.publicationYear}</th>
+                  <th>{c.historicalValue}</th>
+                  <th>{c.period}</th>
+                  <th>{c.source}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...acgfHistoricalRecords]
+                  .sort(
+                    (a, b) =>
+                      (b.period.calendarYear ?? 0) - (a.period.calendarYear ?? 0) ||
+                      acgfSeriesIndicatorIds.indexOf(
+                        a.indicatorId as (typeof acgfSeriesIndicatorIds)[number],
+                      ) -
+                        acgfSeriesIndicatorIds.indexOf(
+                          b.indicatorId as (typeof acgfSeriesIndicatorIds)[number],
+                        ),
+                  )
+                  .map((record) => {
+                    const source = sourceRegistry.find(
+                      (item) => item.sourceId === record.source.sourceId,
+                    );
+                    return (
+                      <tr key={record.recordId}>
+                        <th scope="row">{indicatorName(record.indicatorId)}</th>
+                        <td>{record.period.calendarYear ?? '—'}</td>
+                        <td>{record.source.publicationDate?.slice(0, 4) ?? '—'}</td>
+                        <td>
+                          {formatNumber(record.reported.value, locale)} {record.reported.unit}
+                        </td>
+                        <td>{formatDisplayPeriod(record.period, locale)}</td>
+                        <td>
+                          {source ? (
+                            <a href={source.url} target="_blank" rel="noreferrer">
+                              {source.title}
+                            </a>
+                          ) : (
+                            record.source.sourceId
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          </div>
+        </details>
+      )}
+
       <div className="pilot-records" aria-live="polite">
         {records.map((record) => {
           const source = sourceRegistry.find((item) => item.sourceId === record.source.sourceId)!;
@@ -367,6 +474,14 @@ export function DataPilotPage() {
                 <div>
                   <dt>{c.period}</dt>
                   <dd>{formatDisplayPeriod(record.period, locale)}</dd>
+                </div>
+                <div>
+                  <dt>{c.dataYear}</dt>
+                  <dd>{record.period.calendarYear ?? '—'}</dd>
+                </div>
+                <div>
+                  <dt>{c.publicationYear}</dt>
+                  <dd>{record.source.publicationDate?.slice(0, 4) ?? '—'}</dd>
                 </div>
                 <div>
                   <dt>{c.source}</dt>

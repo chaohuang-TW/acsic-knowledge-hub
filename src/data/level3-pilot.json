@@ -519,6 +519,344 @@
     }
   },
   {
+    "recordId": "acgf-cy2025-guarantee-amount",
+    "institutionId": "acgf-tw",
+    "indicatorId": "new_guarantee_volume",
+    "indicatorDefinitionVersion": "1.0",
+    "reported": {
+      "label": "保證金額",
+      "value": 18480910,
+      "unit": "新臺幣千元",
+      "currency": "TWD",
+      "periodLabel": "2025",
+      "originalPeriodLabel": "114 年",
+      "population": "2025 年度承保保證案件",
+      "originalPopulation": "114 年度承保保證案件",
+      "definition": {
+        "en": "Guarantee amount recorded for guarantee cases accepted during CY2025.",
+        "zh-TW": "2025 年度承保保證案件所認列之保證金額。"
+      }
+    },
+    "normalized": {
+      "indicatorId": "new_guarantee_volume",
+      "value": 18480.91,
+      "unit": "TWD million",
+      "currency": "TWD",
+      "method": "Divide the reported thousand-TWD value by 1,000.",
+      "status": "unit_conversion",
+      "notes": {
+        "en": "The adjacent guaranteed-loan amount of TWD 23,928,298 thousand is not used.",
+        "zh-TW": "未使用相鄰欄位之保證貸款金額新臺幣 23,928,298 千元。"
+      }
+    },
+    "period": {
+      "reportingPeriodType": "calendar_year",
+      "fiscalYear": null,
+      "calendarYear": 2025,
+      "periodStart": "2025-01-01",
+      "periodEnd": "2025-12-31",
+      "asOfDate": null
+    },
+    "scheme": {
+      "schemeSpecific": false,
+      "schemeId": null,
+      "schemeName": { "en": null, "zh-TW": null }
+    },
+    "source": {
+      "sourceId": "acgf-annual-report-2025",
+      "pageOrSection": "Printed p. 22; PDF page index 26",
+      "tableOrFigure": "5-1 最近五年保證情形",
+      "pdfPageIndex": 26,
+      "publicationDate": "2026-06-02",
+      "verifiedDate": "2026-08-01"
+    },
+    "comparability": {
+      "status": "reference_only",
+      "level": "medium",
+      "issues": {
+        "en": [
+          "CY2025 differs from the JFC fiscal year and currencies differ across institutions."
+        ],
+        "zh-TW": ["2025 曆年與 JFC 會計年度不同，且機構間原始幣別不同。"]
+      }
+    },
+    "verificationStatus": "verified",
+    "manualReviewStatus": "completed",
+    "gates": {
+      "researchVerified": true,
+      "schemaValidated": true,
+      "sourceValidated": true,
+      "comparabilityReviewed": true,
+      "manualReviewRequired": false
+    },
+    "derivation": {
+      "isDerived": false,
+      "derivationMethod": null,
+      "inputSourceIds": [],
+      "calculation": null,
+      "calculatedDate": null
+    },
+    "convertedValue": null,
+    "capitalConcept": null,
+    "institutionTypes": [],
+    "notes": {
+      "en": "The annual guarantee amount remains separate from the adjacent guaranteed-loan amount.",
+      "zh-TW": "年度保證金額與相鄰的保證貸款金額維持分開記錄。"
+    }
+  },
+  {
+    "recordId": "acgf-2025-guarantee-balance",
+    "institutionId": "acgf-tw",
+    "indicatorId": "outstanding_guarantee_balance",
+    "indicatorDefinitionVersion": "1.0",
+    "reported": {
+      "label": "保證餘額",
+      "value": 63798273,
+      "unit": "新臺幣千元",
+      "currency": "TWD",
+      "periodLabel": "As of 31 Dec 2025",
+      "originalPeriodLabel": "114 年底",
+      "population": "仍存續之保證責任",
+      "definition": {
+        "en": "Outstanding guarantee liability at the end of CY2025.",
+        "zh-TW": "截至 2025 年底仍存續之保證責任餘額。"
+      }
+    },
+    "normalized": {
+      "indicatorId": "outstanding_guarantee_balance",
+      "value": 63798.273,
+      "unit": "TWD million",
+      "currency": "TWD",
+      "method": "Divide the reported thousand-TWD value by 1,000.",
+      "status": "unit_conversion",
+      "notes": {
+        "en": "Preserves the year-end stock concept.",
+        "zh-TW": "保留年末存量概念。"
+      }
+    },
+    "period": {
+      "reportingPeriodType": "point_in_time",
+      "fiscalYear": null,
+      "calendarYear": 2025,
+      "periodStart": null,
+      "periodEnd": null,
+      "asOfDate": "2025-12-31"
+    },
+    "scheme": {
+      "schemeSpecific": false,
+      "schemeId": null,
+      "schemeName": { "en": null, "zh-TW": null }
+    },
+    "source": {
+      "sourceId": "acgf-annual-report-2025",
+      "pageOrSection": "Printed p. 22; PDF page index 26",
+      "tableOrFigure": "5-1 最近五年保證情形",
+      "pdfPageIndex": 26,
+      "publicationDate": "2026-06-02",
+      "verifiedDate": "2026-08-01"
+    },
+    "comparability": {
+      "status": "reference_only",
+      "level": "medium",
+      "issues": {
+        "en": ["As-of dates and currencies differ across institutions."],
+        "zh-TW": ["機構間資料基準日與原始幣別不同。"]
+      }
+    },
+    "verificationStatus": "verified",
+    "manualReviewStatus": "completed",
+    "gates": {
+      "researchVerified": true,
+      "schemaValidated": true,
+      "sourceValidated": true,
+      "comparabilityReviewed": true,
+      "manualReviewRequired": false
+    },
+    "derivation": {
+      "isDerived": false,
+      "derivationMethod": null,
+      "inputSourceIds": [],
+      "calculation": null,
+      "calculatedDate": null
+    },
+    "convertedValue": null,
+    "capitalConcept": null,
+    "institutionTypes": [],
+    "notes": {
+      "en": "The year-end stock remains separate from the annual guarantee flow.",
+      "zh-TW": "年末存量與年度保證流量維持分開記錄。"
+    }
+  },
+  {
+    "recordId": "acgf-cy2025-guarantee-cases",
+    "institutionId": "acgf-tw",
+    "indicatorId": "number_of_guarantees",
+    "indicatorDefinitionVersion": "1.0",
+    "reported": {
+      "label": "保證件數",
+      "value": 18545,
+      "unit": "件",
+      "currency": null,
+      "periodLabel": "2025",
+      "originalPeriodLabel": "114 年",
+      "population": "保證案件",
+      "definition": {
+        "en": "Guarantee cases accepted during CY2025.",
+        "zh-TW": "2025 年度承保之保證案件數。"
+      }
+    },
+    "normalized": {
+      "indicatorId": "number_of_guarantees",
+      "value": 18545,
+      "unit": "guarantee cases",
+      "currency": null,
+      "method": "Direct mapping; retain cases as the counting unit.",
+      "status": "direct",
+      "notes": {
+        "en": "Cases are not treated as distinct beneficiary enterprises.",
+        "zh-TW": "保證件數不視為不重複受益對象數。"
+      }
+    },
+    "period": {
+      "reportingPeriodType": "calendar_year",
+      "fiscalYear": null,
+      "calendarYear": 2025,
+      "periodStart": "2025-01-01",
+      "periodEnd": "2025-12-31",
+      "asOfDate": null
+    },
+    "scheme": {
+      "schemeSpecific": false,
+      "schemeId": null,
+      "schemeName": { "en": null, "zh-TW": null }
+    },
+    "source": {
+      "sourceId": "acgf-annual-report-2025",
+      "pageOrSection": "Printed p. 22; PDF page index 26",
+      "tableOrFigure": "5-1 最近五年保證情形",
+      "pdfPageIndex": 26,
+      "publicationDate": "2026-06-02",
+      "verifiedDate": "2026-08-01"
+    },
+    "comparability": {
+      "status": "reference_only",
+      "level": "low",
+      "issues": {
+        "en": ["CY2025 counting units require confirmation before cross-institution comparison."],
+        "zh-TW": ["2025 曆年跨機構比較前須確認計數單位。"]
+      }
+    },
+    "verificationStatus": "verified",
+    "manualReviewStatus": "completed",
+    "gates": {
+      "researchVerified": true,
+      "schemaValidated": true,
+      "sourceValidated": true,
+      "comparabilityReviewed": true,
+      "manualReviewRequired": false
+    },
+    "derivation": {
+      "isDerived": false,
+      "derivationMethod": null,
+      "inputSourceIds": [],
+      "calculation": null,
+      "calculatedDate": null
+    },
+    "convertedValue": null,
+    "capitalConcept": null,
+    "institutionTypes": [],
+    "notes": {
+      "en": "The official unit is guarantee cases.",
+      "zh-TW": "官方計數單位為保證件數。"
+    }
+  },
+  {
+    "recordId": "acgf-2025-contributed-fund",
+    "institutionId": "acgf-tw",
+    "indicatorId": "capital_or_fund_size",
+    "indicatorDefinitionVersion": "1.0",
+    "reported": {
+      "label": "各單位捐助基金統計表－合計",
+      "value": 10846717,
+      "unit": "新臺幣千元",
+      "currency": "TWD",
+      "periodLabel": "1983–2025",
+      "originalPeriodLabel": "截至 114 年 12 月 31 日",
+      "population": "中央與地方政府及各簽約金融機構累計捐助款",
+      "definition": {
+        "en": "Cumulative contributions from government bodies and contracted financial institutions through 31 December 2025.",
+        "zh-TW": "截至 2025 年 12 月 31 日政府機關與各簽約金融機構之累計捐助款。"
+      }
+    },
+    "normalized": {
+      "indicatorId": "capital_or_fund_size",
+      "value": 10846.717,
+      "unit": "TWD million",
+      "currency": "TWD",
+      "method": "Divide the reported thousand-TWD value by 1,000 and retain the contributed-capital concept.",
+      "status": "unit_conversion",
+      "notes": {
+        "en": "This is contributed capital, not net assets, paid-in share capital or guarantee reserve.",
+        "zh-TW": "此為捐助資本，不是淨資產、實收股本或保證準備。"
+      }
+    },
+    "period": {
+      "reportingPeriodType": "cumulative_since_establishment",
+      "fiscalYear": null,
+      "calendarYear": 2025,
+      "periodStart": "1983-09-27",
+      "periodEnd": null,
+      "asOfDate": "2025-12-31"
+    },
+    "scheme": {
+      "schemeSpecific": false,
+      "schemeId": null,
+      "schemeName": { "en": null, "zh-TW": null }
+    },
+    "source": {
+      "sourceId": "acgf-annual-report-2025",
+      "pageOrSection": "Printed p. 06; PDF page index 10",
+      "tableOrFigure": "各單位捐助基金統計表",
+      "pdfPageIndex": 10,
+      "publicationDate": "2026-06-02",
+      "verifiedDate": "2026-08-01"
+    },
+    "comparability": {
+      "status": "not_comparable",
+      "level": "low",
+      "issues": {
+        "en": [
+          "Capital concepts differ across institutions.",
+          "Cumulative contributions cannot be compared with net assets or reserves."
+        ],
+        "zh-TW": ["機構間資本概念不同。", "累計捐助款不得與淨資產或準備金直接比較。"]
+      }
+    },
+    "verificationStatus": "verified_with_limitation",
+    "manualReviewStatus": "completed",
+    "gates": {
+      "researchVerified": true,
+      "schemaValidated": true,
+      "sourceValidated": true,
+      "comparabilityReviewed": true,
+      "manualReviewRequired": false
+    },
+    "derivation": {
+      "isDerived": false,
+      "derivationMethod": null,
+      "inputSourceIds": [],
+      "calculation": null,
+      "calculatedDate": null
+    },
+    "convertedValue": null,
+    "capitalConcept": "cumulative_contributed_capital",
+    "institutionTypes": ["government bodies", "contracted financial institutions"],
+    "notes": {
+      "en": "The exact official capital concept is displayed in the pilot UI.",
+      "zh-TW": "試辦介面顯示完整官方資本概念。"
+    }
+  },
+  {
     "recordId": "tsmeg-cy2025-guarantee-amount",
     "institutionId": "tsmeg-tw",
     "indicatorId": "new_guarantee_volume",

@@ -133,7 +133,7 @@ const evidenceSourceOverrides: Record<string, Record<string, string>> = {
   'acgf-tw': {
     fundingOrCapitalBasis: 'acgf-budget-2026',
     geographicScope: 'acgf-annual-report-2024',
-    officialPublications: 'acgf-annual-report-2024',
+    officialPublications: 'acgf-annual-report-2025',
     eligibleAgriculturalSectors: 'acgf-annual-report-2024',
   },
 };

@@ -1208,7 +1208,10 @@
       "partnerFinancialInstitutions": ["Contracted banks", "Farmers' and fishers' associations"],
       "agriculturalPolicyRole": "Supports implementation of agricultural finance policy",
       "fundingOrCapitalBasis": "Annual budget and foundation resources disclosed through official public information",
-      "officialPublications": ["Agricultural Credit Guarantee Fund 2024 Annual Report"],
+      "officialPublications": [
+        "Agricultural Credit Guarantee Fund 2024 Annual Report",
+        "Agricultural Credit Guarantee Fund 2025 Annual Report"
+      ],
       "eligibleAgriculturalSectors": ["Agriculture", "Fisheries"]
     },
     "supervisingOrOversightAuthority": "農業部",
@@ -1217,6 +1220,7 @@
       "acsic-current-member-institutions",
       "acgf-tw-profile",
       "acgf-annual-report-2024",
+      "acgf-annual-report-2025",
       "acgf-budget-2026"
     ],
     "verifiedFieldKeys": [

@@ -213,6 +213,7 @@ const zh: Record<string, string> = {
   'Annual budget and foundation resources disclosed through official public information':
     '官方公開資訊所揭露的年度預算與基金資源',
   'Agricultural Credit Guarantee Fund 2024 Annual Report': '《農業信用保證基金 2024 年報》',
+  'Agricultural Credit Guarantee Fund 2025 Annual Report': '《農業信用保證基金 2025 年報》',
   臺灣地區農業信用保證制度實施方案: '《臺灣地區農業信用保證制度實施方案》',
   農業部: '農業部',
 };
