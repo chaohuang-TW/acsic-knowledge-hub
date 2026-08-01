@@ -1112,7 +1112,9 @@
       "tsmeg-tw-profile",
       "tsmeg-annual-report-2025",
       "tsmeg-performance-2025",
-      "tsmeg-indirect-guarantee"
+      "tsmeg-indirect-guarantee",
+      "tsmeg-direct-guarantee",
+      "acsic-37th-conference-2025"
     ],
     "verifiedFieldKeys": [
       "establishedYear",

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { PageHeader, ResearchBadge } from '../components/Layout';
 import { coverageStats, membershipStats } from '../data/coverage';
-import { acsicEvents } from '../data/events';
+import { acsicEvents, formatEventDate } from '../data/events';
 import { institutions, sourceRegistry } from '../data/institutions';
 import { level2FieldLabels } from '../data/level2-standards';
 import {
@@ -472,15 +472,23 @@ const systemCards = [
         },
       },
       {
+        title: { en: 'Direct guarantee', 'zh-TW': '直接保證' },
+        text: {
+          en: 'An enterprise applies directly to TSMEG. TSMEG reviews the application and issues a commitment letter; the enterprise then applies to a financial institution for financing.',
+          'zh-TW':
+            '企業直接向 TSMEG 申請信用保證。TSMEG 審查通過並核發承諾書後，企業再憑承諾書向金融機構申請融資。',
+        },
+      },
+      {
         title: { en: 'Other documented models', 'zh-TW': '其他已記錄模式' },
         text: {
-          en: 'Direct and co-guarantee remain recorded in TSMEG’s governed institution profile; detailed process claims are withheld pending source-specific verification.',
+          en: 'Co-guarantee remains recorded in TSMEG’s governed institution profile; its detailed workflow is withheld pending source-specific verification.',
           'zh-TW':
-            '直接保證與共同保證仍保留於 TSMEG 的治理後機構檔案；個別流程細節待取得對應官方來源後才刊登。',
+            '共同保證仍保留於 TSMEG 的治理後機構檔案；個別流程細節待取得對應官方來源後才刊登。',
         },
       },
     ],
-    sourceIds: ['tsmeg-indirect-guarantee'],
+    sourceIds: ['tsmeg-indirect-guarantee', 'tsmeg-direct-guarantee'],
   },
   {
     id: 'japan',
@@ -888,45 +896,50 @@ export function ResourcesPage() {
       <section className="events-section" aria-labelledby="acsic-events-title">
         <h2 id="acsic-events-title">{c.eventsTitle}</h2>
         <div className="event-grid">
-          {acsicEvents.map((event) => (
-            <article className="event-card" key={event.id}>
-              <p className="eyebrow">{event.edition} ACSIC Conference</p>
-              <h3>{event.title[locale]}</h3>
-              <p>{event.summary[locale]}</p>
-              <dl className="event-details">
-                <div>
-                  <dt>{locale === 'en' ? 'Date' : '日期'}</dt>
-                  <dd>{locale === 'en' ? '23–24 April 2026' : '2026 年 4 月 23–24 日'}</dd>
-                </div>
-                <div>
-                  <dt>{locale === 'en' ? 'Location' : '地點'}</dt>
-                  <dd>{event.location[locale]}</dd>
-                </div>
-                <div>
-                  <dt>{locale === 'en' ? 'Host' : '主辦單位'}</dt>
-                  <dd>{event.hostLabel[locale]}</dd>
-                </div>
-              </dl>
-              <p className="event-topics">
-                <strong>{locale === 'en' ? 'Topics: ' : '主題：'}</strong>
-                {event.topics.map((topic) => topic[locale]).join(' · ')}
-              </p>
-              <p className="official-source-link">
-                {event.sourceIds.map((sourceId, index) => {
-                  const source = sourceRegistry.find((item) => item.sourceId === sourceId);
-                  if (!source) return null;
-                  return (
-                    <span key={sourceId}>
-                      {index > 0 ? ' · ' : ''}
-                      <a href={source.finalResolvedUrl} target="_blank" rel="noreferrer">
-                        {locale === 'en' ? 'Official source' : '官方來源'}
-                      </a>
-                    </span>
-                  );
-                })}
-              </p>
-            </article>
-          ))}
+          {acsicEvents.map((event) => {
+            const host = institutions.find(
+              (institution) => institution.id === event.hostInstitutionId,
+            );
+            return (
+              <article className="event-card" key={event.id}>
+                <p className="eyebrow">{event.edition} ACSIC Conference</p>
+                <h3>{event.title[locale]}</h3>
+                <p>{event.summary[locale]}</p>
+                <dl className="event-details">
+                  <div>
+                    <dt>{locale === 'en' ? 'Date' : '日期'}</dt>
+                    <dd>{formatEventDate(event.dateStart, event.dateEnd, locale)}</dd>
+                  </div>
+                  <div>
+                    <dt>{locale === 'en' ? 'Location' : '地點'}</dt>
+                    <dd>{event.location[locale]}</dd>
+                  </div>
+                  <div>
+                    <dt>{locale === 'en' ? 'Host' : '主辦單位'}</dt>
+                    <dd>{host?.name[locale] ?? event.hostInstitutionId}</dd>
+                  </div>
+                </dl>
+                <p className="event-topics">
+                  <strong>{locale === 'en' ? 'Topics: ' : '主題：'}</strong>
+                  {event.topics.map((topic) => topic[locale]).join(' · ')}
+                </p>
+                <p className="official-source-link">
+                  {event.sourceIds.map((sourceId, index) => {
+                    const source = sourceRegistry.find((item) => item.sourceId === sourceId);
+                    if (!source) return null;
+                    return (
+                      <span key={sourceId}>
+                        {index > 0 ? ' · ' : ''}
+                        <a href={source.finalResolvedUrl} target="_blank" rel="noreferrer">
+                          {locale === 'en' ? 'Official source' : '官方來源'}
+                        </a>
+                      </span>
+                    );
+                  })}
+                </p>
+              </article>
+            );
+          })}
         </div>
         <p className="event-more">{c.moreEvents}</p>
       </section>

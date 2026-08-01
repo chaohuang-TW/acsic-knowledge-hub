@@ -192,8 +192,8 @@ test('all 21 institution details can be opened and closed', async ({ page }) => 
 
 test('source registry statistics, metadata and filters are functional', async ({ page }) => {
   await page.goto('./#/en/sources');
-  await expect(page.getByText('73', { exact: true }).first()).toBeVisible();
-  await expect(page.getByText('55', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('75', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('57', { exact: true }).first()).toBeVisible();
   await expect(page.getByText('Annual or integrated reports')).toBeVisible();
   await expect(page.getByText('Scheme or programme documents')).toBeVisible();
   await page.getByLabel('Institution', { exact: true }).selectOption('askrindo-id');
@@ -217,6 +217,8 @@ test('systems publish only source-supported public system knowledge in both lang
   ).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Indirect guarantee' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Batch guarantee' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Direct guarantee' })).toBeVisible();
+  await expect(page.getByText('commitment letter')).toBeVisible();
   await expect(
     page.getByRole('heading', { name: 'Japan: differentiated institutional roles' }),
   ).toBeVisible();
@@ -256,6 +258,15 @@ test('resources publish only ACSIC events with verified official sources', async
   await expect(page.getByText('The Taj Mahal Palace, Mumbai, India')).toBeVisible();
   await expect(page.getByText('CGTMSE')).toBeVisible();
   await expect(page.locator('.event-card a[href="https://globalacsic2026.in/"]')).toHaveCount(1);
+  await expect(page.getByRole('heading', { name: '37th ACSIC Conference 2025' })).toBeVisible();
+  await expect(page.getByText('10–14 November 2025')).toBeVisible();
+  await expect(page.getByText('Grand Hyatt Taipei, Taiwan')).toBeVisible();
+  await expect(
+    page.getByText('Small and Medium Enterprise Credit Guarantee Fund of Taiwan', { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.locator('a[href="https://www.smeg.org.tw/basic/?mode=detail&node=4734"]'),
+  ).toHaveCount(1);
   await expect(page.locator('main')).not.toContainText('event archive - planned');
 });
 
