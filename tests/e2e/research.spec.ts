@@ -6,14 +6,19 @@ test('international default uses English and preserves the independent disclaime
   await page.goto('./');
   await expect(page).toHaveURL(/acsic-knowledge-hub\/#\/en\/$/);
   await expect(
-    page.getByRole('heading', { name: 'Explore Asia’s credit guarantee systems' }),
+    page.getByRole('heading', { name: "Explore Asia's Credit Guarantee Network" }),
   ).toBeVisible();
   await expect(page.getByText('Independent, unofficial platform')).toBeVisible();
   await expect(page.getByText('20', { exact: true }).first()).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'ACSIC Network' })).toBeVisible();
-  await expect(page.getByText('Across Asia')).toBeVisible();
-  await expect(page.getByText('Cambodia, India, Indonesia, Japan')).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Explore all institutions →' })).toHaveAttribute(
+  await expect(page.getByRole('heading', { name: 'ACSIC Network Explorer' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Taiwan' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Japan' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Republic of Korea' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Taiwan', exact: true })).toBeVisible();
+  await expect(page.getByText('TSMEG', { exact: true })).toBeVisible();
+  await expect(page.getByText('ACGF', { exact: true })).toBeVisible();
+  await expect(page.getByText('Observer', { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Explore all institutions' })).toHaveAttribute(
     'href',
     '#/en/members',
   );
@@ -43,15 +48,18 @@ test('international default uses English and preserves the independent disclaime
   await expect(page.locator('main')).not.toContainText('Source references');
 });
 
-test('Traditional Chinese homepage renders the dynamic ACSIC network overview', async ({
+test('Traditional Chinese homepage renders the interactive ACSIC network explorer', async ({
   page,
 }) => {
   await page.goto('./#/zh-TW/');
-  await expect(page.getByRole('heading', { name: 'ACSIC 聯盟概況' })).toBeVisible();
-  await expect(page.getByText('橫跨亞洲')).toBeVisible();
-  await expect(page.locator('.network-countries p')).toContainText('柬埔寨');
-  await expect(page.locator('.network-countries p')).toContainText('日本');
-  await expect(page.getByRole('link', { name: '探索全部會員機構 →' })).toHaveAttribute(
+  await expect(page.getByRole('heading', { name: '探索亞洲信用保證網絡' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'ACSIC 網絡探索器' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Taiwan' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Japan' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Republic of Korea' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Taiwan', exact: true })).toBeVisible();
+  await expect(page.getByText('觀察員', { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole('link', { name: '查看全部會員機構' })).toHaveAttribute(
     'href',
     '#/zh-TW/members',
   );

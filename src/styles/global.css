@@ -1589,3 +1589,375 @@ tbody th {
     animation-duration: 0.01ms !important;
   }
 }
+/* ACSIC Interactive Network Explorer: restrained miniature-diorama treatment. */
+.network-hero-page {
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+  min-height: min(68dvh, 620px);
+}
+.network-hero-page .hero-copy h1 {
+  max-width: 11ch;
+}
+.network-hero-counts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  overflow: hidden;
+  background: var(--line);
+  box-shadow: var(--shadow);
+}
+.network-hero-counts div {
+  display: grid;
+  align-content: center;
+  min-height: 145px;
+  padding: 1.2rem;
+  background: var(--surface);
+}
+.network-hero-counts dt {
+  order: 2;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+.network-hero-counts dd {
+  order: 1;
+  margin: 0 0 0.3rem;
+  color: var(--accent-strong);
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+.network-explorer {
+  width: min(1280px, calc(100% - 2rem));
+  margin: 0 auto clamp(4rem, 8vw, 7rem);
+}
+.network-explorer-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 1.35rem;
+}
+.network-explorer-heading h2,
+.network-panel-heading h2 {
+  margin: 0.35rem 0 0.55rem;
+}
+.network-explorer-heading p {
+  max-width: 48rem;
+  margin-bottom: 0;
+  color: var(--muted);
+}
+.network-schematic-note {
+  flex: 0 0 auto;
+  max-width: 16rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  text-align: right;
+}
+.network-explorer-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(300px, 0.85fr);
+  gap: 1.15rem;
+  align-items: stretch;
+}
+.network-stage {
+  min-width: 0;
+}
+.network-canvas-frame {
+  position: relative;
+  min-height: 480px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: linear-gradient(145deg, #eaf3ee, #d5e6dd);
+  box-shadow: var(--shadow);
+}
+.network-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 480px;
+}
+.network-canvas canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+.network-destination-controls {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+.network-destination-controls button,
+.fallback-region {
+  min-height: 2.65rem;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 0.72rem;
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  font-weight: 750;
+}
+.network-destination-controls button:hover,
+.network-destination-controls button.is-selected,
+.fallback-region:hover,
+.fallback-region.is-selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--text);
+}
+.network-panel {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: clamp(1rem, 2.2vw, 1.5rem);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.network-live {
+  min-height: 1.5em;
+  margin: 0 0 0.8rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+.network-panel-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.network-count {
+  color: var(--accent-strong);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-align: right;
+}
+.institution-card-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+.network-institution-card {
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.82rem;
+  background: color-mix(in srgb, var(--surface) 80%, var(--accent-soft));
+}
+.network-institution-card.is-selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+.network-institution-card h3 {
+  margin: 0.6rem 0 0.35rem;
+}
+.network-institution-card p {
+  margin-bottom: 0.7rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.network-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.network-badge,
+.network-abbreviation {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+.network-badge {
+  padding: 0.28rem 0.5rem;
+  border-radius: 0.45rem;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+.network-badge.observer {
+  background: #f7e7c8;
+  color: #714e13;
+}
+.network-abbreviation {
+  color: var(--muted);
+}
+.network-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  font-size: 0.82rem;
+}
+.network-card-actions .button {
+  min-height: 2.2rem;
+  padding: 0.45rem 0.7rem;
+}
+.network-explore-all {
+  width: 100%;
+  margin-top: auto;
+  text-align: center;
+}
+.network-skeleton-canvas {
+  min-height: 420px;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background:
+    linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.42) 50%, transparent 70%),
+    linear-gradient(145deg, #eaf3ee, #d5e6dd);
+  background-size:
+    220% 100%,
+    100% 100%;
+  animation: network-skeleton-shimmer 1.4s ease-in-out infinite;
+}
+.network-skeleton-copy {
+  display: grid;
+  gap: 0.8rem;
+  max-width: 38rem;
+  margin-top: 1rem;
+  color: var(--muted);
+}
+.network-skeleton-lines {
+  width: 70%;
+  height: 0.8rem;
+  border-radius: 0.4rem;
+  background: var(--surface-strong);
+}
+@keyframes network-skeleton-shimmer {
+  to {
+    background-position:
+      -220% 0,
+      0 0;
+  }
+}
+.network-explorer-fallback {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.85fr);
+  gap: 1rem;
+  align-items: start;
+}
+.network-fallback-visual {
+  position: relative;
+  min-height: 420px;
+  padding: 1.25rem;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background:
+    radial-gradient(circle at 25% 35%, rgb(27 102 91 / 0.12), transparent 24%),
+    radial-gradient(circle at 72% 62%, rgb(27 102 91 / 0.1), transparent 22%), var(--surface);
+}
+.fallback-network-lines {
+  position: absolute;
+  inset: 19% 15%;
+  border: 2px solid var(--accent-soft);
+  border-radius: 50%;
+  transform: rotate(-16deg) skewX(-10deg);
+}
+.fallback-region-list {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+  padding-top: 8rem;
+}
+.fallback-region {
+  display: grid;
+  gap: 0.2rem;
+  text-align: left;
+}
+.fallback-region small {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+.network-overlay {
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.network-fallback-note {
+  margin-bottom: 0.55rem;
+  color: var(--muted);
+}
+.network-overlay h2 {
+  margin: 0.5rem 0 1rem;
+}
+.network-fallback-all {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+.network-institution-card.is-compact p {
+  margin-bottom: 0;
+}
+
+@media (max-width: 900px) {
+  .network-explorer-layout,
+  .network-explorer-fallback {
+    grid-template-columns: 1fr;
+  }
+  .network-fallback-all {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .network-hero-page {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding-block: 2.5rem 3.2rem;
+  }
+  .network-hero-counts div {
+    min-height: 110px;
+    padding: 0.8rem;
+  }
+  .network-hero-counts dd {
+    font-size: 2.15rem;
+  }
+  .network-explorer {
+    width: min(100% - 1.25rem, 1280px);
+  }
+  .network-explorer-heading {
+    display: block;
+  }
+  .network-schematic-note {
+    max-width: none;
+    margin-top: 0.75rem;
+    text-align: left;
+  }
+  .network-canvas-frame,
+  .network-canvas {
+    min-height: 380px;
+  }
+  .network-destination-controls {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .network-destination-controls button {
+    min-width: 0;
+    padding-inline: 0.45rem;
+    font-size: 0.76rem;
+  }
+  .fallback-region-list,
+  .network-fallback-all {
+    grid-template-columns: 1fr;
+  }
+  .network-fallback-visual {
+    min-height: 320px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .network-skeleton-canvas {
+    animation: none;
+  }
+}
