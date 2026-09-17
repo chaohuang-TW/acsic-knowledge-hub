@@ -41,6 +41,10 @@ const copy = {
     official: 'official',
     research_translation: 'research translation',
     pending: 'pending',
+    pendingOfficial: 'Pending official-source confirmation',
+    nonApplicable: 'Documented non-applicable fields',
+    sourceWarning: 'Source warning:',
+    temporarilyUnavailable: 'Temporarily unavailable',
     notFound: 'Institution not found',
     notFoundText: 'This identifier does not match a governed ACSIC institution record.',
   },
@@ -77,6 +81,10 @@ const copy = {
     official: '官方',
     research_translation: '研究翻譯',
     pending: '待處理',
+    pendingOfficial: '待官方來源確認',
+    nonApplicable: '正式記錄的不適用欄位',
+    sourceWarning: '來源警示：',
+    temporarilyUnavailable: '暫時無法存取',
     notFound: '找不到此機構',
     notFoundText: '此識別碼不符合目前治理中的 ACSIC 機構紀錄。',
   },
@@ -137,7 +145,7 @@ export function InstitutionDetailPage({ institutionId }: { institutionId: string
             value={
               record.name.nativeName.status === 'official'
                 ? `${record.name.nativeName.value} (${record.name.nativeName.language})`
-                : c.pending
+                : c.pendingOfficial
             }
           />
           <DetailField label={c.translatedName} value={record.name['zh-TW']} />
@@ -196,7 +204,15 @@ export function InstitutionDetailPage({ institutionId }: { institutionId: string
           />
           <DetailField
             label={c.confidence}
-            value={`${record.confidenceLevel} · ${record.confidenceScore}/100`}
+            value={`${
+              locale === 'en'
+                ? record.confidenceLevel.charAt(0).toUpperCase() + record.confidenceLevel.slice(1)
+                : record.confidenceLevel === 'high'
+                  ? '高'
+                  : record.confidenceLevel === 'medium'
+                    ? '中'
+                    : '低'
+            } · ${record.confidenceScore}/100`}
           />
         </div>
         <section className="sources-block">
@@ -207,12 +223,32 @@ export function InstitutionDetailPage({ institutionId }: { institutionId: string
               <p>
                 {item.publisher} · {item.originalLanguage} · {item.accessedDate}
               </p>
+              {(item.stalenessWarning || item.accessStatus === 'temporarily_unavailable') && (
+                <p className="warning">
+                  <strong>{c.sourceWarning}</strong>{' '}
+                  {item.accessStatus === 'temporarily_unavailable'
+                    ? c.temporarilyUnavailable
+                    : locale === 'en'
+                      ? 'Source may be stale.'
+                      : '來源可能已過時。'}
+                </p>
+              )}
               <a href={item.url} target="_blank" rel="noreferrer">
                 {c.openSource}
               </a>
             </article>
           ))}
         </section>
+        {record.notApplicableFields.length > 0 && (
+          <section className="sources-block">
+            <h3>{c.nonApplicable}</h3>
+            <ul>
+              {record.notApplicableFields.map((item) => (
+                <li key={item.field}>{item.reason[locale]}</li>
+              ))}
+            </ul>
+          </section>
+        )}
         {record.missingFields.length > 0 && (
           <section className="sources-block">
             <h3>{locale === 'en' ? 'Pending fields' : '待查證欄位'}</h3>

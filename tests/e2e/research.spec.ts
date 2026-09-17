@@ -70,11 +70,11 @@ test('English and Traditional Chinese routes, switch and preference memory work'
 }) => {
   await page.goto('./#/en/members');
   await expect(
-    page.getByRole('heading', { name: 'Member Institutions', exact: true }),
+    page.getByRole('heading', { name: 'ACSIC Institutions', exact: true }),
   ).toBeVisible();
   await page.getByLabel('Language').selectOption('zh-TW');
   await expect(page).toHaveURL(/#\/zh-TW\/members$/);
-  await expect(page.getByRole('heading', { name: '會員機構', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'ACSIC 會員機構', exact: true })).toBeVisible();
   expect(await page.evaluate(() => localStorage.getItem('acsic-knowledge-hub-locale'))).toBe(
     'zh-TW',
   );
@@ -102,50 +102,50 @@ test('ACSIC overview answers first-visit questions with current membership facts
 
 test('production member page has no development-state controls', async ({ page }) => {
   await page.goto('./#/en/members');
-  await expect(page.getByText('21 institution records')).toBeVisible();
+  await expect(page.getByText('21 institutions')).toBeVisible();
   await expect(page.getByText('Interface state preview')).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Empty', exact: true })).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Error', exact: true })).toHaveCount(0);
-  await expect(page.locator('.institution-list article').first()).not.toContainText(
-    'Strict Level 2 status',
-  );
-  await expect(page.locator('.institution-list article').first()).not.toContainText('Confidence');
+  await expect(page.locator('.directory-card').first()).not.toContainText('Strict Level 2 status');
+  await expect(page.locator('.directory-card').first()).not.toContainText('Confidence');
 });
 
 test('search and all member filter classes use readable bilingual labels', async ({ page }) => {
   await page.goto('./#/en/members');
-  await page.getByLabel('Search').fill('ACGF');
-  await expect(page.locator('.institution-list article')).toHaveCount(1);
-  await expect(page.getByText('ACSIC Observer')).toBeVisible();
+  await page.getByLabel('Search institutions').fill('ACGF');
+  await expect(page.locator('.directory-card')).toHaveCount(1);
+  await expect(page.locator('.directory-card .membership-badge--observer')).toBeVisible();
   await page.getByRole('button', { name: 'Clear filters' }).click();
-  await page.getByLabel('Countries / Economies').selectOption('KR');
-  await expect(page.locator('.institution-list article')).toHaveCount(3);
+  await page.getByLabel('Economy').selectOption('KR');
+  await expect(page.locator('.directory-card')).toHaveCount(3);
   await page
     .getByLabel('Institution type')
     .selectOption('technology_finance_guarantee_institution');
-  await expect(page.locator('.institution-list article')).toHaveCount(1);
-  await expect(page.locator('.institution-list')).not.toContainText(
+  await expect(page.locator('.directory-card')).toHaveCount(1);
+  await expect(page.locator('.directory-card')).not.toContainText(
     'technology_finance_guarantee_institution',
   );
   await page.getByRole('button', { name: 'Clear filters' }).click();
-  await page.getByLabel('ACSIC status').selectOption('observer');
-  await expect(page.locator('.institution-list article')).toHaveCount(1);
+  await page.getByLabel('Membership').selectOption('observer');
+  await expect(page.locator('.directory-card')).toHaveCount(1);
 });
 
 test('no-results state remains available without production preview controls', async ({ page }) => {
   await page.goto('./#/en/members');
-  await page.getByLabel('Search').fill('not-a-real-institution');
-  await expect(page.getByRole('heading', { name: 'No matching results' })).toBeVisible();
-  await expect(page.getByText('Missing records are never generated.')).toBeVisible();
+  await page.getByLabel('Search institutions').fill('not-a-real-institution');
+  await expect(
+    page.getByRole('heading', { name: 'No institutions match these filters.' }),
+  ).toBeVisible();
 });
 
 test('detail view is readable, linked and preserves filter and record when language changes', async ({
   page,
 }) => {
   await page.goto('./#/en/members');
-  await page.getByLabel('Search').fill('JFG');
-  await page.getByRole('button', { name: 'View profile' }).click();
-  const detail = page.locator('.detail-panel');
+  await page.getByLabel('Search institutions').fill('JFG');
+  await page.getByRole('link', { name: 'View profile' }).click();
+  await expect(page).toHaveURL(/#\/en\/institutions\/jfg-jp$/);
+  const detail = page.locator('.institution-detail-page');
   await expect(
     detail.getByRole('heading', {
       name: 'Japan Federation of Credit Guarantee Corporations',
@@ -162,23 +162,20 @@ test('detail view is readable, linked and preserves filter and record when langu
     research.getByRole('heading', { name: 'Documented non-applicable fields' }),
   ).toBeVisible();
   await expect(detail.locator('a[href^="https://www.zenshinhoren.or.jp/"]').first()).toBeVisible();
-  await expect(detail.getByRole('link', { name: 'Open source' }).first()).toHaveAttribute(
+  await expect(detail.getByRole('link', { name: 'Open official source' }).first()).toHaveAttribute(
     'href',
     /^https:/,
   );
   await expect(detail).not.toContainText('jfg-jp-profile');
   await page.getByLabel('Language').selectOption('zh-TW');
-  await expect(page).toHaveURL(/#\/zh-TW\/members$/);
-  await expect(page.getByLabel('關鍵字搜尋')).toHaveValue('JFG');
-  await expect(detail.getByRole('heading', { name: '日本全國信用保證協會聯合會' })).toBeVisible();
-  await expect(detail.getByRole('heading', { name: '正式記錄的不適用欄位' })).toBeVisible();
+  await expect(page).toHaveURL(/#\/zh-TW\/institutions\/jfg-jp$/);
+  await expect(page.getByRole('heading', { name: '日本全國信用保證協會聯合會' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '正式記錄的不適用欄位' })).toBeVisible();
 });
 
 test('ASKRINDO exposes low confidence and critical source warning', async ({ page }) => {
-  await page.goto('./#/en/members');
-  await page.getByLabel('Search').fill('ASKRINDO');
-  await page.getByRole('button', { name: 'View profile' }).click();
-  const detail = page.locator('.detail-panel');
+  await page.goto('./#/en/institutions/askrindo-id');
+  const detail = page.locator('.institution-detail-page');
   await detail.locator('.research-details summary').click();
   await expect(detail.getByText('Pending official-source confirmation')).toBeVisible();
   await expect(detail.getByText('Low ·')).toBeVisible();
@@ -188,13 +185,15 @@ test('ASKRINDO exposes low confidence and critical source warning', async ({ pag
 
 test('all 21 institution details can be opened and closed', async ({ page }) => {
   await page.goto('./#/en/members');
-  const buttons = page.getByRole('button', { name: 'View profile' });
-  await expect(buttons).toHaveCount(21);
-  for (let index = 0; index < 21; index += 1) {
-    await buttons.nth(index).click();
-    await expect(page.locator('.detail-panel')).toBeVisible();
-    await expect(page.locator('.detail-panel .research-details')).not.toHaveAttribute('open', '');
-    await page.getByRole('button', { name: 'Close profile' }).click();
+  const cards = page.locator('.directory-card');
+  await expect(cards).toHaveCount(21);
+  const ids = await cards.evaluateAll((items) =>
+    items.map((item) => item.getAttribute('data-institution-id')).filter(Boolean),
+  );
+  for (const id of ids) {
+    await page.goto(`./#/en/institutions/${id}`);
+    await expect(page.locator('.institution-detail-page h1')).toBeVisible();
+    await expect(page.locator('.institution-research-details')).not.toHaveAttribute('open', '');
   }
 });
 
@@ -340,13 +339,10 @@ test('mobile member filters, language selector, cards and details remain usable'
   await page.goto('./#/zh-TW/members');
   await expect(page.getByRole('navigation', { name: '主要導覽' })).toBeVisible();
   await expect(page.getByLabel('語言')).toBeVisible();
-  await page.getByLabel('關鍵字搜尋').fill('JFC');
-  await expect(page.locator('.institution-list article')).toHaveCount(1);
-  await page.getByRole('button', { name: '檢視機構檔案' }).click();
-  await expect(page.locator('.detail-panel')).toBeVisible();
-  await expect(
-    page.locator('.detail-panel').getByText('株式会社日本政策金融公庫 (ja)', { exact: true }),
-  ).toBeVisible();
+  await page.getByLabel('搜尋機構').fill('JFC');
+  await expect(page.locator('.directory-card')).toHaveCount(1);
+  await expect(page.locator('.directory-card h3')).toContainText('日本政策金融公庫');
+  await expect(page.locator('body')).not.toHaveCSS('overflow-x', 'scroll');
 });
 
 test('hash refresh and Pages subpath preserve a deep bilingual route', async ({ page }) => {

@@ -1,4 +1,5 @@
 import { institutions } from '../../data/institutions';
+import { getEconomies } from '../institutions/directoryUtils';
 
 export type Vec3 = [number, number, number];
 
@@ -12,11 +13,19 @@ export type NetworkRegion = {
   cameraTarget: Vec3;
 };
 
+const economyLabels = new Map(getEconomies().map((economy) => [economy.id, economy.label]));
+
+function economyLabel(countryCode: string) {
+  const label = economyLabels.get(countryCode);
+  if (!label) throw new Error(`Unknown governed economy: ${countryCode}`);
+  return label;
+}
+
 export const networkRegions: NetworkRegion[] = [
   {
     id: 'taiwan',
     countryCode: 'TW',
-    label: { en: 'Taiwan', 'zh-TW': '臺灣' },
+    label: economyLabel('TW'),
     institutionIds: ['tsmeg-tw', 'acgf-tw'],
     position: [-1.85, 0.16, 0.25],
     mascotTarget: [-1.85, 0.48, 0.82],
@@ -25,7 +34,7 @@ export const networkRegions: NetworkRegion[] = [
   {
     id: 'japan',
     countryCode: 'JP',
-    label: { en: 'Japan', 'zh-TW': '日本' },
+    label: economyLabel('JP'),
     institutionIds: ['jfc-jp', 'jfg-jp'],
     position: [1.65, 0.2, -0.75],
     mascotTarget: [1.65, 0.48, -0.16],
@@ -34,7 +43,7 @@ export const networkRegions: NetworkRegion[] = [
   {
     id: 'korea',
     countryCode: 'KR',
-    label: { en: 'Republic of Korea', 'zh-TW': '韓國' },
+    label: economyLabel('KR'),
     institutionIds: ['kodit-kr', 'koreg-kr', 'kotec-kr'],
     position: [0.35, 0.19, 1.65],
     mascotTarget: [0.35, 0.48, 2.22],
