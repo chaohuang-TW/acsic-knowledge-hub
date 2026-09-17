@@ -40,7 +40,7 @@ test('institution actions use governed profile and official website links', asyn
   const tsmeg = page.locator('.network-institution-card').filter({ hasText: 'TSMEG' });
   await expect(tsmeg.getByRole('link', { name: 'View profile' })).toHaveAttribute(
     'href',
-    '#/en/members',
+    '#/en/institutions/tsmeg-tw',
   );
   await expect(tsmeg.locator('a[target="_blank"]')).toHaveAttribute('href', /^https?:\/\//);
   await expect(
@@ -77,4 +77,72 @@ test('DOM fallback exposes all three destinations and seven institutions', async
   await expect(page.locator('.network-institution-card')).toHaveCount(7);
   await expect(page.getByText('KODIT', { exact: true })).toBeVisible();
   await expect(page.getByText('ACGF', { exact: true })).toBeVisible();
+  await expect(
+    page.locator('.network-institution-card').filter({ hasText: 'KODIT' }).getByRole('link', {
+      name: 'View profile',
+    }),
+  ).toHaveAttribute('href', '#/en/institutions/kodit-kr');
+  await expect(
+    page
+      .locator('.network-institution-card')
+      .filter({ hasText: 'KODIT' })
+      .locator('a[target="_blank"]'),
+  ).toHaveAttribute('href', /^https?:\/\//);
+});
+
+test('Traditional Chinese destinations use localized region names', async ({ page }) => {
+  await page.goto('./?networkFallback=1#/zh-TW/');
+  await expect(page.locator('.fallback-region').filter({ hasText: '臺灣' })).toBeVisible();
+  await expect(page.locator('.fallback-region').filter({ hasText: '日本' })).toBeVisible();
+  await expect(page.locator('.fallback-region').filter({ hasText: '韓國' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '臺灣', exact: true })).toBeVisible();
+});
+
+test('institution profile links are shareable and unknown IDs stay explicit', async ({ page }) => {
+  await page.goto('./#/en/institutions/tsmeg-tw');
+  await expect(
+    page.getByRole('heading', {
+      name: 'Small and Medium Enterprise Credit Guarantee Fund of Taiwan',
+    }),
+  ).toBeVisible();
+  await expect(page.getByText('TSMEG', { exact: true })).toBeVisible();
+  await page.reload();
+  await expect(page.getByText('TSMEG', { exact: true })).toBeVisible();
+  await page.getByLabel('Language').selectOption('zh-TW');
+  await expect(page).toHaveURL(/#\/zh-TW\/institutions\/tsmeg-tw$/);
+  await expect(page.getByRole('heading', { name: '財團法人中小企業信用保證基金' })).toBeVisible();
+  await page.goto('./#/en/institutions/not-a-real-institution');
+  await expect(page.getByRole('heading', { name: 'Institution not found' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Back to all institutions' })).toHaveAttribute(
+    'href',
+    '#/en/members',
+  );
+  await page.goto('./#/en/institutions/acgf-tw');
+  await expect(page.locator('.institution-detail-identity')).toContainText('Observer');
+});
+
+test('fallback card selection is coupled to accessible card state', async ({ page }) => {
+  await page.goto('./?networkFallback=1#/en/');
+  const card = page.locator('.network-institution-card').filter({ hasText: 'TSMEG' }).first();
+  await expect(card.getByRole('button', { name: 'Select institution' })).toHaveAttribute(
+    'aria-pressed',
+    'false',
+  );
+  await card.getByRole('button', { name: 'Select institution' }).click();
+  await expect(card).toHaveClass(/is-selected/);
+  await expect(card.getByRole('button', { name: 'Selected' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  await expect(card.getByRole('link', { name: 'View profile' })).toHaveAttribute(
+    'href',
+    '#/en/institutions/tsmeg-tw',
+  );
+});
+
+test('network explorer remains usable at the 320px boundary', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 720 });
+  await page.goto('./?networkFallback=1#/en/');
+  await expect(page.locator('body')).toHaveJSProperty('scrollWidth', 320);
+  await expect(page.locator('.network-fallback-mascot')).toBeVisible();
 });

@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { Layout } from './components/Layout';
 import { ComparisonPage } from './features/comparison/ComparisonPage';
 import { InstitutionsPage } from './features/institutions/InstitutionsPage';
+import { InstitutionDetailPage } from './features/institutions/InstitutionDetailPage';
 import { ReportsPage } from './features/reports/ReportsPage';
 import { DataPilotPage } from './features/data-pilot/DataPilotPage';
 import { browserLocale, copy, localeStorageKey, LocaleContext } from './i18n';
-import { routePath, type PageId } from './routing';
+import { institutionPath, routePath, type PageId } from './routing';
 import {
   AboutPage,
   DisclaimerPage,
@@ -51,11 +52,23 @@ const legacyPages: Record<string, PageId> = {
   '/disclaimer': 'disclaimer',
 };
 
-function routeState(): { locale: Locale; page: PageId; canonical: boolean } {
+type AppRoute = { locale: Locale; page: PageId; canonical: boolean; institutionId?: string };
+
+function routeState(): AppRoute {
   const hash = window.location.hash.replace(/^#/, '') || '/';
   const match = hash.match(/^\/(en|zh-TW)\/(.*)$/);
   if (match) {
-    const page = (match[2] || 'home') as PageId;
+    const path = match[2] || 'home';
+    const institutionMatch = path.match(/^institutions\/([^/]+)\/?$/);
+    if (institutionMatch) {
+      return {
+        locale: match[1] as Locale,
+        page: 'institution',
+        institutionId: decodeURIComponent(institutionMatch[1]),
+        canonical: true,
+      };
+    }
+    const page = path as PageId;
     if (pages.includes(page)) return { locale: match[1] as Locale, page, canonical: true };
   }
   return { locale: browserLocale(), page: legacyPages[hash] ?? 'home', canonical: false };
@@ -88,7 +101,10 @@ export default function App() {
 
   const setLocale = (locale: Locale) => {
     window.localStorage.setItem(localeStorageKey, locale);
-    window.location.hash = routePath(locale, state.page);
+    window.location.hash =
+      state.page === 'institution' && state.institutionId
+        ? institutionPath(locale, state.institutionId)
+        : routePath(locale, state.page);
   };
 
   return (
@@ -97,6 +113,9 @@ export default function App() {
         {state.page === 'home' && <HomePage />}
         {state.page === 'overview' && <OverviewPage />}
         {state.page === 'members' && <InstitutionsPage />}
+        {state.page === 'institution' && state.institutionId && (
+          <InstitutionDetailPage institutionId={state.institutionId} />
+        )}
         {state.page === 'systems' && <SystemsPage />}
         {state.page === 'reference' && <ReferenceInstitutionsPage />}
         {state.page === 'framework' && <ComparativeFrameworkPage />}

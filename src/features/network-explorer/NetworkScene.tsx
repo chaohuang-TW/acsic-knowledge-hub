@@ -1,9 +1,10 @@
 import { Line } from '@react-three/drei';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import type { Locale } from '../../types';
 import { getRegion, networkRegions, type NetworkRegion, type Vec3 } from './networkSceneData';
+import { mascotSpriteUrl, type MascotGuideProps, type MascotGuideState } from './mascot';
 
 type SceneProps = {
   locale: Locale;
@@ -11,6 +12,7 @@ type SceneProps = {
   reducedMotion: boolean;
   onSelectRegion: (regionId: NetworkRegion['id']) => void;
   onSelectInstitution: (institutionId: string) => void;
+  selectedInstitutionId: string | null;
 };
 
 export function NetworkScene({
@@ -18,6 +20,7 @@ export function NetworkScene({
   reducedMotion,
   onSelectRegion,
   onSelectInstitution,
+  selectedInstitutionId,
 }: SceneProps) {
   const region = getRegion(selectedRegion);
   return (
@@ -42,8 +45,18 @@ export function NetworkScene({
           onSelect={onSelectRegion}
         />
       ))}
-      <MascotGuide target={region.mascotTarget} reducedMotion={reducedMotion} color="#1b665b" />
-      <InstitutionCluster region={region} active={true} onSelectInstitution={onSelectInstitution} />
+      <MascotGuide
+        target={region.mascotTarget}
+        state="idle"
+        reducedMotion={reducedMotion}
+        spriteUrl={mascotSpriteUrl}
+      />
+      <InstitutionCluster
+        region={region}
+        active={true}
+        selectedInstitutionId={selectedInstitutionId}
+        onSelectInstitution={onSelectInstitution}
+      />
       <CameraRig target={region.cameraTarget} reducedMotion={reducedMotion} />
     </Canvas>
   );
@@ -140,10 +153,12 @@ function NetworkRegion({
 function InstitutionCluster({
   region,
   active,
+  selectedInstitutionId,
   onSelectInstitution,
 }: {
   region: NetworkRegion;
   active: boolean;
+  selectedInstitutionId: string | null;
   onSelectInstitution: (institutionId: string) => void;
 }) {
   const offsets: Vec3[] = [
@@ -157,72 +172,85 @@ function InstitutionCluster({
         <group
           key={institutionId}
           position={offsets[index] ?? [0, 0, 0]}
+          name={`network-node-${institutionId}`}
+          userData={{ institutionId }}
           onClick={(event) => {
             event.stopPropagation();
             onSelectInstitution(institutionId);
           }}
         >
           <mesh position={[0, 0.44, 0]} castShadow>
-            <cylinderGeometry args={[0.13, 0.17, 0.16, 8]} />
-            <meshStandardMaterial color="#f0b35b" roughness={0.72} />
+            <cylinderGeometry
+              args={
+                selectedInstitutionId === institutionId
+                  ? [0.18, 0.21, 0.2, 10]
+                  : [0.13, 0.17, 0.16, 8]
+              }
+            />
+            <meshStandardMaterial
+              color={selectedInstitutionId === institutionId ? '#176b60' : '#f0b35b'}
+              roughness={0.72}
+            />
           </mesh>
           <mesh position={[0, 0.62, 0]} castShadow>
-            <sphereGeometry args={[0.12, 8, 8]} />
-            <meshStandardMaterial color="#fffaf0" roughness={0.8} />
+            <sphereGeometry args={[selectedInstitutionId === institutionId ? 0.15 : 0.12, 8, 8]} />
+            <meshStandardMaterial
+              color={selectedInstitutionId === institutionId ? '#f8d58a' : '#fffaf0'}
+              roughness={0.8}
+            />
           </mesh>
+          {selectedInstitutionId === institutionId && (
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.72, 0]}>
+              <ringGeometry args={[0.24, 0.3, 24]} />
+              <meshBasicMaterial color="#176b60" transparent opacity={0.78} />
+            </mesh>
+          )}
         </group>
       ))}
     </group>
   );
 }
 
-function MascotGuide({
-  target,
-  reducedMotion,
-  color,
-}: {
-  target: Vec3;
-  reducedMotion: boolean;
-  color: string;
-}) {
+function MascotGuide({ target, state: initialState, reducedMotion, spriteUrl }: MascotGuideProps) {
   const group = useRef<THREE.Group>(null);
   const progress = useRef(1);
   const from = useRef(new THREE.Vector3(...target));
   const current = useRef(new THREE.Vector3(...target));
   const lastTarget = useRef(target.join(','));
+  const state = useRef<MascotGuideState>(initialState);
+  const stateStartedAt = useRef(0);
+  const texture = useLoader(THREE.TextureLoader, spriteUrl ?? mascotSpriteUrl);
   useFrame((_, delta) => {
     if (!group.current) return;
     const nextKey = target.join(',');
     if (nextKey !== lastTarget.current) {
       from.current.copy(current.current);
       progress.current = reducedMotion ? 1 : 0;
+      state.current = reducedMotion ? 'arrive' : 'walk';
+      stateStartedAt.current = performance.now();
       lastTarget.current = nextKey;
     }
     progress.current = Math.min(1, progress.current + delta / 0.9);
     const eased = progress.current * progress.current * (3 - 2 * progress.current);
     current.current.lerpVectors(from.current, new THREE.Vector3(...target), eased);
     group.current.position.copy(current.current);
-    group.current.rotation.y = Math.sin(performance.now() / 650) * 0.08;
-    group.current.position.y += reducedMotion ? 0 : Math.sin(performance.now() / 420) * 0.025;
-    group.current.userData.state = progress.current < 1 ? 'walk' : 'point';
+    const now = performance.now();
+    if (progress.current < 1) state.current = reducedMotion ? 'arrive' : 'walk';
+    else if (state.current === 'walk' || state.current === 'arrive') {
+      state.current = now - stateStartedAt.current > 360 ? 'point' : 'arrive';
+    }
+    group.current.rotation.y = reducedMotion ? 0 : Math.sin(now / 650) * 0.08;
+    group.current.position.y += reducedMotion ? 0 : Math.sin(now / 420) * 0.025;
+    group.current.userData.state = state.current;
   });
   return (
-    <group ref={group} userData={{ state: 'idle' }}>
-      <mesh castShadow position={[0, 0.26, 0]}>
-        <cylinderGeometry args={[0.16, 0.22, 0.48, 8]} />
-        <meshStandardMaterial color={color} roughness={0.68} />
-      </mesh>
-      <mesh castShadow position={[0, 0.62, 0]}>
-        <sphereGeometry args={[0.2, 12, 8]} />
-        <meshStandardMaterial color="#f4c9a1" roughness={0.82} />
-      </mesh>
-      <mesh castShadow position={[0.2, 0.3, 0.02]} rotation={[0, 0, -0.45]}>
-        <boxGeometry args={[0.28, 0.08, 0.08]} />
-        <meshStandardMaterial color={color} roughness={0.7} />
-      </mesh>
-      <mesh position={[0, 0.84, 0]}>
-        <coneGeometry args={[0.11, 0.18, 6]} />
-        <meshStandardMaterial color="#f0b35b" roughness={0.78} />
+    <group ref={group} userData={{ state: initialState }}>
+      <sprite scale={[0.9, 1.68, 1]} position={[0, 0.85, 0]}>
+        <spriteMaterial map={texture} transparent alphaTest={0.04} depthWrite toneMapped />
+      </sprite>
+      <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.03, 0]}>
+        <circleGeometry args={[0.38, 32]} />
+        <meshBasicMaterial color="#174f47" transparent opacity={0.17} />
       </mesh>
     </group>
   );

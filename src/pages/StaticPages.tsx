@@ -1,4 +1,4 @@
-import { lazy, Suspense, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { PageHeader, ResearchBadge } from '../components/Layout';
 import { coverageStats, membershipStats } from '../data/coverage';
 import { acsicEvents, formatEventDate } from '../data/events';
@@ -16,9 +16,6 @@ import { researchPriorityDisclaimer } from '../data/research-priority';
 import { useLocale } from '../i18n';
 import { routePath } from '../routing';
 import type { Locale, SourceType } from '../types';
-import { NetworkExplorerSkeleton } from '../features/network-explorer/NetworkExplorerSkeleton';
-
-const LazyNetworkExplorer = lazy(() => import('../features/network-explorer/NetworkExplorer'));
 
 const sourceTypeLabels: Record<SourceType, Record<Locale, string>> = {
   official_membership_roster: { en: 'Official membership roster', 'zh-TW': '官方會員名冊' },
@@ -43,9 +40,9 @@ const accessStatusLabels = {
 const pageCopy = {
   en: {
     home: {
-      title: "Explore Asia's Credit Guarantee Network",
+      title: 'Explore Asia’s credit guarantee systems',
       intro:
-        'Meet ACSIC institutions, explore how credit guarantee systems work, and follow their official data.',
+        'One place to explore ACSIC institutions, institutional models and source-traceable official data.',
       primary: 'Explore institutions',
       secondary: 'Compare institutions',
       tertiary: 'About ACSIC',
@@ -166,8 +163,8 @@ const pageCopy = {
   },
   'zh-TW': {
     home: {
-      title: '探索亞洲信用保證網絡',
-      intro: '探索 ACSIC 會員機構、信用保證制度與已查證官方資料。',
+      title: '探索亞洲信用保證制度',
+      intro: '從 ACSIC 會員機構、制度特色到官方數據，用一個入口理解亞洲信用補充體系。',
       primary: '探索會員機構',
       secondary: '比較制度',
       tertiary: '認識 ACSIC',
@@ -271,43 +268,59 @@ const pageCopy = {
 export function HomePage() {
   const { locale } = useLocale();
   const c = pageCopy[locale].home;
+  const countries = useMemo(
+    () =>
+      [
+        ...new Map(
+          institutions.map((record) => [record.countryCode, record.countryName[locale]]),
+        ).values(),
+      ].sort((left, right) => left.localeCompare(right, locale)),
+    [locale],
+  );
+  const networkStats = [
+    [c.formalMembers, membershipStats.formalMembers],
+    [c.observer, membershipStats.observers],
+    [c.countriesEconomies, membershipStats.countriesEconomies],
+    [c.institutionsCovered, membershipStats.institutionsCovered],
+  ] as const;
   return (
     <>
-      <section className="hero section-shell network-hero-page">
+      <section className="hero section-shell">
         <div className="hero-copy">
           <ResearchBadge />
           <h1>{c.title}</h1>
           <p>{c.intro}</p>
           <div className="button-row">
-            <a className="button primary" href={'#' + routePath(locale, 'members')}>
+            <a className="button primary" href={`#${routePath(locale, 'members')}`}>
               {c.primary}
             </a>
-            <a className="button secondary" href={'#' + routePath(locale, 'compare')}>
+            <a className="button secondary" href={`#${routePath(locale, 'compare')}`}>
               {c.secondary}
             </a>
           </div>
-          <a className="text-link" href={'#' + routePath(locale, 'overview')}>
+          <a className="text-link" href={`#${routePath(locale, 'overview')}`}>
             {c.tertiary}
           </a>
         </div>
-        <dl className="network-hero-counts" aria-label={c.networkTitle}>
-          <div>
-            <dt>{c.formalMembers}</dt>
-            <dd>{membershipStats.formalMembers}</dd>
-          </div>
-          <div>
-            <dt>{c.countriesEconomies}</dt>
-            <dd>{membershipStats.countriesEconomies}</dd>
-          </div>
-          <div>
-            <dt>{c.observer}</dt>
-            <dd>{membershipStats.observers}</dd>
-          </div>
-        </dl>
+        <aside className="network-hero" aria-label={c.networkTitle}>
+          <h2>{c.networkTitle}</h2>
+          <dl className="network-stats">
+            {networkStats.map(([label, value]) => (
+              <div key={label}>
+                <dt>{label}</dt>
+                <dd>{value}</dd>
+              </div>
+            ))}
+          </dl>
+          <section className="network-countries" aria-labelledby="network-countries-title">
+            <h3 id="network-countries-title">{c.acrossAsia}</h3>
+            <p>{countries.join(', ')}</p>
+          </section>
+          <a className="network-link" href={`#${routePath(locale, 'members')}`}>
+            {c.exploreAll}
+          </a>
+        </aside>
       </section>
-      <Suspense fallback={<NetworkExplorerSkeleton locale={locale} />}>
-        <LazyNetworkExplorer locale={locale} />
-      </Suspense>
       <section className="section-shell problem-section">
         <h2>{c.scopeTitle}</h2>
         <div className="problem-grid">
@@ -328,6 +341,7 @@ export function HomePage() {
     </>
   );
 }
+
 export function OverviewPage() {
   const { locale } = useLocale();
   const c = pageCopy[locale].overview;

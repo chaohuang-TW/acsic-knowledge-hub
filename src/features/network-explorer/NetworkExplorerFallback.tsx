@@ -1,5 +1,5 @@
 import { institutions } from '../../data/institutions';
-import { routePath } from '../../routing';
+import { institutionPath } from '../../routing';
 import type { Locale } from '../../types';
 import {
   getRegion,
@@ -13,6 +13,8 @@ type Props = {
   locale: Locale;
   selectedRegion: NetworkRegion['id'];
   onSelectRegion: (regionId: NetworkRegion['id']) => void;
+  selectedInstitutionId: string | null;
+  onSelectInstitution: (institutionId: string) => void;
 };
 
 const copy = {
@@ -24,6 +26,8 @@ const copy = {
     member: 'Member',
     observer: 'Observer',
     profile: 'View profile',
+    select: 'Select institution',
+    selected: 'Selected',
     website: 'Official website ↗',
     institutions: 'institutions',
   },
@@ -34,18 +38,31 @@ const copy = {
     member: '正式會員',
     observer: '觀察員',
     profile: '查看機構檔案',
+    select: '選取機構',
+    selected: '已選取',
     website: '官方網站 ↗',
     institutions: '家機構',
   },
 } as const;
 
-export function NetworkExplorerFallback({ locale, selectedRegion, onSelectRegion }: Props) {
+export function NetworkExplorerFallback({
+  locale,
+  selectedRegion,
+  onSelectRegion,
+  selectedInstitutionId,
+  onSelectInstitution,
+}: Props) {
   const c = copy[locale];
   const selected = getRegion(selectedRegion);
   return (
     <section className="network-explorer network-explorer-fallback" aria-labelledby="network-title">
       <div className="network-fallback-visual" role="img" aria-label={c.schematic}>
         <div className="fallback-network-lines" aria-hidden="true" />
+        <img
+          className="network-fallback-mascot"
+          src={`${import.meta.env.BASE_URL}assets/mascot/meng-ge-guide.webp`}
+          alt={locale === 'en' ? 'Meng-Ge mascot guide' : '萌哥導覽員吉祥物'}
+        />
         <div className="fallback-region-list">
           {networkRegions.map((region) => {
             const counts = getRegionMembershipCounts(region);
@@ -79,6 +96,8 @@ export function NetworkExplorerFallback({ locale, selectedRegion, onSelectRegion
               institution={institution}
               locale={locale}
               copy={c}
+              selected={institution.id === selectedInstitutionId}
+              onSelect={() => onSelectInstitution(institution.id)}
             />
           ))}
         </div>
@@ -96,6 +115,8 @@ export function NetworkExplorerFallback({ locale, selectedRegion, onSelectRegion
                   institution={institution}
                   locale={locale}
                   copy={c}
+                  selected={institution.id === selectedInstitutionId}
+                  onSelect={() => onSelectInstitution(institution.id)}
                   compact
                 />
               )),
@@ -109,6 +130,8 @@ function InstitutionCard({
   institution,
   locale,
   copy,
+  selected,
+  onSelect,
   compact = false,
 }: {
   institution: (typeof institutions)[number];
@@ -118,13 +141,17 @@ function InstitutionCard({
     observer: string;
     profile: string;
     website: string;
+    select: string;
+    selected: string;
   };
+  selected: boolean;
+  onSelect: () => void;
   compact?: boolean;
 }) {
   const status = institution.acsicMembershipStatus === 'observer' ? copy.observer : copy.member;
   return (
     <article
-      className={compact ? 'network-institution-card is-compact' : 'network-institution-card'}
+      className={`${compact ? 'network-institution-card is-compact' : 'network-institution-card'}${selected ? ' is-selected' : ''}`}
     >
       <div className="network-card-heading">
         <span
@@ -140,16 +167,22 @@ function InstitutionCard({
       </div>
       <h3>{institution.name[locale]}</h3>
       <p>{institution.summary[locale]}</p>
-      {!compact && (
-        <div className="network-card-actions">
-          <a className="button secondary" href={`#${routePath(locale, 'members')}`}>
-            {copy.profile}
-          </a>
-          <a href={institution.officialWebsite} target="_blank" rel="noreferrer">
-            {copy.website}
-          </a>
-        </div>
-      )}
+      <div className="network-card-actions">
+        <button
+          type="button"
+          className="button secondary network-card-select"
+          aria-pressed={selected}
+          onClick={onSelect}
+        >
+          {selected ? copy.selected : copy.select}
+        </button>
+        <a className="button secondary" href={`#${institutionPath(locale, institution.id)}`}>
+          {copy.profile}
+        </a>
+        <a href={institution.officialWebsite} target="_blank" rel="noreferrer">
+          {copy.website}
+        </a>
+      </div>
     </article>
   );
 }
