@@ -1,5 +1,6 @@
 import { Component, type ReactNode, useEffect, useMemo, useState } from 'react';
 import type { Locale } from '../../types';
+import { institutionPath } from '../../routing';
 import { NetworkExplorerFallback } from './NetworkExplorerFallback';
 import { NetworkScene } from './NetworkScene';
 import { isWebGLAvailable } from './webgl';
@@ -88,6 +89,8 @@ export default function NetworkExplorer({ locale }: Props) {
         locale={locale}
         selectedRegion={selectedRegion}
         onSelectRegion={selectRegion}
+        selectedInstitutionId={selectedInstitutionId}
+        onSelectInstitution={setSelectedInstitution}
       />
     );
   }
@@ -97,6 +100,8 @@ export default function NetworkExplorer({ locale }: Props) {
       locale={locale}
       selectedRegion={selectedRegion}
       onSelectRegion={selectRegion}
+      selectedInstitutionId={selectedInstitutionId}
+      onSelectInstitution={setSelectedInstitution}
     >
       <section className="network-explorer" aria-labelledby="network-explorer-title">
         <div className="network-explorer-heading">
@@ -121,6 +126,7 @@ export default function NetworkExplorer({ locale }: Props) {
                 reducedMotion={reducedMotion}
                 onSelectRegion={selectRegion}
                 onSelectInstitution={setSelectedInstitution}
+                selectedInstitutionId={selectedInstitutionId}
               />
             </div>
             <p className="visually-hidden" id="network-canvas-description">
@@ -215,7 +221,21 @@ function InstitutionCard({
       <h3>{institution.name[locale]}</h3>
       <p>{institution.summary[locale]}</p>
       <div className="network-card-actions">
-        <a className="button secondary" href={'#/' + locale + '/members'} onClick={onSelect}>
+        <button
+          type="button"
+          className="button secondary network-card-select"
+          aria-pressed={selected}
+          onClick={onSelect}
+        >
+          {selected
+            ? locale === 'en'
+              ? 'Selected'
+              : '已選取'
+            : locale === 'en'
+              ? 'Select'
+              : '選取'}
+        </button>
+        <a className="button secondary" href={`#${institutionPath(locale, institution.id)}`}>
           {copy.profile}
         </a>
         <a href={institution.officialWebsite} target="_blank" rel="noreferrer">
@@ -232,6 +252,8 @@ class NetworkErrorBoundary extends Component<
     locale: Locale;
     selectedRegion: NetworkRegion['id'];
     onSelectRegion: (regionId: NetworkRegion['id']) => void;
+    selectedInstitutionId: string | null;
+    onSelectInstitution: (institutionId: string) => void;
   },
   { hasError: boolean }
 > {
@@ -252,6 +274,8 @@ class NetworkErrorBoundary extends Component<
           locale={this.props.locale}
           selectedRegion={this.props.selectedRegion}
           onSelectRegion={this.props.onSelectRegion}
+          selectedInstitutionId={this.props.selectedInstitutionId}
+          onSelectInstitution={this.props.onSelectInstitution}
         />
       );
     }

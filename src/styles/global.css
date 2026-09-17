@@ -1961,3 +1961,74 @@ tbody th {
     animation: none;
   }
 }
+
+/* Production hardening: official mascot and shareable institution profiles. */
+.network-fallback-mascot {
+  position: absolute;
+  right: 8%;
+  bottom: 7%;
+  width: clamp(84px, 16vw, 148px);
+  max-height: 190px;
+  object-fit: contain;
+  filter: drop-shadow(0 0.65rem 0.5rem rgb(23 79 71 / 0.18));
+  pointer-events: none;
+}
+.network-card-select[aria-pressed='true'] {
+  background: var(--accent);
+  color: #f8fbfa;
+}
+.network-institution-card.is-selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.network-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+.institution-detail-page {
+  padding-bottom: 4rem;
+}
+.institution-back-link {
+  display: inline-block;
+  margin-bottom: 1.3rem;
+}
+.institution-home-link {
+  display: inline-block;
+  margin: 0 0 1.3rem 1rem;
+}
+.institution-detail-identity {
+  margin: -0.5rem 0 2rem;
+  padding: 1rem 1.2rem;
+  border-left: 4px solid var(--accent);
+  background: var(--surface-strong);
+}
+.institution-detail-identity p {
+  margin-bottom: 0.3rem;
+}
+.institution-detail-identity p:last-child {
+  margin-bottom: 0;
+}
+.institution-official-name {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.institution-detail-page .detail-section > h2 {
+  margin-bottom: 1rem;
+  font-size: clamp(1.35rem, 3vw, 1.9rem);
+}
+.institution-research-details {
+  margin-top: 2.2rem;
+}
+
+@media (max-width: 640px) {
+  .network-fallback-mascot {
+    right: 4%;
+    bottom: 4%;
+    width: 88px;
+  }
+  .institution-detail-page .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}

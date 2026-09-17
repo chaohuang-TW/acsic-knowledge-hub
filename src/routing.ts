@@ -15,8 +15,14 @@ export type PageId =
   | 'sources'
   | 'governance'
   | 'about'
-  | 'disclaimer';
+  | 'disclaimer'
+  | 'institution';
 
 export function routePath(locale: Locale, page: PageId) {
   return page === 'home' ? `/${locale}/` : `/${locale}/${page}`;
+}
+
+/** Canonical deep link for one governed institution record. */
+export function institutionPath(locale: Locale, institutionId: string) {
+  return `/${locale}/institutions/${encodeURIComponent(institutionId)}`;
 }

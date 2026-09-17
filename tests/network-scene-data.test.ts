@@ -13,6 +13,10 @@ describe('ACSIC network explorer scene contract', () => {
     expect(networkRegions.map((region) => region.id)).toEqual(['taiwan', 'japan', 'korea']);
   });
 
+  it('uses the governed Traditional Chinese region labels', () => {
+    expect(networkRegions.map((region) => region.label['zh-TW'])).toEqual(['臺灣', '日本', '韓國']);
+  });
+
   it('keeps the governed destination institution IDs', () => {
     expect(getRegion('taiwan').institutionIds).toEqual(['tsmeg-tw', 'acgf-tw']);
     expect(getRegion('japan').institutionIds).toEqual(['jfc-jp', 'jfg-jp']);
