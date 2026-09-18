@@ -1,40 +1,65 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+
+async function chooseEconomy(page: Page, optionValue: string, buttonLabel: string) {
+  const mobileSelector = page.locator('.network-mobile-economy-control');
+  if (await mobileSelector.isVisible()) {
+    await mobileSelector.getByRole('combobox').selectOption(optionValue);
+  } else {
+    await page.getByRole('button', { name: buttonLabel, exact: true }).click();
+  }
+}
+
+async function returnToOverview(page: Page) {
+  const mobileSelector = page.locator('.network-mobile-economy-control');
+  if (await mobileSelector.isVisible()) {
+    await mobileSelector.getByRole('combobox').selectOption('');
+  } else {
+    await page.getByRole('button', { name: 'Back to Asia overview', exact: true }).click();
+  }
+}
 
 test('supported Chromium keeps the normal 3D explorer path', async ({ page, browserName }) => {
   test.skip(browserName !== 'chromium', 'The blocking WebGL smoke is defined for Chromium.');
   await page.goto('./#/en/');
   await expect(page.locator('.network-explorer-fallback')).toHaveCount(0);
   await expect(page.locator('.network-canvas canvas')).toBeVisible();
-  await page.getByRole('button', { name: 'Japan', exact: true }).click();
+  await chooseEconomy(page, 'JP', 'Japan');
   await expect(page.getByText('JFC', { exact: true })).toBeVisible();
 });
 
 test('overview exposes all governed economies and dynamic network counts', async ({ page }) => {
   await page.goto('./#/en/');
   await expect(page.locator('.network-destination-controls button')).toHaveCount(15);
-  await expect(page.getByRole('button', { name: 'Asia overview', exact: true })).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  );
-  await expect(
-    page.getByText('Choose an economy to explore its ACSIC institutions.'),
-  ).toBeVisible();
-  await expect(page.locator('.network-overview-counts')).toContainText('20');
-  await expect(page.locator('.network-overview-counts')).toContainText('14');
-  await expect(page.locator('.network-overview-counts')).toContainText('1');
+  if (await page.locator('.network-mobile-economy-control').isVisible()) {
+    const selector = page.getByRole('combobox', { name: 'Choose an economy' });
+    await expect(selector.locator('option')).toHaveCount(15);
+    await expect(selector).toHaveValue('');
+    await expect(page.locator('.network-panel-overview')).toBeHidden();
+  } else {
+    await expect(page.getByRole('button', { name: 'Asia overview', exact: true })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    await expect(
+      page.getByText('Choose an economy to explore its ACSIC institutions.'),
+    ).toBeVisible();
+    await expect(page.locator('.network-overview-counts')).toContainText('20');
+    await expect(page.locator('.network-overview-counts')).toContainText('14');
+    await expect(page.locator('.network-overview-counts')).toContainText('1');
+  }
   await expect(page.locator('.network-panel .network-institution-card')).toHaveCount(0);
 });
 
 test('prototype economies retain their governed institutions', async ({ page }) => {
   await page.goto('./#/en/');
-  await page.getByRole('button', { name: 'Taiwan', exact: true }).click();
+  await chooseEconomy(page, 'TW', 'Taiwan');
   await expect(page.getByRole('heading', { name: 'Taiwan', exact: true })).toBeVisible();
   await expect(page.locator('.network-panel').getByText('TSMEG', { exact: true })).toBeVisible();
   await expect(page.locator('.network-panel').getByText('ACGF', { exact: true })).toBeVisible();
-  await page.getByRole('button', { name: 'Japan', exact: true }).click();
+  await chooseEconomy(page, 'JP', 'Japan');
   await expect(page.getByText('JFC', { exact: true })).toBeVisible();
   await expect(page.getByText('JFG', { exact: true })).toBeVisible();
-  await page.getByRole('button', { name: 'Republic of Korea', exact: true }).click();
+  await chooseEconomy(page, 'KR', 'Republic of Korea');
   await expect(page.getByText('KODIT', { exact: true })).toBeVisible();
   await expect(page.getByText('KOREG', { exact: true })).toBeVisible();
   await expect(page.getByText('KOTEC', { exact: true })).toBeVisible();
@@ -43,14 +68,14 @@ test('prototype economies retain their governed institutions', async ({ page }) 
 test('additional governed economies reveal their complete institution groups', async ({ page }) => {
   await page.goto('./#/en/');
   const fixtures = [
-    ['Cambodia', ['CGCC']],
-    ['India', ['CGTMSE']],
-    ['Indonesia', ['ASIPPINDO', 'ASKRINDO']],
-    ['Papua New Guinea', ['SMEC', 'CGCPNG']],
-    ['Sri Lanka', ['CBSL', 'SLECIC']],
+    ['KH', 'Cambodia', ['CGCC']],
+    ['IN', 'India', ['CGTMSE']],
+    ['ID', 'Indonesia', ['ASIPPINDO', 'ASKRINDO']],
+    ['PG', 'Papua New Guinea', ['SMEC', 'CGCPNG']],
+    ['LK', 'Sri Lanka', ['CBSL', 'SLECIC']],
   ] as const;
-  for (const [economy, abbreviations] of fixtures) {
-    await page.getByRole('button', { name: economy, exact: true }).click();
+  for (const [economyId, economy, abbreviations] of fixtures) {
+    await chooseEconomy(page, economyId, economy);
     await expect(page.getByRole('heading', { name: economy, exact: true })).toBeVisible();
     for (const abbreviation of abbreviations)
       await expect(
@@ -61,7 +86,7 @@ test('additional governed economies reveal their complete institution groups', a
 
 test('institution actions use governed profile and official website links', async ({ page }) => {
   await page.goto('./#/en/');
-  await page.getByRole('button', { name: 'Taiwan', exact: true }).click();
+  await chooseEconomy(page, 'TW', 'Taiwan');
   const tsmeg = page.locator('.network-institution-card').filter({ hasText: 'TSMEG' });
   await expect(tsmeg.getByRole('link', { name: 'View profile' })).toHaveAttribute(
     'href',
@@ -75,7 +100,7 @@ test('institution actions use governed profile and official website links', asyn
 
 test('institution selection and return-to-overview stay synchronized', async ({ page }) => {
   await page.goto('./#/en/');
-  await page.getByRole('button', { name: 'Japan', exact: true }).click();
+  await chooseEconomy(page, 'JP', 'Japan');
   const jfc = page.locator('.network-institution-card').filter({ hasText: 'JFC' });
   await jfc.getByRole('button', { name: 'Select institution' }).click();
   await expect(jfc).toHaveClass(/is-selected/);
@@ -83,15 +108,19 @@ test('institution selection and return-to-overview stay synchronized', async ({ 
     'aria-pressed',
     'true',
   );
-  await page.getByRole('button', { name: 'Back to Asia overview', exact: true }).click();
-  await expect(
-    page.getByText('Choose an economy to explore its ACSIC institutions.'),
-  ).toBeVisible();
+  await returnToOverview(page);
   await expect(page.locator('.network-panel .network-institution-card')).toHaveCount(0);
-  await expect(page.getByRole('button', { name: 'Asia overview', exact: true })).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  );
+  if (await page.locator('.network-mobile-economy-control').isVisible()) {
+    await expect(page.getByRole('combobox', { name: 'Choose an economy' })).toHaveValue('');
+  } else {
+    await expect(
+      page.getByText('Choose an economy to explore its ACSIC institutions.'),
+    ).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Asia overview', exact: true })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+  }
 });
 
 test('mobile economy selector remains usable at 390px and 320px', async ({ page }) => {
@@ -115,9 +144,9 @@ test('reduced motion supports nearby and distant selections without an animation
 }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('./#/en/');
-  await page.getByRole('button', { name: 'Japan', exact: true }).click();
+  await chooseEconomy(page, 'JP', 'Japan');
   await expect(page.getByText('JFC', { exact: true })).toBeVisible();
-  await page.getByRole('button', { name: 'Papua New Guinea', exact: true }).click();
+  await chooseEconomy(page, 'PG', 'Papua New Guinea');
   await expect(page.getByText('CGCPNG', { exact: true })).toBeVisible();
 });
 
