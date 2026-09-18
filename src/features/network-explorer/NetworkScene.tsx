@@ -83,6 +83,7 @@ export function NetworkScene({
         state="idle"
         reducedMotion={reducedMotion}
         spriteUrl={mascotSpriteUrl}
+        overview={!region}
       />
       {region && (
         <InstitutionCluster
@@ -104,21 +105,17 @@ export function NetworkScene({
 function DioramaGround() {
   return (
     <group>
-      <mesh receiveShadow position={[0, -0.25, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[7.5, 64]} />
-        <meshStandardMaterial color={theme.ground} roughness={0.95} />
+      <mesh receiveShadow position={[0, -0.15, 0]} scale={[1, 1, 0.64]}>
+        <cylinderGeometry args={[6.7, 6.88, 0.24, 64]} />
+        <meshStandardMaterial color={theme.porcelain} roughness={0.8} />
       </mesh>
-      <mesh receiveShadow position={[0, -0.08, 0]}>
-        <boxGeometry args={[12.8, 0.28, 8.2]} />
-        <meshStandardMaterial color={theme.porcelain} roughness={0.72} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} scale={[1, 0.64, 1]}>
+        <ringGeometry args={[5.55, 6.05, 64]} />
+        <meshBasicMaterial color={theme.sage} transparent opacity={0.16} />
       </mesh>
-      <mesh position={[-5.4, 0.15, -3.2]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[1.2, 32]} />
-        <meshStandardMaterial color={theme.sage} roughness={0.9} />
-      </mesh>
-      <mesh position={[5.4, 0.17, 3.2]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[0.95, 32]} />
-        <meshStandardMaterial color={theme.mist} roughness={0.9} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 0]} scale={[1, 0.64, 1]}>
+        <circleGeometry args={[4.95, 64]} />
+        <meshBasicMaterial color={theme.mist} transparent opacity={0.08} />
       </mesh>
     </group>
   );
@@ -255,7 +252,13 @@ function InstitutionNode({
   );
 }
 
-function MascotGuide({ target, state: initialState, reducedMotion, spriteUrl }: MascotGuideProps) {
+function MascotGuide({
+  target,
+  state: initialState,
+  reducedMotion,
+  spriteUrl,
+  overview,
+}: MascotGuideProps & { overview: boolean }) {
   const group = useRef<THREE.Group>(null);
   const progress = useRef(1);
   const from = useRef(new THREE.Vector3(...target));
@@ -314,12 +317,15 @@ function MascotGuide({ target, state: initialState, reducedMotion, spriteUrl }: 
   return (
     <group ref={group} userData={{ state: initialState }}>
       {texture && (
-        <sprite scale={[0.9, 1.68, 1]} position={[0, 0.85, 0]}>
+        <sprite
+          scale={overview ? [1.28, 2.4, 1] : [1.04, 1.94, 1]}
+          position={[0, overview ? 1.08 : 0.94, 0]}
+        >
           <spriteMaterial map={texture} transparent alphaTest={0.04} depthWrite toneMapped />
         </sprite>
       )}
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.03, 0]}>
-        <circleGeometry args={[0.38, 32]} />
+        <circleGeometry args={[overview ? 0.5 : 0.4, 32]} />
         <meshBasicMaterial color={theme.deepJade} transparent opacity={0.14} />
       </mesh>
     </group>
@@ -340,14 +346,21 @@ function CameraRig({
   const lookAt = useMemo(() => new THREE.Vector3(), []);
   useFrame((_, delta) => {
     const mobile = size.width < 600;
+    if (camera instanceof THREE.PerspectiveCamera) {
+      const nextFov = mobile ? 52 : 47;
+      if (camera.fov !== nextFov) {
+        camera.fov = nextFov;
+        camera.updateProjectionMatrix();
+      }
+    }
     if (overview) {
-      destination.set(0, mobile ? 11.5 : 9.2, mobile ? 15.5 : 13.2);
-      lookAt.set(0, 0, 0.5);
+      destination.set(0, mobile ? 8.4 : 9.2, mobile ? 11.4 : 13.2);
+      lookAt.set(0, 0, 0.35);
     } else {
       destination.set(
-        target[0] + (mobile ? 3.1 : 3.9),
-        target[1] + (mobile ? 5.8 : 4.9),
-        target[2] + (mobile ? 7.2 : 5.5),
+        target[0] + (mobile ? 2.2 : 3.9),
+        target[1] + (mobile ? 4.4 : 4.9),
+        target[2] + (mobile ? 5.5 : 5.5),
       );
       lookAt.set(target[0], target[1], target[2]);
     }
