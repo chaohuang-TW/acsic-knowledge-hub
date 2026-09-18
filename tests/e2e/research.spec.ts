@@ -1,4 +1,20 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+
+async function chooseHomepageEconomy(
+  page: Page,
+  optionValue: string,
+  desktopLabel: string,
+  selectLabel: string,
+) {
+  const mobile = (page.viewportSize()?.width ?? 1280) <= 767;
+  if (mobile) {
+    const selector = page.getByRole('combobox', { name: selectLabel });
+    await selector.waitFor({ state: 'visible' });
+    await selector.selectOption(optionValue);
+  } else {
+    await page.getByRole('button', { name: desktopLabel, exact: true }).click();
+  }
+}
 
 test('international default uses English and preserves the independent disclaimer', async ({
   page,
@@ -11,14 +27,20 @@ test('international default uses English and preserves the independent disclaime
   await expect(page.getByText('Independent, unofficial platform')).toBeVisible();
   await expect(page.getByText('20', { exact: true }).first()).toBeVisible();
   await expect(page.getByRole('heading', { name: 'ACSIC Network Explorer' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Taiwan' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Japan' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Republic of Korea' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Asia overview', exact: true })).toBeVisible();
-  await expect(
-    page.getByText('Choose an economy to explore its ACSIC institutions.'),
-  ).toBeVisible();
-  await page.getByRole('button', { name: 'Taiwan' }).click();
+  if (await page.locator('.network-mobile-economy-control').isVisible()) {
+    const selector = page.getByRole('combobox', { name: 'Choose an economy' });
+    await expect(selector.locator('option')).toHaveCount(15);
+    await expect(selector).toHaveValue('');
+  } else {
+    await expect(page.getByRole('button', { name: 'Taiwan' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Japan' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Republic of Korea' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Asia overview', exact: true })).toBeVisible();
+    await expect(
+      page.getByText('Choose an economy to explore its ACSIC institutions.'),
+    ).toBeVisible();
+  }
+  await chooseHomepageEconomy(page, 'TW', 'Taiwan', 'Choose an economy');
   await expect(page.getByRole('heading', { name: 'Taiwan', exact: true })).toBeVisible();
   await expect(page.getByText('TSMEG', { exact: true })).toBeVisible();
   await expect(page.getByText('ACGF', { exact: true })).toBeVisible();
@@ -59,12 +81,18 @@ test('Traditional Chinese homepage renders the interactive ACSIC network explore
   await page.goto('./#/zh-TW/');
   await expect(page.getByRole('heading', { name: '探索亞洲信用保證網絡' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'ACSIC 網絡探索器' })).toBeVisible();
-  await expect(page.getByRole('button', { name: '臺灣' })).toBeVisible();
-  await expect(page.getByRole('button', { name: '日本' })).toBeVisible();
-  await expect(page.getByRole('button', { name: '韓國' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: '亞洲總覽', exact: true })).toBeVisible();
-  await expect(page.getByText('選擇一個國家／經濟體，探索當地 ACSIC 機構。')).toBeVisible();
-  await page.getByRole('button', { name: '臺灣' }).click();
+  if (await page.locator('.network-mobile-economy-control').isVisible()) {
+    const selector = page.getByRole('combobox', { name: '選擇國家／經濟體' });
+    await expect(selector.locator('option')).toHaveCount(15);
+    await expect(selector).toHaveValue('');
+  } else {
+    await expect(page.getByRole('button', { name: '臺灣' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '日本' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '韓國' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '亞洲總覽', exact: true })).toBeVisible();
+    await expect(page.getByText('選擇一個國家／經濟體，探索當地 ACSIC 機構。')).toBeVisible();
+  }
+  await chooseHomepageEconomy(page, 'TW', '臺灣', '選擇國家／經濟體');
   await expect(page.getByRole('heading', { name: '臺灣', exact: true })).toBeVisible();
   await expect(page.getByText('觀察員', { exact: true }).first()).toBeVisible();
   await expect(page.getByRole('link', { name: '查看全部會員機構' })).toHaveAttribute(

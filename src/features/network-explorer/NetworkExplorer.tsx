@@ -22,6 +22,7 @@ const copy = {
     description: 'Choose an economy to explore its ACSIC institutions across the region.',
     overview: 'Asia overview',
     overviewPrompt: 'Choose an economy to explore its ACSIC institutions.',
+    economySelector: 'Choose an economy',
     schematic: 'Schematic ACSIC network visualization - not to scale.',
     selected: 'Economy focus',
     member: 'Member',
@@ -47,6 +48,7 @@ const copy = {
     description: '選擇一個國家／經濟體，探索亞洲各地的 ACSIC 機構。',
     overview: '亞洲總覽',
     overviewPrompt: '選擇一個國家／經濟體，探索當地 ACSIC 機構。',
+    economySelector: '選擇國家／經濟體',
     schematic: 'ACSIC 網絡示意圖，非依比例繪製。',
     selected: '經濟體聚焦',
     member: '正式會員',
@@ -171,9 +173,13 @@ export default function NetworkExplorer({ locale }: Props) {
               onSelectRegion={selectRegion}
               onReturnToOverview={returnToOverview}
               overviewLabel={c.overview}
+              selectLabel={c.economySelector}
             />
           </div>
-          <aside className="network-panel" aria-labelledby="network-region-title">
+          <aside
+            className={selected ? 'network-panel' : 'network-panel network-panel-overview'}
+            aria-labelledby="network-region-title"
+          >
             <p className="network-live" aria-live="polite">
               {regionStatus}
             </p>
@@ -246,35 +252,56 @@ function EconomyControls({
   onSelectRegion,
   onReturnToOverview,
   overviewLabel,
+  selectLabel,
 }: {
   locale: Locale;
   selectedRegion: string | null;
   onSelectRegion: (id: string) => void;
   onReturnToOverview: () => void;
   overviewLabel: string;
+  selectLabel: string;
 }) {
   return (
-    <div className="network-destination-controls" role="group" aria-label={overviewLabel}>
-      <button
-        type="button"
-        className={!selectedRegion ? 'is-selected' : ''}
-        aria-pressed={!selectedRegion}
-        onClick={onReturnToOverview}
-      >
-        {overviewLabel}
-      </button>
-      {networkRegions.map((region) => (
+    <>
+      <div className="network-destination-controls" role="group" aria-label={overviewLabel}>
         <button
           type="button"
-          key={region.id}
-          className={region.id === selectedRegion ? 'is-selected' : ''}
-          aria-pressed={region.id === selectedRegion}
-          onClick={() => onSelectRegion(region.id)}
+          className={!selectedRegion ? 'is-selected' : ''}
+          aria-pressed={!selectedRegion}
+          onClick={onReturnToOverview}
         >
-          {region.label[locale]}
+          {overviewLabel}
         </button>
-      ))}
-    </div>
+        {networkRegions.map((region) => (
+          <button
+            type="button"
+            key={region.id}
+            className={region.id === selectedRegion ? 'is-selected' : ''}
+            aria-pressed={region.id === selectedRegion}
+            onClick={() => onSelectRegion(region.id)}
+          >
+            {region.label[locale]}
+          </button>
+        ))}
+      </div>
+      <label className="network-mobile-economy-control">
+        <span>{selectLabel}</span>
+        <select
+          aria-label={selectLabel}
+          value={selectedRegion ?? ''}
+          onChange={(event) =>
+            event.target.value ? onSelectRegion(event.target.value) : onReturnToOverview()
+          }
+        >
+          <option value="">{overviewLabel}</option>
+          {networkRegions.map((region) => (
+            <option key={region.id} value={region.id}>
+              {region.label[locale]}
+            </option>
+          ))}
+        </select>
+      </label>
+    </>
   );
 }
 
