@@ -6,9 +6,11 @@ async function chooseHomepageEconomy(
   desktopLabel: string,
   selectLabel: string,
 ) {
-  const mobileSelector = page.locator('.network-mobile-economy-control');
-  if (await mobileSelector.isVisible()) {
-    await page.getByRole('combobox', { name: selectLabel }).selectOption(optionValue);
+  const mobile = (page.viewportSize()?.width ?? 1280) <= 767;
+  if (mobile) {
+    const selector = page.getByRole('combobox', { name: selectLabel });
+    await selector.waitFor({ state: 'visible' });
+    await selector.selectOption(optionValue);
   } else {
     await page.getByRole('button', { name: desktopLabel, exact: true }).click();
   }
