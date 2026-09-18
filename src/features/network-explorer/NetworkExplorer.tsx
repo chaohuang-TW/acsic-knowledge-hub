@@ -1,6 +1,7 @@
-import { Component, type ReactNode, useEffect, useMemo, useState } from 'react';
-import type { Locale } from '../../types';
+import { Component, type ReactNode, useEffect, useState } from 'react';
+import type { Institution, Locale } from '../../types';
 import { institutionPath } from '../../routing';
+import { getMembershipStats } from '../institutions/directoryUtils';
 import { NetworkExplorerFallback } from './NetworkExplorerFallback';
 import { NetworkScene } from './NetworkScene';
 import { isWebGLAvailable } from './webgl';
@@ -12,59 +13,70 @@ import {
   type NetworkRegion,
 } from './networkSceneData';
 
-type Props = {
-  locale: Locale;
-};
+type Props = { locale: Locale };
 
 const copy = {
   en: {
     eyebrow: 'Interactive 3D network explorer',
     title: 'ACSIC Network Explorer',
-    description:
-      'Follow a guided path across three prototype destinations and meet the institutions represented in this public knowledge hub.',
+    description: 'Choose an economy to explore its ACSIC institutions across the region.',
+    overview: 'Asia overview',
+    overviewPrompt: 'Choose an economy to explore its ACSIC institutions.',
     schematic: 'Schematic ACSIC network visualization - not to scale.',
-    selected: 'selected',
+    selected: 'Economy focus',
     member: 'Member',
     observer: 'Observer',
+    members: 'Members',
+    economies: 'Economies',
     profile: 'View profile',
     website: 'Official website ↗',
     exploreAll: 'Explore all institutions',
+    back: 'Back to Asia overview',
+    select: 'Select institution',
+    selectedInstitution: 'Selected',
     networkStatus: (name: string, members: number, observers: number) =>
       observers
-        ? name +
-          ' selected. ' +
-          members +
-          ' ACSIC member institutions and ' +
-          observers +
-          ' observer.'
-        : name + ' selected. ' + members + ' ACSIC member institutions.',
+        ? `${name} selected. ${members} ACSIC member institutions and ${observers} observer.`
+        : `${name} selected. ${members} ACSIC member institutions.`,
+    overviewStatus: (members: number, economies: number, observers: number) =>
+      `ACSIC Asia overview. ${members} members across ${economies} economies and ${observers} observer.`,
   },
   'zh-TW': {
     eyebrow: '互動式 3D 網絡探索器',
     title: 'ACSIC 網絡探索器',
-    description: '沿著三個示範目的地探索公開知識平台中的 ACSIC 機構。',
+    description: '選擇一個國家／經濟體，探索亞洲各地的 ACSIC 機構。',
+    overview: '亞洲總覽',
+    overviewPrompt: '選擇一個國家／經濟體，探索當地 ACSIC 機構。',
     schematic: 'ACSIC 網絡示意圖，非依比例繪製。',
-    selected: '目前選取',
+    selected: '經濟體聚焦',
     member: '正式會員',
     observer: '觀察員',
+    members: '正式會員',
+    economies: '國家／經濟體',
     profile: '查看機構檔案',
     website: '官方網站 ↗',
     exploreAll: '查看全部會員機構',
+    back: '返回亞洲總覽',
+    select: '選取機構',
+    selectedInstitution: '已選取',
     networkStatus: (name: string, members: number, observers: number) =>
       observers
-        ? name + ' 已選取。' + members + ' 家 ACSIC 正式會員及 ' + observers + ' 家觀察員。'
-        : name + ' 已選取。' + members + ' 家 ACSIC 正式會員。',
+        ? `${name} 已選取。${members} 家 ACSIC 正式會員及 ${observers} 家觀察員。`
+        : `${name} 已選取。${members} 家 ACSIC 正式會員。`,
+    overviewStatus: (members: number, economies: number, observers: number) =>
+      `ACSIC 亞洲總覽。${economies} 個國家／經濟體共有 ${members} 家正式會員及 ${observers} 家觀察員。`,
   },
 } as const;
 
 export default function NetworkExplorer({ locale }: Props) {
   const c = copy[locale];
-  const [selectedRegion, setSelectedRegion] = useState<NetworkRegion['id']>('taiwan');
+  const [selectedRegion, setSelectedRegion] = useState<NetworkRegion['id'] | null>(null);
   const [selectedInstitution, setSelectedInstitution] = useState<string | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [fallback, setFallback] = useState(false);
   const selected = getRegion(selectedRegion);
-  const counts = getRegionMembershipCounts(selected);
+  const stats = getMembershipStats();
+  const counts = selected ? getRegionMembershipCounts(selected) : null;
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -79,9 +91,14 @@ export default function NetworkExplorer({ locale }: Props) {
     setSelectedRegion(regionId);
     setSelectedInstitution(null);
   };
-
-  const selectedInstitutionId = useMemo(() => selectedInstitution, [selectedInstitution]);
-  const regionStatus = c.networkStatus(selected.label[locale], counts.members, counts.observers);
+  const returnToOverview = () => {
+    setSelectedRegion(null);
+    setSelectedInstitution(null);
+  };
+  const regionStatus =
+    selected && counts
+      ? c.networkStatus(selected.label[locale], counts.members, counts.observers)
+      : c.overviewStatus(stats.members, stats.economies, stats.observers);
 
   if (fallback) {
     return (
@@ -89,7 +106,8 @@ export default function NetworkExplorer({ locale }: Props) {
         locale={locale}
         selectedRegion={selectedRegion}
         onSelectRegion={selectRegion}
-        selectedInstitutionId={selectedInstitutionId}
+        onReturnToOverview={returnToOverview}
+        selectedInstitutionId={selectedInstitution}
         onSelectInstitution={setSelectedInstitution}
       />
     );
@@ -100,7 +118,8 @@ export default function NetworkExplorer({ locale }: Props) {
       locale={locale}
       selectedRegion={selectedRegion}
       onSelectRegion={selectRegion}
-      selectedInstitutionId={selectedInstitutionId}
+      onReturnToOverview={returnToOverview}
+      selectedInstitutionId={selectedInstitution}
       onSelectInstitution={setSelectedInstitution}
     >
       <section className="network-explorer" aria-labelledby="network-explorer-title">
@@ -126,60 +145,122 @@ export default function NetworkExplorer({ locale }: Props) {
                 reducedMotion={reducedMotion}
                 onSelectRegion={selectRegion}
                 onSelectInstitution={setSelectedInstitution}
-                selectedInstitutionId={selectedInstitutionId}
+                selectedInstitutionId={selectedInstitution}
               />
             </div>
             <p className="visually-hidden" id="network-canvas-description">
               {c.schematic}
             </p>
-            <div className="network-destination-controls" role="group" aria-label={c.title}>
-              {networkRegions.map((region) => (
-                <button
-                  type="button"
-                  key={region.id}
-                  className={region.id === selectedRegion ? 'is-selected' : ''}
-                  aria-pressed={region.id === selectedRegion}
-                  onClick={() => selectRegion(region.id)}
-                >
-                  {region.label[locale]}
-                </button>
-              ))}
-            </div>
+            <EconomyControls
+              locale={locale}
+              selectedRegion={selectedRegion}
+              onSelectRegion={selectRegion}
+              onReturnToOverview={returnToOverview}
+              overviewLabel={c.overview}
+            />
           </div>
           <aside className="network-panel" aria-labelledby="network-region-title">
             <p className="network-live" aria-live="polite">
               {regionStatus}
             </p>
-            <div className="network-panel-heading">
-              <div>
-                <span className="eyebrow">{c.selected}</span>
-                <h2 id="network-region-title">{selected.label[locale]}</h2>
+            {selected && counts ? (
+              <>
+                <div className="network-panel-heading">
+                  <div>
+                    <span className="eyebrow">{c.selected}</span>
+                    <h2 id="network-region-title">{selected.label[locale]}</h2>
+                  </div>
+                  <span className="network-count">
+                    {counts.members} {c.members}
+                    {counts.observers ? ` · ${counts.observers} ${c.observer}` : ''}
+                  </span>
+                </div>
+                <div className="institution-card-grid">
+                  {getRegionInstitutions(selected).map((institution) => (
+                    <InstitutionCard
+                      key={institution.id}
+                      institution={institution}
+                      locale={locale}
+                      copy={c}
+                      selected={institution.id === selectedInstitution}
+                      onSelect={() => setSelectedInstitution(institution.id)}
+                    />
+                  ))}
+                </div>
+                <button
+                  className="button secondary network-back"
+                  type="button"
+                  onClick={returnToOverview}
+                >
+                  {c.back}
+                </button>
+                <a className="button secondary network-explore-all" href={`#/${locale}/members`}>
+                  {c.exploreAll}
+                </a>
+              </>
+            ) : (
+              <div className="network-overview-panel">
+                <span className="eyebrow">{c.overview}</span>
+                <h2 id="network-region-title">{c.overview}</h2>
+                <p>{c.overviewPrompt}</p>
+                <div
+                  className="network-overview-counts"
+                  aria-label={c.overviewStatus(stats.members, stats.economies, stats.observers)}
+                >
+                  <span>
+                    <strong>{stats.members}</strong> {c.members}
+                  </span>
+                  <span>
+                    <strong>{stats.economies}</strong> {c.economies}
+                  </span>
+                  <span>
+                    <strong>{stats.observers}</strong> {c.observer}
+                  </span>
+                </div>
               </div>
-              <span className="network-count">
-                {counts.members}
-                {locale === 'en' ? ' Member' : ' 會員'}
-                {counts.observers ? ' · ' + counts.observers + ' ' + c.observer : ''}
-              </span>
-            </div>
-            <div className="institution-card-grid">
-              {getRegionInstitutions(selected).map((institution) => (
-                <InstitutionCard
-                  key={institution.id}
-                  institution={institution}
-                  locale={locale}
-                  copy={c}
-                  selected={institution.id === selectedInstitutionId}
-                  onSelect={() => setSelectedInstitution(institution.id)}
-                />
-              ))}
-            </div>
-            <a className="button secondary network-explore-all" href={'#/' + locale + '/members'}>
-              {c.exploreAll}
-            </a>
+            )}
           </aside>
         </div>
       </section>
     </NetworkErrorBoundary>
+  );
+}
+
+function EconomyControls({
+  locale,
+  selectedRegion,
+  onSelectRegion,
+  onReturnToOverview,
+  overviewLabel,
+}: {
+  locale: Locale;
+  selectedRegion: string | null;
+  onSelectRegion: (id: string) => void;
+  onReturnToOverview: () => void;
+  overviewLabel: string;
+}) {
+  return (
+    <div className="network-destination-controls" role="group" aria-label={overviewLabel}>
+      <button
+        type="button"
+        className={!selectedRegion ? 'is-selected' : ''}
+        aria-pressed={!selectedRegion}
+        onClick={onReturnToOverview}
+      >
+        {overviewLabel}
+      </button>
+      {networkRegions.map((region) => (
+        <button
+          type="button"
+          key={region.id}
+          className={region.id === selectedRegion ? 'is-selected' : ''}
+          aria-pressed={region.id === selectedRegion}
+          onClick={() => onSelectRegion(region.id)}
+        >
+          {region.label[locale]}
+        </button>
+      ))}
+    </div>
   );
 }
 
@@ -190,13 +271,15 @@ function InstitutionCard({
   selected,
   onSelect,
 }: {
-  institution: ReturnType<typeof getRegionInstitutions>[number];
+  institution: Institution;
   locale: Locale;
   copy: {
     member: string;
     observer: string;
     profile: string;
     website: string;
+    select: string;
+    selectedInstitution: string;
   };
   selected: boolean;
   onSelect: () => void;
@@ -227,13 +310,7 @@ function InstitutionCard({
           aria-pressed={selected}
           onClick={onSelect}
         >
-          {selected
-            ? locale === 'en'
-              ? 'Selected'
-              : '已選取'
-            : locale === 'en'
-              ? 'Select'
-              : '選取'}
+          {selected ? copy.selectedInstitution : copy.select}
         </button>
         <a className="button secondary" href={`#${institutionPath(locale, institution.id)}`}>
           {copy.profile}
@@ -250,23 +327,21 @@ class NetworkErrorBoundary extends Component<
   {
     children: ReactNode;
     locale: Locale;
-    selectedRegion: NetworkRegion['id'];
+    selectedRegion: NetworkRegion['id'] | null;
     onSelectRegion: (regionId: NetworkRegion['id']) => void;
+    onReturnToOverview: () => void;
     selectedInstitutionId: string | null;
     onSelectInstitution: (institutionId: string) => void;
   },
   { hasError: boolean }
 > {
   state = { hasError: false };
-
   static getDerivedStateFromError() {
     return { hasError: true };
   }
-
   componentDidCatch(): void {
-    // Keep the production surface readable while preserving the error in development tools.
+    /* Keep the production surface readable while preserving the error in development tools. */
   }
-
   render() {
     if (this.state.hasError) {
       return (
@@ -274,6 +349,7 @@ class NetworkErrorBoundary extends Component<
           locale={this.props.locale}
           selectedRegion={this.props.selectedRegion}
           onSelectRegion={this.props.onSelectRegion}
+          onReturnToOverview={this.props.onReturnToOverview}
           selectedInstitutionId={this.props.selectedInstitutionId}
           onSelectInstitution={this.props.onSelectInstitution}
         />

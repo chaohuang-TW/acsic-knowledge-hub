@@ -1,45 +1,80 @@
 import { describe, expect, it } from 'vitest';
 import { institutions } from '../src/data/institutions';
+import { getEconomies, getMembershipStats } from '../src/features/institutions/directoryUtils';
 import {
+  getExplorerCoverage,
+  getInstitutionNodeOffsets,
   getRegion,
   getRegionInstitutions,
   getRegionMembershipCounts,
+  networkEconomyLayouts,
   networkInstitutionIds,
   networkRegions,
 } from '../src/features/network-explorer/networkSceneData';
 
-describe('ACSIC network explorer scene contract', () => {
-  it('publishes exactly the three prototype regions', () => {
-    expect(networkRegions.map((region) => region.id)).toEqual(['taiwan', 'japan', 'korea']);
+describe('ACSIC full network explorer scene contract', () => {
+  it('covers every governed economy with exactly one presentation layout', () => {
+    const governed = getEconomies().map((economy) => economy.id);
+    expect(governed).toHaveLength(14);
+    expect(networkEconomyLayouts).toHaveLength(14);
+    expect(networkRegions).toHaveLength(14);
+    expect(new Set(networkEconomyLayouts.map((layout) => layout.economyId)).size).toBe(14);
+    expect(new Set(networkEconomyLayouts.map((layout) => layout.countryCode)).size).toBe(14);
+    expect(networkRegions.map((region) => region.id).sort()).toEqual([...governed].sort());
   });
 
-  it('uses the governed Traditional Chinese region labels', () => {
-    expect(networkRegions.map((region) => region.label['zh-TW'])).toEqual(['臺灣', '日本', '韓國']);
+  it('derives all institution IDs from governed production records', () => {
+    const coverage = getExplorerCoverage();
+    const stats = getMembershipStats();
+    expect(stats.institutions).toBe(21);
+    expect(stats.members).toBe(20);
+    expect(stats.observers).toBe(1);
+    expect(coverage.explorerInstitutions).toBe(21);
+    expect(coverage.missingEconomies).toEqual([]);
+    expect(coverage.extraEconomies).toEqual([]);
+    expect(coverage.missingInstitutions).toEqual([]);
+    expect(coverage.extraInstitutions).toEqual([]);
+    expect(new Set(networkInstitutionIds).size).toBe(21);
   });
 
-  it('keeps the governed destination institution IDs', () => {
-    expect(getRegion('taiwan').institutionIds).toEqual(['tsmeg-tw', 'acgf-tw']);
-    expect(getRegion('japan').institutionIds).toEqual(['jfc-jp', 'jfg-jp']);
-    expect(getRegion('korea').institutionIds).toEqual(['kodit-kr', 'koreg-kr', 'kotec-kr']);
+  it('assigns each governed institution to exactly one economy', () => {
+    const occurrences = new Map<string, number>();
+    networkRegions.forEach((region) =>
+      region.institutionIds.forEach((id) => occurrences.set(id, (occurrences.get(id) ?? 0) + 1)),
+    );
+    expect(occurrences.size).toBe(institutions.length);
+    expect([...occurrences.values()].every((count) => count === 1)).toBe(true);
   });
 
-  it('resolves every scene ID to one production institution without duplicates', () => {
-    expect(new Set(networkInstitutionIds).size).toBe(7);
-    expect(
-      networkInstitutionIds.every((id) =>
-        institutions.some((institution) => institution.id === id),
+  it('keeps the prototype economy groupings and observer status', () => {
+    expect(getRegion('TW')?.institutionIds).toEqual(['tsmeg-tw', 'acgf-tw']);
+    expect(getRegion('JP')?.institutionIds).toEqual(['jfc-jp', 'jfg-jp']);
+    expect(getRegion('KR')?.institutionIds).toEqual(['kodit-kr', 'koreg-kr', 'kotec-kr']);
+    expect(getRegionMembershipCounts(getRegion('TW')!)).toEqual({ members: 1, observers: 1 });
+    expect(getRegionMembershipCounts(getRegion('JP')!)).toEqual({ members: 2, observers: 0 });
+  });
+
+  it('provides finite unique scene coordinates and targets', () => {
+    const positions = networkEconomyLayouts.map((layout) => layout.position.join(','));
+    expect(new Set(positions).size).toBe(positions.length);
+    networkEconomyLayouts.forEach((layout) =>
+      [layout.position, layout.mascotTarget, layout.cameraTarget].forEach((point) =>
+        point.forEach((value) => expect(Number.isFinite(value)).toBe(true)),
       ),
-    ).toBe(true);
-    expect(new Set(networkInstitutionIds).size).toBe(networkInstitutionIds.length);
+    );
   });
 
-  it('derives region member and observer counts from production status', () => {
-    expect(getRegionMembershipCounts(getRegion('taiwan'))).toEqual({ members: 1, observers: 1 });
-    expect(getRegionMembershipCounts(getRegion('japan'))).toEqual({ members: 2, observers: 0 });
-    expect(getRegionMembershipCounts(getRegion('korea'))).toEqual({ members: 3, observers: 0 });
-  });
+  it.each([1, 2, 3, 4, 5, 6])(
+    'supports a non-overlapping institution cluster of %i nodes',
+    (count) => {
+      const offsets = getInstitutionNodeOffsets(count);
+      expect(offsets).toHaveLength(count);
+      expect(new Set(offsets.map((offset) => offset.join(','))).size).toBe(count);
+      offsets.flat().forEach((value) => expect(Number.isFinite(value)).toBe(true));
+    },
+  );
 
-  it('uses production institution websites and names for every node', () => {
+  it('uses production names and official websites for every rendered node', () => {
     networkRegions.forEach((region) =>
       getRegionInstitutions(region).forEach((institution) => {
         expect(institution.officialWebsite).toMatch(/^https?:\/\//);
