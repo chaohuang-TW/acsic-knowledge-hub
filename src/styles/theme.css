@@ -1,4 +1,16 @@
 /* Visual layer only. Layout hooks, routes and governed content are retained. */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
 body {
   min-width: 0;
   font-family: var(--font-body);
@@ -229,12 +241,15 @@ html[lang='zh-TW'] .network-hero-page .hero-copy h1 {
   height: 512px;
 }
 .network-destination-controls {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 0.6rem;
   margin-top: 1.15rem;
 }
 .network-destination-controls button {
   background: transparent;
   padding-inline: 1.2rem;
+  min-width: 0;
 }
 .network-destination-controls button.is-selected,
 .fallback-region.is-selected {
@@ -266,6 +281,38 @@ html[lang='zh-TW'] .network-hero-page .hero-copy h1 {
 }
 .network-live {
   font-size: 0.78rem;
+}
+.network-overview-panel {
+  display: grid;
+  gap: 0.9rem;
+}
+.network-overview-panel h2 {
+  margin: 0;
+}
+.network-overview-counts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin-top: 0.4rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+.network-overview-counts span {
+  display: grid;
+  gap: 0.12rem;
+  padding: 0.75rem;
+  border-radius: var(--radius-control);
+  background: var(--accent-soft);
+}
+.network-overview-counts strong {
+  color: var(--accent-strong);
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 500;
+}
+.network-back {
+  width: 100%;
+  margin-top: 1rem;
 }
 .institution-card-grid {
   gap: 1.2rem;
@@ -685,6 +732,12 @@ html[lang='zh-TW'] .network-hero-page .hero-copy h1 {
   }
   .network-destination-controls button {
     padding-inline: 0.35rem;
+  }
+  .network-overview-counts {
+    gap: 0.35rem;
+  }
+  .network-overview-counts span {
+    padding-inline: 0.45rem;
   }
   .network-panel,
   .network-overlay {
