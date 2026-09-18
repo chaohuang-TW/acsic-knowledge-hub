@@ -976,3 +976,64 @@ html[lang='zh-TW'] .network-hero-page .hero-copy h1 {
     margin-top: -0.4rem;
   }
 }
+
+
+/* Mobile 3D explorer visual hardening */
+.network-mobile-economy-control {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .network-explorer-heading {
+    margin-bottom: 1.1rem;
+  }
+
+  .network-canvas-frame,
+  .network-canvas {
+    min-height: 350px;
+  }
+
+  .network-canvas-frame {
+    height: 352px;
+  }
+
+  .network-destination-controls {
+    display: none;
+  }
+
+  .network-mobile-economy-control {
+    display: grid;
+    gap: 0.45rem;
+    margin-top: 0.9rem;
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 650;
+  }
+
+  .network-mobile-economy-control select {
+    width: 100%;
+    min-height: 50px;
+    padding: 0.75rem 2.7rem 0.75rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-control);
+    background: color-mix(in srgb, var(--surface) 90%, var(--accent-soft));
+    color: var(--accent-strong);
+    font-size: 1rem;
+    font-weight: 650;
+  }
+
+  .network-panel-overview {
+    display: none;
+  }
+}
+
+@media (max-width: 390px) {
+  .network-canvas-frame,
+  .network-canvas {
+    min-height: 320px;
+  }
+
+  .network-canvas-frame {
+    height: 322px;
+  }
+}
