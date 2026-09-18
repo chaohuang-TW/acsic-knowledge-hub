@@ -1,6 +1,6 @@
 import { Line } from '@react-three/drei';
-import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
-import { useMemo, useRef } from 'react';
+import { Canvas, useFrame, useThree, type RootState } from '@react-three/fiber';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { sceneTheme as theme } from '../../styles/sceneTheme';
 import type { Locale } from '../../types';
@@ -12,6 +12,7 @@ import {
   type Vec3,
 } from './networkSceneData';
 import { mascotSpriteUrl, type MascotGuideProps, type MascotGuideState } from './mascot';
+import { reportNetworkDiagnostic, type NetworkFallbackReason } from './webgl';
 
 type SceneProps = {
   locale: Locale;
@@ -20,6 +21,7 @@ type SceneProps = {
   onSelectRegion: (regionId: NetworkRegion['id']) => void;
   onSelectInstitution: (institutionId: string) => void;
   selectedInstitutionId: string | null;
+  onSceneIssue: (reason: Extract<NetworkFallbackReason, 'context-lost'>) => void;
 };
 
 export function NetworkScene({
@@ -29,9 +31,20 @@ export function NetworkScene({
   onSelectInstitution,
   selectedInstitutionId,
   locale,
+  onSceneIssue,
 }: SceneProps) {
   const region = getRegion(selectedRegion);
   const mascotTarget: Vec3 = region?.mascotTarget ?? [0, 0.48, 0.35];
+  const handleCreated = useCallback(
+    ({ gl }: RootState) => {
+      const onContextLost = (event: Event) => {
+        event.preventDefault();
+        onSceneIssue('context-lost');
+      };
+      gl.domElement.addEventListener('webglcontextlost', onContextLost, { once: true });
+    },
+    [onSceneIssue],
+  );
   return (
     <Canvas
       className="network-canvas"
@@ -39,6 +52,7 @@ export function NetworkScene({
       camera={{ position: [0, 9.2, 13.2], fov: 47, near: 0.1, far: 60 }}
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       shadows
+      onCreated={handleCreated}
       aria-label={
         locale === 'en'
           ? 'Schematic ACSIC network visualization - not to scale.'
@@ -249,7 +263,32 @@ function MascotGuide({ target, state: initialState, reducedMotion, spriteUrl }: 
   const lastTarget = useRef(target.join(','));
   const state = useRef<MascotGuideState>(initialState);
   const stateStartedAt = useRef(0);
-  const texture = useLoader(THREE.TextureLoader, spriteUrl ?? mascotSpriteUrl);
+  const [texture, setTexture] = useState<THREE.Texture | null>(null);
+  const spriteSource = spriteUrl ?? mascotSpriteUrl;
+
+  useEffect(() => {
+    let active = true;
+    let loadedTexture: THREE.Texture | null = null;
+    setTexture(null);
+    new THREE.TextureLoader().load(
+      spriteSource,
+      (nextTexture) => {
+        loadedTexture = nextTexture;
+        if (active) setTexture(nextTexture);
+        else nextTexture.dispose();
+      },
+      undefined,
+      (error) => {
+        if (active) setTexture(null);
+        reportNetworkDiagnostic('asset-error', error);
+      },
+    );
+    return () => {
+      active = false;
+      loadedTexture?.dispose();
+    };
+  }, [spriteSource]);
+
   useFrame((_, delta) => {
     if (!group.current) return;
     const nextKey = target.join(',');
@@ -274,9 +313,11 @@ function MascotGuide({ target, state: initialState, reducedMotion, spriteUrl }: 
   });
   return (
     <group ref={group} userData={{ state: initialState }}>
-      <sprite scale={[0.9, 1.68, 1]} position={[0, 0.85, 0]}>
-        <spriteMaterial map={texture} transparent alphaTest={0.04} depthWrite toneMapped />
-      </sprite>
+      {texture && (
+        <sprite scale={[0.9, 1.68, 1]} position={[0, 0.85, 0]}>
+          <spriteMaterial map={texture} transparent alphaTest={0.04} depthWrite toneMapped />
+        </sprite>
+      )}
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.03, 0]}>
         <circleGeometry args={[0.38, 32]} />
         <meshBasicMaterial color={theme.deepJade} transparent opacity={0.14} />

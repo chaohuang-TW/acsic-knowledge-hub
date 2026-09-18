@@ -1,5 +1,14 @@
 import { expect, test } from '@playwright/test';
 
+test('supported Chromium keeps the normal 3D explorer path', async ({ page, browserName }) => {
+  test.skip(browserName !== 'chromium', 'The blocking WebGL smoke is defined for Chromium.');
+  await page.goto('./#/en/');
+  await expect(page.locator('.network-explorer-fallback')).toHaveCount(0);
+  await expect(page.locator('.network-canvas canvas')).toBeVisible();
+  await page.getByRole('button', { name: 'Japan', exact: true }).click();
+  await expect(page.getByText('JFC', { exact: true })).toBeVisible();
+});
+
 test('overview exposes all governed economies and dynamic network counts', async ({ page }) => {
   await page.goto('./#/en/');
   await expect(page.locator('.network-destination-controls button')).toHaveCount(15);
@@ -112,17 +121,22 @@ test('DOM fallback keeps all economy navigation and selected institution coverag
 }) => {
   await page.goto('./?networkFallback=1#/en/');
   await expect(page.locator('.network-explorer-fallback')).toBeVisible();
-  await expect(page.getByText('Interactive 3D view is unavailable on this device.')).toBeVisible();
-  await expect(page.locator('.fallback-region')).toHaveCount(15);
+  await expect(page.getByText('Standard explorer mode', { exact: true })).toBeVisible();
+  await expect(page.locator('.network-standard-economy')).toHaveCount(14);
   await expect(page.getByText('CGCC', { exact: true })).toHaveCount(0);
-  await page.getByRole('button', { name: 'Cambodia', exact: true }).click();
+  if (await page.locator('.network-standard-mobile-select').isVisible()) {
+    await page.getByRole('combobox', { name: 'Choose an economy' }).selectOption('KH');
+  } else {
+    await page.getByRole('button', { name: 'Cambodia', exact: true }).click();
+  }
   await expect(page.getByText('CGCC', { exact: true })).toBeVisible();
   await expect(page.locator('.network-institution-card')).toHaveCount(1);
+  await expect(page.getByRole('button', { name: 'Select institution' })).toHaveCount(0);
   await expect(page.getByRole('link', { name: 'View profile' })).toHaveAttribute(
     'href',
     '#/en/institutions/cgcc-kh',
   );
-  await page.getByRole('button', { name: 'Asia overview', exact: true }).click();
+  await page.getByRole('button', { name: /Back to Asia overview/ }).click();
   await expect(
     page.getByText('Choose an economy to explore its ACSIC institutions.'),
   ).toBeVisible();
@@ -130,12 +144,22 @@ test('DOM fallback keeps all economy navigation and selected institution coverag
 
 test('Traditional Chinese economy labels and actions stay governed', async ({ page }) => {
   await page.goto('./?networkFallback=1#/zh-TW/');
-  await expect(page.getByRole('button', { name: '亞洲總覽', exact: true })).toBeVisible();
-  await expect(page.locator('.fallback-region').filter({ hasText: '臺灣' })).toBeVisible();
-  await expect(page.locator('.fallback-region').filter({ hasText: '印度' })).toBeVisible();
-  await page.getByRole('button', { name: '臺灣', exact: true }).click();
+  await expect(page.getByText('目前使用一般探索模式', { exact: true })).toBeVisible();
+  if (await page.locator('.network-standard-mobile-select').isVisible()) {
+    await page.getByRole('combobox', { name: '選擇國家／經濟體' }).selectOption('TW');
+  } else {
+    await expect(
+      page.locator('.network-standard-economy').filter({ hasText: '臺灣' }),
+    ).toBeVisible();
+    await expect(
+      page.locator('.network-standard-economy').filter({ hasText: '印度' }),
+    ).toBeVisible();
+    await page.getByRole('button', { name: '臺灣', exact: true }).click();
+  }
   await expect(page.getByRole('heading', { name: '臺灣', exact: true })).toBeVisible();
-  await expect(page.locator('.network-overlay').getByText('觀察員', { exact: true })).toBeVisible();
+  await expect(
+    page.locator('.network-standard-selected').getByText('觀察員', { exact: true }),
+  ).toBeVisible();
   await expect(page.getByRole('link', { name: '查看機構檔案' }).first()).toHaveAttribute(
     'href',
     '#/zh-TW/institutions/tsmeg-tw',
@@ -144,4 +168,38 @@ test('Traditional Chinese economy labels and actions stay governed', async ({ pa
     'target',
     '_blank',
   );
+});
+
+test('context loss switches to standard explorer with an explicit reason', async ({ page }) => {
+  await page.goto('./#/en/');
+  const canvas = page.locator('.network-canvas canvas');
+  await expect(canvas).toBeVisible();
+  await page.waitForTimeout(250);
+  await canvas.dispatchEvent('webglcontextlost');
+  await expect(page.locator('.network-explorer-fallback')).toBeVisible();
+  await expect(page.locator('.network-explorer-fallback')).toHaveAttribute(
+    'data-fallback-reason',
+    'context-lost',
+  );
+  await expect(
+    page.getByText('The 3D view was interrupted. The standard explorer is available below.'),
+  ).toBeVisible();
+});
+
+test('mobile standard explorer uses a compact selector without horizontal overflow', async ({
+  page,
+}) => {
+  for (const width of [390, 320]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto(`./?networkFallback=1&qaWidth=${width}#/en/`);
+    await expect(page.locator('.network-standard-mobile-select')).toBeVisible();
+    await expect(page.locator('.network-standard-economy-grid')).toBeHidden();
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+    ).toBe(true);
+    await page.getByRole('combobox', { name: 'Choose an economy' }).selectOption('JP');
+    await expect(page.getByRole('heading', { name: 'Japan', exact: true })).toBeVisible();
+    await expect(page.getByText('JFC', { exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'View profile' }).first()).toBeVisible();
+  }
 });
