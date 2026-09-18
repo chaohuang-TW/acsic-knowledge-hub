@@ -1,18 +1,22 @@
 import { expect, test, type Page } from '@playwright/test';
 
 async function chooseEconomy(page: Page, optionValue: string, buttonLabel: string) {
-  const mobileSelector = page.locator('.network-mobile-economy-control');
-  if (await mobileSelector.isVisible()) {
-    await mobileSelector.getByRole('combobox').selectOption(optionValue);
+  const mobile = (page.viewportSize()?.width ?? 1280) <= 767;
+  if (mobile) {
+    const selector = page.getByRole('combobox', { name: 'Choose an economy' });
+    await selector.waitFor({ state: 'visible' });
+    await selector.selectOption(optionValue);
   } else {
     await page.getByRole('button', { name: buttonLabel, exact: true }).click();
   }
 }
 
 async function returnToOverview(page: Page) {
-  const mobileSelector = page.locator('.network-mobile-economy-control');
-  if (await mobileSelector.isVisible()) {
-    await mobileSelector.getByRole('combobox').selectOption('');
+  const mobile = (page.viewportSize()?.width ?? 1280) <= 767;
+  if (mobile) {
+    const selector = page.getByRole('combobox', { name: 'Choose an economy' });
+    await selector.waitFor({ state: 'visible' });
+    await selector.selectOption('');
   } else {
     await page.getByRole('button', { name: 'Back to Asia overview', exact: true }).click();
   }
