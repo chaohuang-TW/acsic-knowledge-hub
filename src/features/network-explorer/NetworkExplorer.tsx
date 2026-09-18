@@ -1,10 +1,10 @@
-import { Component, type ReactNode, useEffect, useState } from 'react';
+import { Component, type ReactNode, useCallback, useEffect, useState } from 'react';
 import type { Institution, Locale } from '../../types';
 import { institutionPath } from '../../routing';
 import { getMembershipStats } from '../institutions/directoryUtils';
 import { NetworkExplorerFallback } from './NetworkExplorerFallback';
 import { NetworkScene } from './NetworkScene';
-import { isWebGLAvailable } from './webgl';
+import { getWebGLCapability, reportNetworkDiagnostic, type NetworkFallbackReason } from './webgl';
 import {
   getRegion,
   getRegionInstitutions,
@@ -73,17 +73,31 @@ export default function NetworkExplorer({ locale }: Props) {
   const [selectedRegion, setSelectedRegion] = useState<NetworkRegion['id'] | null>(null);
   const [selectedInstitution, setSelectedInstitution] = useState<string | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const [fallback, setFallback] = useState(false);
+  const [fallbackReason, setFallbackReason] = useState<NetworkFallbackReason | null>(null);
   const selected = getRegion(selectedRegion);
   const stats = getMembershipStats();
   const counts = selected ? getRegionMembershipCounts(selected) : null;
+
+  const handleSceneIssue = useCallback((reason: NetworkFallbackReason) => {
+    reportNetworkDiagnostic(reason);
+    setFallbackReason(reason);
+  }, []);
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
     const update = () => setReducedMotion(media.matches);
     update();
     media.addEventListener?.('change', update);
-    setFallback(!isWebGLAvailable());
+    const capability = getWebGLCapability();
+    if (!capability.available) {
+      const reason: NetworkFallbackReason =
+        capability.reason === 'manual-test' ? 'manual-test' : 'capability-unavailable';
+      reportNetworkDiagnostic(reason, undefined, {
+        capabilityMode: capability.mode,
+        capabilityReason: capability.reason,
+      });
+      setFallbackReason(reason);
+    }
     return () => media.removeEventListener?.('change', update);
   }, []);
 
@@ -100,15 +114,14 @@ export default function NetworkExplorer({ locale }: Props) {
       ? c.networkStatus(selected.label[locale], counts.members, counts.observers)
       : c.overviewStatus(stats.members, stats.economies, stats.observers);
 
-  if (fallback) {
+  if (fallbackReason) {
     return (
       <NetworkExplorerFallback
         locale={locale}
         selectedRegion={selectedRegion}
         onSelectRegion={selectRegion}
         onReturnToOverview={returnToOverview}
-        selectedInstitutionId={selectedInstitution}
-        onSelectInstitution={setSelectedInstitution}
+        reason={fallbackReason}
       />
     );
   }
@@ -146,6 +159,7 @@ export default function NetworkExplorer({ locale }: Props) {
                 onSelectRegion={selectRegion}
                 onSelectInstitution={setSelectedInstitution}
                 selectedInstitutionId={selectedInstitution}
+                onSceneIssue={handleSceneIssue}
               />
             </div>
             <p className="visually-hidden" id="network-canvas-description">
@@ -339,8 +353,8 @@ class NetworkErrorBoundary extends Component<
   static getDerivedStateFromError() {
     return { hasError: true };
   }
-  componentDidCatch(): void {
-    /* Keep the production surface readable while preserving the error in development tools. */
+  componentDidCatch(error: unknown): void {
+    reportNetworkDiagnostic('scene-error', error);
   }
   render() {
     if (this.state.hasError) {
@@ -350,8 +364,7 @@ class NetworkErrorBoundary extends Component<
           selectedRegion={this.props.selectedRegion}
           onSelectRegion={this.props.onSelectRegion}
           onReturnToOverview={this.props.onReturnToOverview}
-          selectedInstitutionId={this.props.selectedInstitutionId}
-          onSelectInstitution={this.props.onSelectInstitution}
+          reason="scene-error"
         />
       );
     }
