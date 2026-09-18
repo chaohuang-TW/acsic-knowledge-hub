@@ -99,7 +99,12 @@ test('mobile economy selector remains usable at 390px and 320px', async ({ page 
     await page.setViewportSize({ width, height: 844 });
     await page.goto('./#/en/');
     await expect(page.locator('body')).toHaveJSProperty('scrollWidth', width);
-    await page.getByRole('button', { name: 'Cambodia', exact: true }).click();
+    await expect(page.locator('.network-destination-controls')).toBeHidden();
+    await expect(page.locator('.network-mobile-economy-control')).toBeVisible();
+    await expect(page.locator('.network-panel-overview')).toBeHidden();
+    const selector = page.getByRole('combobox', { name: 'Choose an economy' });
+    await expect(selector.locator('option')).toHaveCount(15);
+    await selector.selectOption('KH');
     await expect(page.getByRole('heading', { name: 'Cambodia', exact: true })).toBeVisible();
     await expect(page.getByText('CGCC', { exact: true })).toBeVisible();
   }
