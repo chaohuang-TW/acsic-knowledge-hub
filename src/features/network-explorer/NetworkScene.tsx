@@ -2,6 +2,7 @@ import { Line } from '@react-three/drei';
 import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { sceneTheme as theme } from '../../styles/sceneTheme';
 import type { Locale } from '../../types';
 import { getRegion, networkRegions, type NetworkRegion, type Vec3 } from './networkSceneData';
 import { mascotSpriteUrl, type MascotGuideProps, type MascotGuideState } from './mascot';
@@ -32,9 +33,15 @@ export function NetworkScene({
       shadows
       aria-label="Schematic ACSIC network visualization - not to scale."
     >
-      <color attach="background" args={['#dfeae4']} />
-      <ambientLight intensity={1.8} />
-      <directionalLight castShadow intensity={2.4} position={[-4, 8, 5]} />
+      <color attach="background" args={[theme.background]} />
+      <ambientLight intensity={1.6} />
+      <directionalLight
+        castShadow
+        intensity={2.1}
+        position={[-4, 8, 5]}
+        shadow-mapSize={[1024, 1024]}
+        shadow-radius={4}
+      />
       <DioramaGround />
       <NetworkRoutes />
       {networkRegions.map((item) => (
@@ -67,19 +74,19 @@ function DioramaGround() {
     <group>
       <mesh receiveShadow position={[0, -0.25, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <circleGeometry args={[5.25, 64]} />
-        <meshStandardMaterial color="#c6d9d0" roughness={0.95} />
+        <meshStandardMaterial color={theme.ground} roughness={0.95} />
       </mesh>
       <mesh receiveShadow position={[0, -0.08, 0]}>
         <boxGeometry args={[8.7, 0.28, 6.2]} />
-        <meshStandardMaterial color="#eef4f0" roughness={0.88} />
+        <meshStandardMaterial color={theme.porcelain} roughness={0.72} />
       </mesh>
       <mesh position={[-3.6, 0.15, -1.9]} rotation={[-Math.PI / 2, 0, 0]}>
         <circleGeometry args={[0.9, 32]} />
-        <meshStandardMaterial color="#b0cdc1" roughness={0.9} />
+        <meshStandardMaterial color={theme.sage} roughness={0.9} />
       </mesh>
       <mesh position={[3.6, 0.17, 1.9]} rotation={[-Math.PI / 2, 0, 0]}>
         <circleGeometry args={[0.72, 32]} />
-        <meshStandardMaterial color="#d1e2d9" roughness={0.9} />
+        <meshStandardMaterial color={theme.mist} roughness={0.9} />
       </mesh>
     </group>
   );
@@ -109,10 +116,10 @@ function NetworkRoutes() {
         <Line
           key={index}
           points={points}
-          color="#4f8f80"
-          lineWidth={1.2}
+          color={theme.line}
+          lineWidth={0.8}
           transparent
-          opacity={0.42}
+          opacity={0.32}
         />
       ))}
     </group>
@@ -132,19 +139,19 @@ function NetworkRegion({
     <group position={region.position} onClick={() => onSelect(region.id)}>
       <mesh receiveShadow position={[0, -0.02, 0]}>
         <cylinderGeometry args={[0.86, 1.02, 0.25, 8]} />
-        <meshStandardMaterial color={active ? '#8ebaae' : '#b2cfc2'} roughness={0.78} />
+        <meshStandardMaterial color={active ? theme.jade : theme.sage} roughness={0.78} />
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.12, 0]}>
         <ringGeometry args={active ? [0.46, 0.58, 40] : [0.38, 0.45, 40]} />
         <meshBasicMaterial
-          color={active ? '#1b665b' : '#7fae9e'}
+          color={active ? theme.deepJade : theme.jade}
           transparent
           opacity={active ? 0.85 : 0.6}
         />
       </mesh>
       <mesh position={[0, 0.34, 0]}>
         <sphereGeometry args={[active ? 0.14 : 0.1, 12, 8]} />
-        <meshStandardMaterial color={active ? '#1b665b' : '#6c9f8d'} roughness={0.68} />
+        <meshStandardMaterial color={active ? theme.deepJade : theme.jade} roughness={0.68} />
       </mesh>
     </group>
   );
@@ -188,21 +195,21 @@ function InstitutionCluster({
               }
             />
             <meshStandardMaterial
-              color={selectedInstitutionId === institutionId ? '#176b60' : '#f0b35b'}
+              color={selectedInstitutionId === institutionId ? theme.deepJade : theme.mist}
               roughness={0.72}
             />
           </mesh>
           <mesh position={[0, 0.62, 0]} castShadow>
             <sphereGeometry args={[selectedInstitutionId === institutionId ? 0.15 : 0.12, 8, 8]} />
             <meshStandardMaterial
-              color={selectedInstitutionId === institutionId ? '#f8d58a' : '#fffaf0'}
+              color={selectedInstitutionId === institutionId ? theme.jade : theme.porcelain}
               roughness={0.8}
             />
           </mesh>
           {selectedInstitutionId === institutionId && (
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.72, 0]}>
-              <ringGeometry args={[0.24, 0.3, 24]} />
-              <meshBasicMaterial color="#176b60" transparent opacity={0.78} />
+              <ringGeometry args={[0.24, 0.265, 32]} />
+              <meshBasicMaterial color={theme.champagne} transparent opacity={0.7} />
             </mesh>
           )}
         </group>
@@ -250,7 +257,7 @@ function MascotGuide({ target, state: initialState, reducedMotion, spriteUrl }: 
       </sprite>
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.03, 0]}>
         <circleGeometry args={[0.38, 32]} />
-        <meshBasicMaterial color="#174f47" transparent opacity={0.17} />
+        <meshBasicMaterial color={theme.deepJade} transparent opacity={0.14} />
       </mesh>
     </group>
   );
