@@ -1,3 +1,4 @@
+import { projectMapPosition } from './asiaMapGeometry';
 import { institutions } from '../../data/institutions';
 import { getEconomies, getMembershipStats } from '../institutions/directoryUtils';
 
@@ -17,107 +18,36 @@ export type NetworkRegion = EconomySceneLayout & {
   institutionIds: string[];
 };
 
-/** Presentation-only coordinates. Economy names and institution membership remain governed data. */
-const sceneLayouts: EconomySceneLayout[] = [
-  {
-    economyId: 'KH',
-    countryCode: 'KH',
-    position: [-4.5, 0.16, -2.7],
-    mascotTarget: [-4.5, 0.48, -2],
-    cameraTarget: [-4.2, 0.2, -2.4],
-  },
-  {
-    economyId: 'IN',
-    countryCode: 'IN',
-    position: [-1.5, 0.16, -2.7],
-    mascotTarget: [-1.5, 0.48, -2],
-    cameraTarget: [-1.2, 0.2, -2.4],
-  },
-  {
-    economyId: 'ID',
-    countryCode: 'ID',
-    position: [1.5, 0.16, -2.7],
-    mascotTarget: [1.5, 0.48, -2],
-    cameraTarget: [1.2, 0.2, -2.4],
-  },
-  {
-    economyId: 'JP',
-    countryCode: 'JP',
-    position: [4.5, 0.16, -2.7],
-    mascotTarget: [4.5, 0.48, -2],
-    cameraTarget: [4.2, 0.2, -2.4],
-  },
-  {
-    economyId: 'KR',
-    countryCode: 'KR',
-    position: [-4.5, 0.16, -0.9],
-    mascotTarget: [-4.5, 0.48, -0.2],
-    cameraTarget: [-4.2, 0.2, -0.6],
-  },
-  {
-    economyId: 'KG',
-    countryCode: 'KG',
-    position: [-1.5, 0.16, -0.9],
-    mascotTarget: [-1.5, 0.48, -0.2],
-    cameraTarget: [-1.2, 0.2, -0.6],
-  },
-  {
-    economyId: 'MY',
-    countryCode: 'MY',
-    position: [1.5, 0.16, -0.9],
-    mascotTarget: [1.5, 0.48, -0.2],
-    cameraTarget: [1.2, 0.2, -0.6],
-  },
-  {
-    economyId: 'MN',
-    countryCode: 'MN',
-    position: [4.5, 0.16, -0.9],
-    mascotTarget: [4.5, 0.48, -0.2],
-    cameraTarget: [4.2, 0.2, -0.6],
-  },
-  {
-    economyId: 'NP',
-    countryCode: 'NP',
-    position: [-4.5, 0.16, 0.9],
-    mascotTarget: [-4.5, 0.48, 1.6],
-    cameraTarget: [-4.2, 0.2, 1.2],
-  },
-  {
-    economyId: 'PG',
-    countryCode: 'PG',
-    position: [-1.5, 0.16, 0.9],
-    mascotTarget: [-1.5, 0.48, 1.6],
-    cameraTarget: [-1.2, 0.2, 1.2],
-  },
-  {
-    economyId: 'PH',
-    countryCode: 'PH',
-    position: [1.5, 0.16, 0.9],
-    mascotTarget: [1.5, 0.48, 1.6],
-    cameraTarget: [1.2, 0.2, 1.2],
-  },
-  {
-    economyId: 'LK',
-    countryCode: 'LK',
-    position: [4.5, 0.16, 0.9],
-    mascotTarget: [4.5, 0.48, 1.6],
-    cameraTarget: [4.2, 0.2, 1.2],
-  },
-  {
-    economyId: 'TW',
-    countryCode: 'TW',
-    position: [-1.5, 0.16, 2.8],
-    mascotTarget: [-1.5, 0.48, 3.5],
-    cameraTarget: [-1.2, 0.2, 3.1],
-  },
-  {
-    economyId: 'TH',
-    countryCode: 'TH',
-    position: [1.5, 0.16, 2.8],
-    mascotTarget: [1.5, 0.48, 3.5],
-    cameraTarget: [1.2, 0.2, 3.1],
-  },
+/** Presentation-only map anchors, approximately centred on each economy.
+ * These coordinates do not represent borders, offices or research measurements.
+ */
+const mapAnchors: [string, number, number][] = [
+  ['KH', 105, 13],
+  ['IN', 79, 23],
+  ['ID', 116, -3],
+  ['JP', 138, 37],
+  ['KR', 128, 36],
+  ['KG', 75, 42],
+  ['MY', 103, 4],
+  ['MN', 104, 47],
+  ['NP', 84, 28],
+  ['PG', 146, -6],
+  ['PH', 123, 12],
+  ['LK', 81, 7],
+  ['TW', 121, 24],
+  ['TH', 100, 17],
 ];
+
+const sceneLayouts: EconomySceneLayout[] = mapAnchors.map(([economyId, longitude, latitude]) => {
+  const position = projectMapPosition(longitude, latitude);
+  return {
+    economyId,
+    countryCode: economyId,
+    position,
+    mascotTarget: [position[0] + 0.65, 0.18, position[2] + 0.55],
+    cameraTarget: [position[0] * 0.12, 0, position[2] * 0.12],
+  };
+});
 
 const economyLabels = new Map(getEconomies().map((economy) => [economy.id, economy.label]));
 const governedEconomyIds = new Set(getEconomies().map((economy) => economy.id));

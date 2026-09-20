@@ -23,7 +23,7 @@ const copy = {
     overview: 'Asia overview',
     overviewPrompt: 'Choose an economy to explore its ACSIC institutions.',
     economySelector: 'Choose an economy',
-    schematic: 'Schematic ACSIC network visualization - not to scale.',
+    schematic: 'Simplified Asia map for visual exploration only.',
     selected: 'Economy focus',
     member: 'Member',
     observer: 'Observer',
@@ -49,7 +49,7 @@ const copy = {
     overview: '亞洲總覽',
     overviewPrompt: '選擇一個國家／經濟體，探索當地 ACSIC 機構。',
     economySelector: '選擇國家／經濟體',
-    schematic: 'ACSIC 網絡示意圖，非依比例繪製。',
+    schematic: '亞洲地圖為視覺化簡化示意。',
     selected: '經濟體聚焦',
     member: '正式會員',
     observer: '觀察員',
@@ -149,7 +149,9 @@ export default function NetworkExplorer({ locale }: Props) {
         <div className="network-explorer-layout">
           <div className="network-stage">
             <div
-              className="network-canvas-frame"
+              className="network-canvas-frame asia-map-frame"
+              data-testid="asia-map-stage"
+              data-selected-economy={selectedRegion ?? ''}
               role="img"
               aria-label={c.schematic}
               aria-describedby="network-canvas-description"

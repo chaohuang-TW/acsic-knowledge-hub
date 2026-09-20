@@ -64,6 +64,23 @@ describe('ACSIC full network explorer scene contract', () => {
     );
   });
 
+  it('keeps geographically meaningful north/south and east/west relationships', () => {
+    const p = (id: string) => getRegion(id)!.position;
+    expect(p('JP')[0]).toBeGreaterThan(p('KR')[0]);
+    expect(p('KR')[2]).toBeLessThan(p('TW')[2]);
+    expect(p('MN')[2]).toBeLessThan(p('KR')[2]);
+    expect(p('KG')[0]).toBeLessThan(p('MN')[0]);
+    expect(p('IN')[0]).toBeLessThan(p('TH')[0]);
+    expect(p('LK')[2]).toBeGreaterThan(p('IN')[2]);
+    expect(p('NP')[2]).toBeLessThan(p('IN')[2]);
+    expect(p('MY')[2]).toBeGreaterThan(p('TH')[2]);
+    expect(p('KH')[0]).toBeGreaterThan(p('TH')[0]);
+    expect(p('ID')[2]).toBeGreaterThan(p('MY')[2]);
+    expect(p('PH')[0]).toBeGreaterThan(p('KH')[0]);
+    expect(p('PG')[0]).toBeGreaterThan(p('ID')[0]);
+    expect(p('PG')[2]).toBeGreaterThan(p('PH')[2]);
+  });
+
   it.each([1, 2, 3, 4, 5, 6])(
     'supports a non-overlapping institution cluster of %i nodes',
     (count) => {

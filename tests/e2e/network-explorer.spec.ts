@@ -27,8 +27,50 @@ test('supported Chromium keeps the normal 3D explorer path', async ({ page, brow
   await page.goto('./#/en/');
   await expect(page.locator('.network-explorer-fallback')).toHaveCount(0);
   await expect(page.locator('.network-canvas canvas')).toBeVisible();
+  await expect(page.getByTestId('asia-map-stage')).toHaveAttribute(
+    'aria-label',
+    'Simplified Asia map for visual exploration only.',
+  );
   await chooseEconomy(page, 'JP', 'Japan');
   await expect(page.getByText('JFC', { exact: true })).toBeVisible();
+});
+
+test('bilingual map stage preserves geographic focus and profile navigation', async ({ page }) => {
+  for (const locale of ['en', 'zh-TW']) {
+    await page.goto(`./#/${locale}/`);
+    const stage = page.getByTestId('asia-map-stage');
+    await expect(stage.locator('canvas')).toBeVisible();
+    await expect(stage).toHaveAttribute('data-selected-economy', '');
+    const cases = [
+      ['TW', 'Taiwan', '臺灣', 'TSMEG'],
+      ['JP', 'Japan', '日本', 'JFC'],
+      ['KR', 'Republic of Korea', '韓國', 'KODIT'],
+      ['KH', 'Cambodia', '柬埔寨', 'CGCC'],
+    ];
+    for (const [id, en, zh, abbreviation] of cases) {
+      if ((page.viewportSize()?.width ?? 1280) <= 767) {
+        await page
+          .getByRole('combobox', {
+            name: locale === 'en' ? 'Choose an economy' : '選擇國家／經濟體',
+          })
+          .selectOption(id);
+      } else {
+        await page.getByRole('button', { name: locale === 'en' ? en : zh, exact: true }).click();
+      }
+      await expect(stage).toHaveAttribute('data-selected-economy', id);
+      await expect(stage.locator('canvas')).toBeVisible();
+      await expect(
+        page.locator('.network-panel').getByText(abbreviation, { exact: true }),
+      ).toBeVisible();
+    }
+    const card = page.locator('.network-institution-card').filter({ hasText: 'CGCC' });
+    await expect(card.locator('a[target="_blank"]')).toHaveAttribute('href', /^https:\/\//);
+    await card
+      .getByRole('link', { name: locale === 'en' ? 'View profile' : '查看機構檔案' })
+      .click();
+    await expect(page).toHaveURL(new RegExp(`#/${locale}/institutions/cgcc-kh$`));
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  }
 });
 
 test('overview exposes all governed economies and dynamic network counts', async ({ page }) => {

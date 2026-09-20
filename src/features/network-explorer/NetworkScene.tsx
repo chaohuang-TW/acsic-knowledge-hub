@@ -1,4 +1,5 @@
 import { Line } from '@react-three/drei';
+import { asiaLandContours, projectMapPosition } from './asiaMapGeometry';
 import { Canvas, useFrame, useThree, type RootState } from '@react-three/fiber';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
@@ -34,7 +35,7 @@ export function NetworkScene({
   onSceneIssue,
 }: SceneProps) {
   const region = getRegion(selectedRegion);
-  const mascotTarget: Vec3 = region?.mascotTarget ?? [0, 0.48, 0.35];
+  const mascotTarget: Vec3 = region?.mascotTarget ?? [5.8, 0.18, 0.9];
   const handleCreated = useCallback(
     ({ gl }: RootState) => {
       const onContextLost = (event: Event) => {
@@ -49,14 +50,14 @@ export function NetworkScene({
     <Canvas
       className="network-canvas"
       dpr={[1, 1.5]}
-      camera={{ position: [0, 9.2, 13.2], fov: 47, near: 0.1, far: 60 }}
+      camera={{ position: [0, 18, 10], fov: 42, near: 0.1, far: 80 }}
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       shadows
       onCreated={handleCreated}
       aria-label={
         locale === 'en'
-          ? 'Schematic ACSIC network visualization - not to scale.'
-          : 'ACSIC 網絡示意圖，非依比例繪製。'
+          ? 'Simplified Asia map for visual exploration only.'
+          : '亞洲地圖為視覺化簡化示意。'
       }
     >
       <color attach="background" args={[theme.background]} />
@@ -68,13 +69,13 @@ export function NetworkScene({
         shadow-mapSize={[1024, 1024]}
         shadow-radius={4}
       />
-      <DioramaGround />
-      <NetworkRoutes />
+      <AsiaMapStage />
       {networkRegions.map((item) => (
         <NetworkRegion
           key={item.id}
           region={item}
           active={item.id === selectedRegion}
+          subdued={!!selectedRegion && item.id !== selectedRegion}
           onSelect={onSelectRegion}
         />
       ))}
@@ -94,7 +95,7 @@ export function NetworkScene({
         />
       )}
       <CameraRig
-        target={region?.cameraTarget ?? [0, 0.2, 0.5]}
+        target={region?.cameraTarget ?? [0, 0, 0]}
         overview={!region}
         reducedMotion={reducedMotion}
       />
@@ -102,52 +103,40 @@ export function NetworkScene({
   );
 }
 
-function DioramaGround() {
-  return (
-    <group>
-      <mesh receiveShadow position={[0, -0.15, 0]} scale={[1, 1, 0.64]}>
-        <cylinderGeometry args={[6.7, 6.88, 0.24, 64]} />
-        <meshStandardMaterial color={theme.porcelain} roughness={0.8} />
-      </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} scale={[1, 0.64, 1]}>
-        <ringGeometry args={[5.55, 6.05, 64]} />
-        <meshBasicMaterial color={theme.sage} transparent opacity={0.16} />
-      </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 0]} scale={[1, 0.64, 1]}>
-        <circleGeometry args={[4.95, 64]} />
-        <meshBasicMaterial color={theme.mist} transparent opacity={0.08} />
-      </mesh>
-    </group>
-  );
-}
-
-function NetworkRoutes() {
-  const rows = [
-    [-4.5, -1.5, 1.5, 4.5],
-    [-4.5, -1.5, 1.5, 4.5],
-    [-4.5, -1.5, 1.5, 4.5],
-  ];
-  const depths = [-2.7, -0.9, 0.9];
-  const lines: Vec3[][] = rows.flatMap((row, rowIndex) =>
-    row.slice(0, -1).map(
-      (x, index) =>
-        [
-          [x, 0.32, depths[rowIndex]],
-          [row[index + 1], 0.34, depths[rowIndex]],
-        ] as Vec3[],
-    ),
+function AsiaMapStage() {
+  const shapes = useMemo(
+    () =>
+      asiaLandContours.map((contour) => {
+        const points = contour.map(([longitude, latitude]) => {
+          const [x, , z] = projectMapPosition(longitude, latitude);
+          return new THREE.Vector2(x, -z);
+        });
+        const shape = new THREE.Shape(points);
+        shape.closePath();
+        return shape;
+      }),
+    [],
   );
   return (
-    <group>
-      {lines.map((points, index) => (
-        <Line
-          key={index}
-          points={points}
-          color={theme.line}
-          lineWidth={0.8}
-          transparent
-          opacity={0.32}
-        />
+    <group name="asia-map-stage">
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.09, 0]} receiveShadow>
+        <planeGeometry args={[16, 12.5]} />
+        <meshBasicMaterial color={theme.porcelain} toneMapped={false} />
+      </mesh>
+      {shapes.map((shape, index) => (
+        <group key={index}>
+          <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+            <shapeGeometry args={[shape]} />
+            <meshBasicMaterial color={theme.sage} toneMapped={false} />
+          </mesh>
+          <Line
+            points={shape.getPoints().map((point) => [point.x, 0.025, -point.y] as Vec3)}
+            color={theme.line}
+            lineWidth={0.75}
+            transparent
+            opacity={0.65}
+          />
+        </group>
       ))}
     </group>
   );
@@ -156,29 +145,47 @@ function NetworkRoutes() {
 function NetworkRegion({
   region,
   active,
+  subdued,
   onSelect,
 }: {
   region: NetworkRegion;
   active: boolean;
+  subdued: boolean;
   onSelect: (regionId: string) => void;
 }) {
+  const [hovered, setHovered] = useState(false);
   return (
-    <group position={region.position} onClick={() => onSelect(region.id)}>
-      <mesh receiveShadow position={[0, -0.02, 0]}>
-        <cylinderGeometry args={[0.86, 1.02, 0.25, 8]} />
-        <meshStandardMaterial color={active ? theme.jade : theme.sage} roughness={0.78} />
-      </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.12, 0]}>
-        <ringGeometry args={active ? [0.46, 0.58, 40] : [0.38, 0.45, 40]} />
+    <group
+      position={region.position}
+      name={`economy-hotspot-${region.id}`}
+      onClick={(event) => {
+        event.stopPropagation();
+        onSelect(region.id);
+      }}
+      onPointerOver={() => setHovered(true)}
+      onPointerOut={() => setHovered(false)}
+    >
+      <mesh rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.19, 32]} />
         <meshBasicMaterial
-          color={active ? theme.deepJade : theme.jade}
+          color={active || hovered ? theme.deepJade : theme.jade}
           transparent
-          opacity={active ? 0.85 : 0.6}
+          opacity={subdued && !hovered ? 0.55 : 1}
         />
       </mesh>
-      <mesh position={[0, 0.34, 0]}>
-        <sphereGeometry args={[active ? 0.14 : 0.1, 12, 8]} />
-        <meshStandardMaterial color={active ? theme.deepJade : theme.jade} roughness={0.68} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
+        <ringGeometry
+          args={[active || hovered ? 0.26 : 0.22, active || hovered ? 0.31 : 0.25, 40]}
+        />
+        <meshBasicMaterial
+          color={active || hovered ? theme.deepJade : theme.jade}
+          transparent
+          opacity={subdued && !hovered ? 0.35 : 0.85}
+        />
+      </mesh>
+      <mesh visible={false}>
+        <sphereGeometry args={[0.3, 8, 8]} />
+        <meshBasicMaterial />
       </mesh>
     </group>
   );
@@ -259,6 +266,8 @@ function MascotGuide({
   spriteUrl,
   overview,
 }: MascotGuideProps & { overview: boolean }) {
+  const { size } = useThree();
+  const guideScale = size.width < 480 ? 1.4 : 1;
   const group = useRef<THREE.Group>(null);
   const progress = useRef(1);
   const from = useRef(new THREE.Vector3(...target));
@@ -318,14 +327,18 @@ function MascotGuide({
     <group ref={group} userData={{ state: initialState }}>
       {texture && (
         <sprite
-          scale={overview ? [1.28, 2.4, 1] : [1.04, 1.94, 1]}
-          position={[0, overview ? 1.08 : 0.94, 0]}
+          scale={
+            overview
+              ? [guideScale, 1.87 * guideScale, 1]
+              : [0.76 * guideScale, 1.42 * guideScale, 1]
+          }
+          position={[0, (overview ? 0.93 : 0.7) * guideScale, 0]}
         >
           <spriteMaterial map={texture} transparent alphaTest={0.04} depthWrite toneMapped />
         </sprite>
       )}
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.03, 0]}>
-        <circleGeometry args={[overview ? 0.5 : 0.4, 32]} />
+        <circleGeometry args={[overview ? 0.28 : 0.23, 32]} />
         <meshBasicMaterial color={theme.deepJade} transparent opacity={0.14} />
       </mesh>
     </group>
@@ -345,25 +358,18 @@ function CameraRig({
   const destination = useMemo(() => new THREE.Vector3(), []);
   const lookAt = useMemo(() => new THREE.Vector3(), []);
   useFrame((_, delta) => {
-    const mobile = size.width < 600;
-    if (camera instanceof THREE.PerspectiveCamera) {
-      const nextFov = mobile ? 52 : 47;
-      if (camera.fov !== nextFov) {
-        camera.fov = nextFov;
-        camera.updateProjectionMatrix();
-      }
+    // Fit the complete map at every aspect ratio. Focus is a restrained pan,
+    // preserving the spatial context instead of zooming into an isolated node.
+    const aspect = size.width / size.height;
+    const distance = Math.max(18, 17 / aspect);
+    if (camera instanceof THREE.PerspectiveCamera && camera.fov !== 42) {
+      camera.fov = 42;
+      camera.updateProjectionMatrix();
     }
-    if (overview) {
-      destination.set(0, mobile ? 8.4 : 9.2, mobile ? 11.4 : 13.2);
-      lookAt.set(0, 0, 0.35);
-    } else {
-      destination.set(
-        target[0] + (mobile ? 2.2 : 3.9),
-        target[1] + (mobile ? 4.4 : 4.9),
-        target[2] + (mobile ? 5.5 : 5.5),
-      );
-      lookAt.set(target[0], target[1], target[2]);
-    }
+    const focusX = overview ? 0 : target[0];
+    const focusZ = overview ? 0 : target[2];
+    destination.set(focusX, distance, distance * 0.46 + focusZ);
+    lookAt.set(focusX, 0, focusZ);
     const factor = reducedMotion ? 1 : 1 - Math.pow(0.001, delta);
     camera.position.lerp(destination, factor);
     camera.lookAt(lookAt);
