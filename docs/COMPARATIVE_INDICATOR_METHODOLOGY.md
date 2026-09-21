@@ -1,6 +1,6 @@
 # Comparative Indicator Methodology
 
-The comparative dictionary defines a common research vocabulary before numeric collection. Its 21 bilingual indicators cover institutional scale, guarantee activity, guarantee terms, portfolio risk, financial capacity, reach and inclusion, delivery networks, special policy programmes, operational efficiency, and recovery and claims.
+The comparative dictionary defines a common research vocabulary before numeric collection. Its 22 bilingual indicators cover institutional scale, guarantee activity, guarantee terms, portfolio risk, financial capacity, reach and inclusion, delivery networks, special policy programmes, operational efficiency, and recovery and claims. The v1.1 addition distinguishes supported-loan principal (`guaranteed_loan_volume`) from guarantee obligation (`new_guarantee_volume`) and remains institution-specific until cross-institution definitions and populations are confirmed.
 
 Every definition records required metadata, numerator and denominator where relevant, value type, time basis, comparability level, common misinterpretations, allowed aggregation, prohibited direct comparisons and a research note.
 

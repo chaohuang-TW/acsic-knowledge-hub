@@ -3,6 +3,7 @@ import type { Institution, Locale } from '../../types';
 import {
   buildInstitutionSnapshot,
   institutionExperienceCopy,
+  formatMetricValue,
   type InstitutionSnapshot,
 } from './institutionExperience';
 
@@ -172,7 +173,7 @@ function MetricProvenance({
         <ProvenanceRow label={c.source} value={metric.sourceLabel} />
         <ProvenanceRow
           label={c.reportedValue}
-          value={`${record.reported.value ?? '—'} ${record.reported.unit}`}
+          value={`${record.reported.value === null ? '—' : formatMetricValue(record.reported.value, locale)} ${record.reported.unit}`}
         />
         <ProvenanceRow
           label={c.reportingPeriod}

@@ -10,8 +10,9 @@ The readiness assessment checks official annual reports, financial statements, g
 | KOTEC        | partially ready | Confirm recovery definitions and technology-appraisal boundary |
 | CGC Malaysia | partially ready | Obtain official claim and recovery definitions                 |
 
-Institution-level readiness alone authorizes no data publication. Pilot v1 adds
-21 indicator-level decisions in
+Institution-level readiness alone authorizes no data publication. The initial
+pilot included 21 indicator-level decisions; the additive v1.1 release adds
+one ACGF-specific `guaranteed_loan_volume` decision (22 total) in
 `docs/LEVEL3_INDICATOR_READINESS_MATRIX.md`; only records that pass the source,
 definition, period, schema, comparability and manual-review gates enter
 production.

@@ -4,8 +4,9 @@ import { latestCompleteCalendarYear } from '../src/utils/indicatorSelection';
 
 const acgfRecords = productionLevel3Values.filter((record) => record.institutionId === 'acgf-tw');
 const acgfIndicatorIds = [
-  'number_of_guarantees',
+  'guaranteed_loan_volume',
   'new_guarantee_volume',
+  'number_of_guarantees',
   'outstanding_guarantee_balance',
   'capital_or_fund_size',
 ] as const;
@@ -18,13 +19,13 @@ describe('latest complete calendar year selection', () => {
   });
 
   it('falls back to the prior year when a latest-year indicator is missing', () => {
-    const withoutLatestGuaranteeVolume = acgfRecords.filter(
+    const withoutLatestNewGuaranteeVolume = acgfRecords.filter(
       (record) =>
         record.period.calendarYear !== 2025 || record.indicatorId !== 'new_guarantee_volume',
     );
 
     expect(
-      latestCompleteCalendarYear(withoutLatestGuaranteeVolume, 'acgf-tw', acgfIndicatorIds),
+      latestCompleteCalendarYear(withoutLatestNewGuaranteeVolume, 'acgf-tw', acgfIndicatorIds),
     ).toBe(2024);
   });
 

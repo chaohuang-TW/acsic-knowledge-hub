@@ -1,5 +1,19 @@
 # 資料變更紀錄
 
+## 2026-09-21 - ACGF Guaranteed Loan Volume Level 3 evidence
+
+- Add frozen Comparative Indicator Dictionary v1.1 indicator
+  `guaranteed_loan_volume`, distinct from guarantee obligation
+  (`new_guarantee_volume`) and institution-specific until cross-institution
+  definitions and populations are confirmed.
+- Add exact ACGF CY2024/CY2025 official reported values of 25,245,745 and
+  23,928,298 TWD thousand from the official guarantee-performance table.
+- Preserve the source's 2024 field label `貸款金額`, its separate
+  `保證金額` series, unknown publication date, and source-level locator; no FX
+  conversion or derived ratio is introduced.
+- Add one ACGF-specific readiness decision and bilingual history, filtering,
+  display, JSON/CSV export, and regression-test coverage.
+
 ## 2026-07-16 - 資料品質校正與完整雙語化
 
 - 以單一版本化共通／角色別標準重新計算 Level 2；結果由 15 完整、6 部分調整為 1 完整、19 部分、1 證據不足。

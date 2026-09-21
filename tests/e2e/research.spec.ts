@@ -1,3 +1,4 @@
+import { readFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
 
 async function chooseHomepageEconomy(
@@ -236,7 +237,7 @@ test('all 21 institution details can be opened and closed', async ({ page }) => 
 test('source registry statistics, metadata and filters are functional', async ({ page }) => {
   await page.goto('./#/en/sources');
   await expect(page.getByText('76', { exact: true }).first()).toBeVisible();
-  await expect(page.getByText('58', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('59', { exact: true }).first()).toBeVisible();
   await expect(page.getByText('Annual or integrated reports')).toBeVisible();
   await expect(page.getByText('Scheme or programme documents')).toBeVisible();
   await page.getByLabel('Institution', { exact: true }).selectOption('askrindo-id');
@@ -406,10 +407,10 @@ test('reference and framework routes switch to Traditional Chinese', async ({ pa
   await expect(page.locator('main')).toContainText('不作績效排名');
 });
 
-test('comparative framework renders 21 definitions and five readiness rows', async ({ page }) => {
+test('comparative framework renders 22 definitions and five readiness rows', async ({ page }) => {
   await page.goto('./#/en/framework');
-  await expect(page.getByText('21', { exact: true }).first()).toBeVisible();
-  await expect(page.locator('.indicator-group details')).toHaveCount(21);
+  await expect(page.getByText('22', { exact: true }).first()).toBeVisible();
+  await expect(page.locator('.indicator-group details')).toHaveCount(22);
   await expect(page.locator('tbody tr')).toHaveCount(5);
   await page.locator('.indicator-group details').first().locator('summary').click();
   await expect(page.locator('.indicator-detail').first()).toBeVisible();
@@ -421,27 +422,71 @@ test('new research pages remain usable on mobile', async ({ page }) => {
   await expect(page.locator('.reference-card')).toHaveCount(7);
   await expect(page.getByLabel('語言')).toBeVisible();
   await page.goto('./#/zh-TW/framework');
-  await expect(page.locator('.indicator-group details')).toHaveCount(21);
+  await expect(page.locator('.indicator-group details')).toHaveCount(22);
   await expect(page.locator('.table-scroll')).toBeVisible();
 });
 
-test('English data route publishes 12 records and keeps readiness behind methodology', async ({
+test('English data route publishes current records and keeps readiness behind methodology', async ({
   page,
 }) => {
   await page.goto('./#/en/data-pilot');
   await expect(page.getByRole('heading', { name: 'Verified Data' })).toBeVisible();
-  await expect(page.getByText('16', { exact: true }).first()).toBeVisible();
-  await expect(page.locator('.pilot-record-card')).toHaveCount(12);
+  await expect(page.getByText('18', { exact: true }).first()).toBeVisible();
+  await expect(page.locator('.pilot-record-card')).toHaveCount(13);
   await expect(page.locator('.historical-series')).toBeVisible();
   await page.locator('.historical-series summary').click();
-  await expect(page.locator('.historical-series tbody tr')).toHaveCount(8);
+  await expect(page.locator('.historical-series tbody tr')).toHaveCount(10);
   await expect(page.locator('.historical-series')).toContainText('2025');
   await expect(page.locator('.historical-series')).toContainText('2024');
   await expect(page.locator('.readiness-section')).not.toHaveAttribute('open', '');
   await page.locator('.readiness-section summary').click();
-  await expect(page.locator('.readiness-section tbody tr')).toHaveCount(21);
+  await expect(page.locator('.readiness-section tbody tr')).toHaveCount(22);
   await expect(page.getByText('Verified with limitation').first()).toBeVisible();
   await expect(page.getByText('No chart is displayed')).toBeVisible();
+});
+
+test('Guaranteed Loan Volume has bilingual filters, exact provenance and a two-year history', async ({
+  page,
+}) => {
+  const sourceUrl = 'https://www.acgf.org.tw/Page/PageEditor/I6YASZTJ3SLERIRHG52SZEOYWU';
+  await page.goto('./#/en/data-pilot');
+  await page.getByLabel('Indicator', { exact: true }).selectOption('guaranteed_loan_volume');
+  const englishCard = page.locator('.pilot-record-card');
+  await expect(englishCard).toHaveCount(1);
+  await expect(englishCard).toContainText('Guaranteed Loan Volume');
+  await expect(englishCard).toContainText('2025');
+  await expect(englishCard).toContainText('TWD 23.928 billion');
+  await englishCard.getByText('View source & methodology').click();
+  await expect(englishCard).toContainText('23,928,298 新臺幣千元');
+  await expect(englishCard).toContainText('年度營運績效');
+  await expect(englishCard.getByRole('link', { name: 'Open official source' })).toHaveAttribute(
+    'href',
+    sourceUrl,
+  );
+  await englishCard.locator('.provenance-viewer summary').click();
+
+  await page.getByLabel('Language').selectOption('zh-TW');
+  await expect(page).toHaveURL(/#\/zh-TW\/data-pilot$/);
+  await page.getByLabel('指標', { exact: true }).selectOption('guaranteed_loan_volume');
+  const chineseCard = page.locator('.pilot-record-card');
+  await expect(chineseCard).toHaveCount(1);
+  await expect(chineseCard).toContainText('保證貸款金額');
+  await expect(chineseCard).toContainText('2025 年');
+  await expect(chineseCard).toContainText('約新臺幣 239.283 億元');
+  const provenance = chineseCard.locator('.provenance-viewer');
+  await provenance.locator('summary').click();
+  await expect(provenance).toHaveJSProperty('open', true);
+  await expect(chineseCard).toContainText('23,928,298 新臺幣千元');
+  await expect(provenance.locator('a.button')).toHaveAttribute('href', sourceUrl);
+
+  await page.getByLabel('指標', { exact: true }).selectOption('all');
+  await page.locator('.historical-series summary').click();
+  const history = page.locator('.historical-series tbody tr').filter({ hasText: '保證貸款金額' });
+  await expect(history).toHaveCount(2);
+  await expect(history.nth(0)).toContainText('2025');
+  await expect(history.nth(0)).toContainText('約新臺幣 239.283 億元');
+  await expect(history.nth(1)).toContainText('2024');
+  await expect(history.nth(1)).toContainText('約新臺幣 252.457 億元');
 });
 
 test('Traditional Chinese pilot route, filters and bilingual statuses work', async ({ page }) => {
@@ -460,7 +505,7 @@ test('Traditional Chinese pilot route, filters and bilingual statuses work', asy
   await expect(page.getByText('截至 2025 年 12 月 31 日', { exact: true })).toHaveCount(4);
   await expect(page.getByText('1974–2025', { exact: true })).toBeVisible();
   await page.locator('.historical-series summary').click();
-  await expect(page.locator('.historical-series tbody tr')).toHaveCount(8);
+  await expect(page.locator('.historical-series tbody tr')).toHaveCount(10);
   await expect(page.locator('.historical-series')).toContainText('2024 年');
   await page.locator('.pilot-toolbar').getByLabel('機構', { exact: true }).selectOption('jfc-jp');
   await expect(page.locator('.pilot-record-card')).toHaveCount(2);
@@ -510,10 +555,49 @@ test('pilot JSON and readiness CSV export in both languages', async ({ page }) =
   await page.locator('.download-details summary').click();
   let pending = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Export pilot JSON' }).click();
-  expect((await pending).suggestedFilename()).toBe('acsic-level3-pilot-v1-en.json');
+  const jsonDownload = await pending;
+  expect(jsonDownload.suggestedFilename()).toBe('acsic-level3-pilot-v1-en.json');
+  const jsonPath = await jsonDownload.path();
+  if (!jsonPath) throw new Error('JSON download was not saved');
+  const jsonExport = JSON.parse(await readFile(jsonPath, 'utf8')) as {
+    records: Array<{
+      indicatorId: string;
+      indicatorLabels: { en: string; 'zh-TW': string } | null;
+      reported: { value: number; unit: string };
+      source: { sourceId: string };
+      period: { calendarYear: number | null };
+    }>;
+  };
+  expect(jsonExport.records).toHaveLength(18);
+  const exportedLoanRecords = jsonExport.records.filter(
+    (record) => record.indicatorId === 'guaranteed_loan_volume',
+  );
+  expect(exportedLoanRecords.map((record) => record.period.calendarYear)).toEqual([2024, 2025]);
+  expect(exportedLoanRecords.map((record) => record.reported.value)).toEqual([25245745, 23928298]);
+  expect(exportedLoanRecords[0]?.indicatorLabels).toEqual({
+    en: 'Guaranteed Loan Volume',
+    'zh-TW': '保證貸款金額',
+  });
+  expect(exportedLoanRecords.every((record) => record.reported.unit === '新臺幣千元')).toBe(true);
+  expect(
+    exportedLoanRecords.every((record) => record.source.sourceId === 'acgf-guarantee-performance'),
+  ).toBe(true);
   pending = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Export pilot CSV' }).click();
-  expect((await pending).suggestedFilename()).toBe('acsic-level3-pilot-v1-en.csv');
+  const csvDownload = await pending;
+  expect(csvDownload.suggestedFilename()).toBe('acsic-level3-pilot-v1-en.csv');
+  const csvPath = await csvDownload.path();
+  if (!csvPath) throw new Error('CSV download was not saved');
+  const csvExport = await readFile(csvPath, 'utf8');
+  expect(csvExport).toContain('"Indicator ID"');
+  expect(csvExport).toContain('"Indicator (English)"');
+  expect(csvExport).toContain('"Indicator (zh-TW)"');
+  expect(csvExport).toContain('"Source ID"');
+  expect(csvExport).toContain('"guaranteed_loan_volume"');
+  expect(csvExport).toContain('"Guaranteed Loan Volume"');
+  expect(csvExport).toContain('"保證貸款金額"');
+  expect(csvExport).toContain('"23,928,298"');
+  expect(csvExport).toContain('"acgf-guarantee-performance"');
   pending = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Export readiness CSV' }).click();
   expect((await pending).suggestedFilename()).toBe('acsic-level3-readiness-v1-en.csv');
@@ -521,13 +605,27 @@ test('pilot JSON and readiness CSV export in both languages', async ({ page }) =
   await page.getByLabel('Language').selectOption('zh-TW');
   pending = page.waitForEvent('download');
   await page.getByRole('button', { name: '匯出試辦 JSON' }).click();
-  expect((await pending).suggestedFilename()).toBe('acsic-level3-pilot-v1-zh-TW.json');
+  const chineseJsonDownload = await pending;
+  expect(chineseJsonDownload.suggestedFilename()).toBe('acsic-level3-pilot-v1-zh-TW.json');
+  const chineseJsonPath = await chineseJsonDownload.path();
+  if (!chineseJsonPath) throw new Error('Traditional Chinese JSON download was not saved');
+  const chineseJson = JSON.parse(await readFile(chineseJsonPath, 'utf8')) as {
+    exportedLocale: string;
+    records: Array<{ indicatorId: string; reported: { value: number } }>;
+  };
+  expect(chineseJson.exportedLocale).toBe('zh-TW');
+  expect(
+    chineseJson.records.some(
+      (record) =>
+        record.indicatorId === 'guaranteed_loan_volume' && record.reported.value === 23928298,
+    ),
+  ).toBe(true);
 });
 
 test('pilot remains usable at 390px without page-level horizontal overflow', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('./#/zh-TW/data-pilot');
-  await expect(page.locator('.pilot-record-card')).toHaveCount(12);
+  await expect(page.locator('.pilot-record-card')).toHaveCount(13);
   await expect(page.locator('.pilot-toolbar select').first()).toHaveCSS('min-width', '0px');
   await expect(page.locator('.download-details')).not.toHaveAttribute('open', '');
   await page.locator('.pilot-record-card').first().getByText('查看來源與資料處理').click();

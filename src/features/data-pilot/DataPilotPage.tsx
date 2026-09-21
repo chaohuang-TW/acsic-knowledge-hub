@@ -10,6 +10,7 @@ import {
 import { institutions, sourceRegistry } from '../../data/institutions';
 import { useLocale } from '../../i18n';
 import type { Locale } from '../../types';
+import { formatFinancialAmount } from '../../utils/metric-format';
 import { formatDisplayPeriod } from '../../utils/period';
 import type {
   IndicatorReadinessStatus,
@@ -19,8 +20,9 @@ import { latestCompleteCalendarYear } from '../../utils/indicatorSelection';
 
 const pilotInstitutionIds = ['jfc-jp', 'acgf-tw', 'tsmeg-tw'] as const;
 const acgfSeriesIndicatorIds = [
-  'number_of_guarantees',
+  'guaranteed_loan_volume',
   'new_guarantee_volume',
+  'number_of_guarantees',
   'outstanding_guarantee_balance',
   'capital_or_fund_size',
 ] as const;
@@ -61,7 +63,7 @@ const copy = {
       'Explore quantitative data with traceable official sources, reporting periods and definitions.',
     boundary: 'Data boundary',
     boundaryText:
-      'The four ACGF indicators show the latest complete year first (2025), with 2024 retained as a historical series. JFC and TSMEG records remain available for reference; no USD conversion, chart or performance ranking is produced.',
+      'The five ACGF indicators show the latest complete year first (2025), with 2024 retained as a historical series. JFC and TSMEG records remain available for reference; no USD conversion, chart or performance ranking is produced.',
     records: 'verified data records',
     institutions: 'institutions',
     indicators: 'indicators',
@@ -74,6 +76,7 @@ const copy = {
     exportCsv: 'Export readiness CSV',
     officialLabel: 'Official reported label',
     reportedValue: 'Reported value',
+    reportedUnit: 'Original unit',
     originalCurrency: 'Original currency',
     period: 'Reporting period',
     originalPeriod: 'Official original period label',
@@ -102,7 +105,7 @@ const copy = {
     openSource: 'Open official source',
     readinessTitle: 'Indicator-level readiness',
     readinessIntro:
-      'Twenty-one decisions are required; readiness does not imply that every cell must contain a number.',
+      'Each readiness decision is assessed independently; readiness does not imply that every indicator must have a numeric value.',
     sourceAvailable: 'Official source',
     definitionCompatible: 'Definition compatible',
     periodAvailable: 'Period available',
@@ -126,7 +129,7 @@ const copy = {
     intro: '查看具有官方來源、報告期間與資料定義的量化資訊。',
     boundary: '資料範圍',
     boundaryText:
-      'ACGF 四項指標先顯示最新完整年度（2025），並保留 2024 歷史序列。JFC 與 TSMEG 資料仍供參考；不轉換美元、不建立圖表或績效排名。',
+      'ACGF 五項指標先顯示最新完整年度（2025），並保留 2024 歷史序列。JFC 與 TSMEG 資料仍供參考；不轉換美元、不建立圖表或績效排名。',
     records: '筆已查證資料',
     institutions: '家機構',
     indicators: '個指標',
@@ -139,6 +142,7 @@ const copy = {
     exportCsv: '匯出準備度 CSV',
     officialLabel: '官方原始欄位名稱',
     reportedValue: '官方原始值',
+    reportedUnit: '原始單位',
     originalCurrency: '原始幣別',
     period: '報告期間',
     originalPeriod: '官方原始期間標示',
@@ -166,7 +170,7 @@ const copy = {
     derived: '由官方名單衍生',
     openSource: '開啟官方來源',
     readinessTitle: '指標層級準備度',
-    readinessIntro: '必須完成 21 格獨立判斷；準備度不代表每一格都必須有數值。',
+    readinessIntro: '每項準備度均獨立判斷；準備度不代表每個指標都必須有數值。',
     sourceAvailable: '有官方來源',
     definitionCompatible: '定義相容',
     periodAvailable: '有完整期間',
@@ -190,6 +194,17 @@ function formatNumber(value: number | null, locale: Locale) {
   return new Intl.NumberFormat(locale === 'en' ? 'en-US' : 'zh-TW', {
     maximumFractionDigits: 3,
   }).format(value);
+}
+
+function formatReportedValue(record: (typeof productionLevel3Values)[number], locale: Locale) {
+  const financialAmount = formatFinancialAmount(
+    record.reported.value,
+    record.reported.unit,
+    record.reported.currency,
+    locale,
+  );
+  if (financialAmount) return `${financialAmount.value} ${financialAmount.unit}`;
+  return `${formatNumber(record.reported.value, locale)} ${record.reported.unit}`;
 }
 
 function downloadFile(filename: string, body: string, type: string) {
@@ -230,6 +245,7 @@ export function DataPilotPage() {
   const indicatorName = (id: string) => indicatorById.get(id)?.name[locale] ?? id;
   const displayRecord = (record: (typeof productionLevel3Values)[number]) => ({
     ...record,
+    indicatorLabels: indicatorById.get(record.indicatorId)?.name ?? null,
     displayPeriod: formatDisplayPeriod(record.period, locale),
     dataYear: record.period.calendarYear,
     publicationYear: record.source.publicationDate?.slice(0, 4) ?? null,
@@ -282,23 +298,33 @@ export function DataPilotPage() {
     const header = [
       c.institution,
       c.indicator,
+      'Indicator ID',
+      'Indicator (English)',
+      'Indicator (zh-TW)',
       c.period,
       c.originalPeriod,
       c.dataYear,
       c.publicationYear,
       c.reportedValue,
+      c.reportedUnit,
       c.originalCurrency,
+      'Source ID',
       c.source,
     ];
     const rows = productionLevel3Values.map((record) => [
       institutionName(record.institutionId),
       indicatorName(record.indicatorId),
+      record.indicatorId,
+      indicatorById.get(record.indicatorId)?.name.en ?? record.indicatorId,
+      indicatorById.get(record.indicatorId)?.name['zh-TW'] ?? record.indicatorId,
       formatDisplayPeriod(record.period, locale),
       record.reported.originalPeriodLabel ?? '',
       record.period.calendarYear ?? '',
       record.source.publicationDate?.slice(0, 4) ?? '',
-      `${formatNumber(record.reported.value, locale)} ${record.reported.unit}`,
+      formatNumber(record.reported.value, locale),
+      record.reported.unit,
       record.reported.currency ?? '',
+      record.source.sourceId,
       sourceRegistry.find((source) => source.sourceId === record.source.sourceId)?.title ?? '',
     ]);
     downloadFile(
@@ -415,9 +441,7 @@ export function DataPilotPage() {
                         <th scope="row">{indicatorName(record.indicatorId)}</th>
                         <td>{record.period.calendarYear ?? '—'}</td>
                         <td>{record.source.publicationDate?.slice(0, 4) ?? '—'}</td>
-                        <td>
-                          {formatNumber(record.reported.value, locale)} {record.reported.unit}
-                        </td>
+                        <td>{formatReportedValue(record, locale)}</td>
                         <td>{formatDisplayPeriod(record.period, locale)}</td>
                         <td>
                           {source ? (
@@ -464,9 +488,7 @@ export function DataPilotPage() {
               <dl className="pilot-record-grid">
                 <div>
                   <dt>{c.reportedValue}</dt>
-                  <dd className="reported-number">
-                    {formatNumber(record.reported.value, locale)} {record.reported.unit}
-                  </dd>
+                  <dd className="reported-number">{formatReportedValue(record, locale)}</dd>
                 </div>
                 <div>
                   <dt>{c.originalCurrency}</dt>
@@ -563,7 +585,10 @@ export function DataPilotPage() {
                   </li>
                   <li>
                     <strong>{c.hubIndicator}</strong>
-                    <span>{indicatorName(record.normalized.indicatorId)} · v1.0</span>
+                    <span>
+                      {indicatorName(record.normalized.indicatorId)} · v
+                      {record.indicatorDefinitionVersion}
+                    </span>
                   </li>
                 </ol>
                 {record.derivation.isDerived && (

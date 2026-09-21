@@ -19,6 +19,7 @@ export const indicatorById = new Map(
 );
 
 export const pilotIndicatorIds: PilotIndicatorId[] = [
+  'guaranteed_loan_volume',
   'new_guarantee_volume',
   'outstanding_guarantee_balance',
   'number_of_guarantees',

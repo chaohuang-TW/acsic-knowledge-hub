@@ -1,9 +1,9 @@
 {
   "dictionaryId": "acsic-comparative-indicator-dictionary",
   "title": "ACSIC Comparative Indicator Dictionary",
-  "version": "1.0",
+  "version": "1.1",
   "status": "frozen",
-  "effectiveDate": "2026-07-26",
+  "effectiveDate": "2026-09-21",
   "indicators": [
     {
       "indicatorId": "new_guarantee_volume",
@@ -37,6 +37,46 @@
       "notes": {
         "en": "Record whether the official source uses approval, issuance or acceptance.",
         "zh-TW": "須記錄官方來源採核准、簽發或承作何種認列時點。"
+      },
+      "valueType": "monetary",
+      "timeBasis": "flow"
+    },
+    {
+      "indicatorId": "guaranteed_loan_volume",
+      "category": "guarantee_activity",
+      "name": { "en": "Guaranteed Loan Volume", "zh-TW": "保證貸款金額" },
+      "definition": {
+        "en": "The principal amount of loans supported by credit guarantees during a defined reporting period. This financing volume is distinct from the guarantee obligation amount recorded as New Guarantee Volume.",
+        "zh-TW": "在明確報導期間內受信用保證支持之貸款融資本金金額；此融資規模不同於「當期新增保證金額」所記錄的保證責任金額。"
+      },
+      "requiredMetadata": [
+        "value",
+        "unit",
+        "currency",
+        "reportedCurrency",
+        "reportingPeriodType",
+        "periodStart",
+        "periodEnd",
+        "sourceId"
+      ],
+      "numeratorDefinition": null,
+      "denominatorDefinition": null,
+      "comparabilityLevel": "institution_specific",
+      "commonMisinterpretations": {
+        "en": [
+          "Do not treat supported loan principal as the amount guaranteed or risk exposure.",
+          "Do not assume institutions use the same guarantee-backed loan population or recognition basis."
+        ],
+        "zh-TW": [
+          "不得將受支持的貸款本金視為保證金額或保證責任曝險。",
+          "不得假設不同機構使用相同的保證貸款母體或認列基礎。"
+        ]
+      },
+      "allowedAggregation": [],
+      "notComparableWith": ["new_guarantee_volume"],
+      "notes": {
+        "en": "Keep each institution's original source label, unit, currency and period. This indicator is institution-specific until definitions and populations are confirmed across institutions.",
+        "zh-TW": "保留各機構官方原始欄位、單位、幣別及期間；在跨機構定義與統計母體完成確認前，本指標僅限機構個案參照。"
       },
       "valueType": "monetary",
       "timeBasis": "flow"

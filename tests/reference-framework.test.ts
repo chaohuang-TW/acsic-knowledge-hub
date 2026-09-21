@@ -120,9 +120,10 @@ describe('comparative indicator dictionary', () => {
     ));
   it('records explicit forbidden comparisons', () =>
     expect(forbiddenIndicatorComparisons.length).toBeGreaterThanOrEqual(5));
-  it('freezes dictionary version 1.0', () => expect(indicatorDictionaryVersion).toBe('1.0'));
+  it('publishes dictionary version 1.1 with backward-compatible additions', () =>
+    expect(indicatorDictionaryVersion).toBe('1.1'));
   it('publishes only the approved pilot records', () =>
-    expect(productionLevel3Values).toHaveLength(16));
+    expect(productionLevel3Values).toHaveLength(18));
 });
 
 describe('Level 3 pilot readiness and official sources', () => {

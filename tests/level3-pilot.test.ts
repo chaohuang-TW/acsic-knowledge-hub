@@ -15,6 +15,7 @@ import { researchPriorityDisclaimer } from '../src/data/research-priority';
 const allowedInstitutions = ['jfc-jp', 'acgf-tw', 'tsmeg-tw'];
 const productionInstitutionIds: string[] = productionLevel3Values.map((item) => item.institutionId);
 const moneyIndicators = [
+  'guaranteed_loan_volume',
   'new_guarantee_volume',
   'outstanding_guarantee_balance',
   'capital_or_fund_size',
@@ -38,22 +39,29 @@ describe('Level 3 production boundary', () => {
     productionLevel3Values.forEach((item) =>
       expect(allowedInstitutions).toContain(item.institutionId),
     ));
-  it('uses only the seven approved indicators', () =>
+  it('uses only the eight approved indicators', () =>
     productionLevel3Values.forEach((item) =>
       expect(pilotIndicatorIds).toContain(item.indicatorId),
     ));
+  it('includes Guaranteed Loan Volume in the governed indicator set', () =>
+    expect(pilotIndicatorIds).toContain('guaranteed_loan_volume'));
 });
 
 describe('indicator versioning', () => {
   it('stores a definition version on every production record', () =>
     productionLevel3Values.forEach((item) => expect(item.indicatorDefinitionVersion).toBeTruthy()));
-  it('binds every record to the frozen dictionary version', () =>
-    productionLevel3Values.forEach((item) =>
-      expect(item.indicatorDefinitionVersion).toBe(indicatorDictionaryVersion),
-    ));
+  it('preserves historical records at v1.0 and binds new records to dictionary v1.1', () => {
+    expect(indicatorDictionaryVersion).toBe('1.1');
+    productionLevel3Values
+      .filter((item) => item.indicatorId !== 'guaranteed_loan_volume')
+      .forEach((item) => expect(item.indicatorDefinitionVersion).toBe('1.0'));
+    productionLevel3Values
+      .filter((item) => item.indicatorId === 'guaranteed_loan_volume')
+      .forEach((item) => expect(item.indicatorDefinitionVersion).toBe('1.1'));
+  });
   it('rejects unknown dictionary versions', () =>
-    expect(productionLevel3Values.some((item) => item.indicatorDefinitionVersion !== '1.0')).toBe(
-      false,
+    productionLevel3Values.forEach((item) =>
+      expect(['1.0', '1.1']).toContain(item.indicatorDefinitionVersion),
     ));
 });
 
@@ -102,16 +110,17 @@ describe('period rules', () => {
 });
 
 describe('ACGF historical series', () => {
-  it('keeps the four governed ACGF indicators for both 2024 and 2025', () => {
+  it('keeps five governed ACGF indicators for both 2024 and 2025', () => {
     const acgf = productionLevel3Values.filter((record) => record.institutionId === 'acgf-tw');
-    expect(acgf).toHaveLength(8);
+    expect(acgf).toHaveLength(10);
     expect(acgf.map((record) => record.period.calendarYear).sort()).toEqual([
-      2024, 2024, 2024, 2024, 2025, 2025, 2025, 2025,
+      2024, 2024, 2024, 2024, 2024, 2025, 2025, 2025, 2025, 2025,
     ]);
     expect(new Set(acgf.map((record) => record.indicatorId))).toEqual(
       new Set([
         'number_of_guarantees',
         'new_guarantee_volume',
+        'guaranteed_loan_volume',
         'outstanding_guarantee_balance',
         'capital_or_fund_size',
       ]),
@@ -121,13 +130,83 @@ describe('ACGF historical series', () => {
     const latest = productionLevel3Values.filter(
       (record) => record.institutionId === 'acgf-tw' && record.period.calendarYear === 2025,
     );
-    expect(latest).toHaveLength(4);
-    latest.forEach((record) => {
+    const annualReportRecords = latest.filter(
+      (record) => record.source.sourceId === 'acgf-annual-report-2025',
+    );
+    expect(annualReportRecords).toHaveLength(4);
+    annualReportRecords.forEach((record) => {
       expect(record.source.sourceId).toBe('acgf-annual-report-2025');
       expect(record.source.publicationDate).toBe('2026-06-02');
       expect(record.source.verifiedDate).toBe('2026-08-01');
       expect(record.indicatorDefinitionVersion).toBe('1.0');
     });
+  });
+  it('adds distinct exact 2024 and 2025 loan-volume records from the official performance page', () => {
+    const loanRecords = productionLevel3Values.filter(
+      (record) =>
+        record.institutionId === 'acgf-tw' && record.indicatorId === 'guaranteed_loan_volume',
+    );
+    expect(loanRecords).toHaveLength(2);
+    expect(
+      loanRecords.map((record) => [record.period.calendarYear, record.reported.value]),
+    ).toEqual([
+      [2024, 25245745],
+      [2025, 23928298],
+    ]);
+    loanRecords.forEach((record) => {
+      expect(record.indicatorDefinitionVersion).toBe('1.1');
+      expect(record.reported.unit).toBe('新臺幣千元');
+      expect(record.reported.currency).toBe('TWD');
+      expect(record.normalized.indicatorId).toBe('guaranteed_loan_volume');
+      expect(record.normalized.currency).toBe('TWD');
+      expect(record.source.sourceId).toBe('acgf-guarantee-performance');
+      expect(record.source.publicationDate).toBeNull();
+      expect(record.source.pdfPageIndex).toBeNull();
+      expect(record.verificationStatus).toBe('verified');
+      expect(record.comparability.status).toBe('reference_only');
+      expect(record.comparability.level).toBe('institution_specific');
+      expect(record.convertedValue).toBeNull();
+    });
+    expect(loanRecords.map((record) => record.reported.label)).toEqual(['貸款金額', '貸款金額']);
+    expect(loanRecords[0]?.normalized.notes['zh-TW']).toContain('保證金額');
+    expect(productionLevel3Values).toHaveLength(18);
+  });
+  it('keeps 2024 and 2025 loan volume distinct from guarantee obligation values', () => {
+    const guaranteeAmounts = productionLevel3Values.filter(
+      (record) =>
+        record.institutionId === 'acgf-tw' &&
+        record.indicatorId === 'new_guarantee_volume' &&
+        ['acgf-cy2024-guarantee-amount', 'acgf-cy2025-guarantee-amount'].includes(record.recordId),
+    );
+    expect(
+      guaranteeAmounts.map((record) => [record.period.calendarYear, record.reported.value]),
+    ).toEqual([
+      [2024, 19407404],
+      [2025, 18480910],
+    ]);
+    guaranteeAmounts.forEach((record) => {
+      expect(record.normalized.notes.en).not.toMatch(/not used|not adopted/i);
+      expect(record.normalized.notes['zh-TW']).not.toMatch(/未使用|未採用/);
+      expect(record.normalized.notes.en).toContain('Guaranteed Loan Volume');
+      expect(record.normalized.notes['zh-TW']).toContain('保證貸款金額');
+    });
+    const loanVolumes = productionLevel3Values.filter(
+      (record) =>
+        record.institutionId === 'acgf-tw' && record.indicatorId === 'guaranteed_loan_volume',
+    );
+    expect(
+      loanVolumes.map((record) => [record.period.calendarYear, record.reported.value]),
+    ).toEqual([
+      [2024, 25245745],
+      [2025, 23928298],
+    ]);
+    guaranteeAmounts.forEach((guaranteeAmount) =>
+      expect(
+        loanVolumes.find(
+          (loanVolume) => loanVolume.period.calendarYear === guaranteeAmount.period.calendarYear,
+        )?.indicatorId,
+      ).not.toBe(guaranteeAmount.indicatorId),
+    );
   });
 });
 
@@ -197,7 +276,11 @@ describe('comparability guards', () => {
       .forEach((item) => expect(item.comparability.status).not.toBe('comparable_with_conditions')));
   it('records period mismatch warnings', () =>
     productionLevel3Values
-      .filter((item) => ['new_guarantee_volume', 'number_of_guarantees'].includes(item.indicatorId))
+      .filter((item) =>
+        ['guaranteed_loan_volume', 'new_guarantee_volume', 'number_of_guarantees'].includes(
+          item.indicatorId,
+        ),
+      )
       .forEach((item) =>
         expect(item.comparability.issues.en.join(' ').toLowerCase()).toMatch(/fy|cy|period/),
       ));
@@ -215,7 +298,7 @@ describe('institution-specific research boundaries', () => {
     productionLevel3Values
       .filter((item) => item.institutionId === 'jfc-jp')
       .forEach((item) => expect(item.reported.population).toMatch(/Credit Insurance/)));
-  it('does not use the ACGF guaranteed-loan amount as guarantee amount', () =>
+  it('keeps the existing ACGF guarantee amount separate from loan volume', () =>
     expect(
       productionLevel3Values.find((item) => item.recordId === 'acgf-cy2024-guarantee-amount')
         ?.reported.value,
@@ -230,11 +313,11 @@ describe('institution-specific research boundaries', () => {
 });
 
 describe('readiness model', () => {
-  it('contains all 21 unique institution-indicator decisions', () => {
-    expect(indicatorReadiness).toHaveLength(21);
+  it('contains all 22 unique institution-indicator decisions', () => {
+    expect(indicatorReadiness).toHaveLength(22);
     expect(
       new Set(indicatorReadiness.map((item) => `${item.institutionId}:${item.indicatorId}`)).size,
-    ).toBe(21);
+    ).toBe(22);
   });
   it('does not require 21 numeric production values', () =>
     expect(productionLevel3Values.length).toBeLessThan(indicatorReadiness.length));
