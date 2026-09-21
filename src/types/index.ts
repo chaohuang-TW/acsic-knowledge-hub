@@ -27,6 +27,7 @@ export type SourceType =
   | 'official_scheme_document'
   | 'official_governance_document'
   | 'official_government_source'
+  | 'official_performance_statistics'
   | 'official_press_release'
   | 'official_event_announcement'
   | 'official_strategy_document';

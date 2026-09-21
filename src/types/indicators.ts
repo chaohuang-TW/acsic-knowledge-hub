@@ -32,6 +32,7 @@ export interface IndicatorDefinition {
 }
 
 export type PilotIndicatorId =
+  | 'guaranteed_loan_volume'
   | 'new_guarantee_volume'
   | 'outstanding_guarantee_balance'
   | 'number_of_guarantees'
@@ -85,7 +86,7 @@ export interface Level3IndicatorRecord {
   recordId: string;
   institutionId: 'jfc-jp' | 'acgf-tw' | 'tsmeg-tw';
   indicatorId: PilotIndicatorId;
-  indicatorDefinitionVersion: '1.0';
+  indicatorDefinitionVersion: '1.0' | '1.1';
   reported: {
     label: string;
     value: number | null;

@@ -40,6 +40,19 @@ test('bilingual map stage preserves geographic focus and profile navigation', as
     await page.goto(`./#/${locale}/`);
     const stage = page.getByTestId('asia-map-stage');
     await expect(stage.locator('canvas')).toBeVisible();
+    if ((page.viewportSize()?.width ?? 1280) <= 767) {
+      await page
+        .getByRole('combobox', {
+          name: locale === 'en' ? 'Choose an economy' : '選擇國家／經濟體',
+        })
+        .selectOption('');
+    } else {
+      const backToOverview = page.getByRole('button', {
+        name: locale === 'en' ? 'Back to Asia overview' : '返回亞洲總覽',
+        exact: true,
+      });
+      if (await backToOverview.isVisible()) await backToOverview.click();
+    }
     await expect(stage).toHaveAttribute('data-selected-economy', '');
     const cases = [
       ['TW', 'Taiwan', '臺灣', 'TSMEG'],

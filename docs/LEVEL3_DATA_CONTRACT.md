@@ -8,9 +8,16 @@ label, value, precision, unit, currency, population or period.
 ## Identity and dictionary binding
 
 Every record has a stable `recordId`, `institutionId`, `indicatorId` and
-`indicatorDefinitionVersion`. Pilot v1 records bind to ACSIC Comparative
-Indicator Dictionary version `1.0`; a later dictionary definition is never
-silently applied to historical records.
+`indicatorDefinitionVersion`. Historical pilot records remain bound to ACSIC
+Comparative Indicator Dictionary version `1.0`. The additive `1.1` release
+adds `guaranteed_loan_volume`; only records using that new definition carry
+version `1.1`. A later dictionary definition is never silently applied to
+historical records.
+
+`guaranteed_loan_volume` means loan principal supported by credit guarantees,
+not the guarantee obligation recorded as `new_guarantee_volume`. Its current
+ACGF values are institution-specific references and do not establish a
+universal cross-institution comparison.
 
 ## Reported layer
 

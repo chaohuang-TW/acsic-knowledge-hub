@@ -44,17 +44,33 @@ describe('institution experience view-model', () => {
   it('selects the latest ACGF value per indicator while preserving the reported scale', () => {
     const metrics = latestVerifiedMetrics('acgf-tw', 'en', 5);
     const volume = metric('acgf-tw', 'new_guarantee_volume', metrics);
+    const loanVolume = metric('acgf-tw', 'guaranteed_loan_volume', metrics);
 
-    expect(metrics).toHaveLength(4);
+    expect(metrics).toHaveLength(5);
     expect(volume.exactValue).toBe(18480910);
-    expect(volume.formattedValue).toBe('18,480,910');
-    expect(volume.unit).toBe('thousand TWD');
+    expect(volume.formattedValue).toBe('TWD 18.481');
+    expect(volume.unit).toBe('billion');
     expect(volume.originalUnit).toBe('新臺幣千元');
     expect(volume.reportedValue.value).toBe(18480910);
     expect(volume.record.normalized.value).toBe(18480.91);
     expect(volume.periodLabel).toBe('CY2025');
     expect(volume.originalPeriodLabel).toBe('114 年');
     expect(volume.sourceId).toBe('acgf-annual-report-2025');
+    expect(loanVolume.exactValue).toBe(23928298);
+    expect(loanVolume.formattedValue).toBe('TWD 23.928');
+    expect(loanVolume.unit).toBe('billion');
+    expect(loanVolume.record.source.sourceId).toBe('acgf-guarantee-performance');
+    expect(loanVolume.label).toBe('Guaranteed Loan Volume');
+  });
+
+  it('uses shared indicator presentation priority without institution-specific ordering', () => {
+    expect(latestVerifiedMetrics('acgf-tw', 'en', 5).map((item) => item.indicatorId)).toEqual([
+      'guaranteed_loan_volume',
+      'new_guarantee_volume',
+      'number_of_guarantees',
+      'outstanding_guarantee_balance',
+      'capital_or_fund_size',
+    ]);
   });
 
   it('limits card metrics to three and supports up to five on profiles', () => {
@@ -190,12 +206,14 @@ describe('institution experience view-model', () => {
     expect(buildInstitutionSnapshot(institution('jfg-jp'), 'en').systemHighlights).toHaveLength(1);
   });
 
-  it('does not invent guaranteed-loan values or a numeric guarantee-coverage ratio', () => {
+  it('keeps supported-loan volume distinct and does not derive a guarantee-coverage ratio', () => {
     const metrics = latestVerifiedMetrics('acgf-tw', 'en', 5);
 
-    expect(metrics.map((item) => item.indicatorId)).not.toContain('guaranteed_loan_volume');
+    expect(metrics.map((item) => item.indicatorId)).toContain('guaranteed_loan_volume');
     expect(metrics.map((item) => item.indicatorId)).not.toContain('guarantee_coverage_ratio');
     expect(metrics.some((item) => item.label === 'Guarantee Coverage Ratio')).toBe(false);
+    expect(metric('acgf-tw', 'guaranteed_loan_volume', metrics).exactValue).toBe(23928298);
+    expect(metric('acgf-tw', 'new_guarantee_volume', metrics).exactValue).toBe(18480910);
   });
 
   it('preserves JFC insurance acceptance as the reported amount and its scheme context', () => {
@@ -225,5 +243,13 @@ describe('institution experience view-model', () => {
     expect(formatMetricUnit('新臺幣百萬元', 'en')).toBe('million TWD');
     expect(formatMetricUnit('新臺幣百萬元', 'zh-TW')).toBe('新臺幣百萬元');
     expect(metric('tsmeg-tw', 'outstanding_guarantee_balance').originalUnit).toBe('新臺幣百萬元');
+    const loanVolume = metric(
+      'acgf-tw',
+      'guaranteed_loan_volume',
+      latestVerifiedMetrics('acgf-tw', 'zh-TW', 5),
+    );
+    expect(loanVolume.label).toBe('保證貸款金額');
+    expect(loanVolume.formattedValue).toBe('約新臺幣 239.283');
+    expect(loanVolume.unit).toBe('億元');
   });
 });

@@ -5,8 +5,8 @@
 ## Current governed coverage
 
 - Formal members: 20; observers: 1; countries/economies: 14; institutions: 21.
-- Level 1 complete: 21; strict Level 2 complete: 4; partial: 16; insufficient: 1; verified Level 3 pilot records: 16.
-- Source references: 76; unique official sources: 58; field-level evidence objects: 224.
+- Level 1 complete: 21; strict Level 2 complete: 4; partial: 16; insufficient: 1; verified Level 3 pilot records: 18.
+- Source references: 76; unique official sources: 59; field-level evidence objects: 224.
 - User-visible governed content bilingual coverage: 100%; official native-language names: 11/21.
 
 <!-- GENERATED:COVERAGE:END -->
@@ -47,4 +47,5 @@ Level 2 is calculated from the central versioned standard. Missing applicable fi
 - official_law_or_regulation: 5
 - official_annual_report: 9
 - official_strategy_document: 1
+- official_performance_statistics: 1
 - official_government_source: 1

@@ -204,8 +204,8 @@
       "method": "Divide the reported thousand-TWD value by 1,000.",
       "status": "unit_conversion",
       "notes": {
-        "en": "The adjacent guaranteed-loan amount of TWD 25,245,745 thousand is not used.",
-        "zh-TW": "未使用相鄰欄位之保證貸款金額新臺幣 25,245,745 千元。"
+        "en": "This record measures the guarantee obligation. Guaranteed Loan Volume is maintained as a distinct indicator.",
+        "zh-TW": "本筆資料衡量保證責任金額；保證貸款金額另以獨立指標記錄。"
       }
     },
     "period": {
@@ -519,6 +519,98 @@
     }
   },
   {
+    "recordId": "acgf-cy2024-guaranteed-loan-volume",
+    "institutionId": "acgf-tw",
+    "indicatorId": "guaranteed_loan_volume",
+    "indicatorDefinitionVersion": "1.1",
+    "reported": {
+      "label": "貸款金額",
+      "value": 25245745,
+      "unit": "新臺幣千元",
+      "currency": "TWD",
+      "periodLabel": "2024",
+      "originalPeriodLabel": "113 年",
+      "population": "113 年度信用保證業務績效統計",
+      "originalPopulation": "113 年度信用保證業務績效統計",
+      "definition": {
+        "en": "Loan amount reported in ACGF's CY2024 guarantee-performance table. It represents financing principal supported by guarantees, not the guarantee obligation amount.",
+        "zh-TW": "ACGF 保證績效表 113 年欄位「貸款金額」，代表信用保證支持之貸款融資本金，不等同基金承擔的保證責任金額。"
+      }
+    },
+    "normalized": {
+      "indicatorId": "guaranteed_loan_volume",
+      "value": 25245.745,
+      "unit": "TWD million",
+      "currency": "TWD",
+      "method": "Divide the reported thousand-TWD value by 1,000 to express TWD million; no currency conversion is performed.",
+      "status": "unit_conversion",
+      "notes": {
+        "en": "The official table's 113 (CY2024) row is labelled '貸款金額'. The 114-year narrative explicitly names the corresponding annual measure guaranteed loan amount; the separate '保證金額' row is not used.",
+        "zh-TW": "官方表格 113 年（2024）欄原標為「貸款金額」；114 年度敘述明確將對應年度指標稱為「保證貸款金額」。未採用另列的「保證金額」欄。"
+      }
+    },
+    "period": {
+      "reportingPeriodType": "calendar_year",
+      "fiscalYear": null,
+      "calendarYear": 2024,
+      "periodStart": "2024-01-01",
+      "periodEnd": "2024-12-31",
+      "asOfDate": null
+    },
+    "scheme": {
+      "schemeSpecific": false,
+      "schemeId": null,
+      "schemeName": { "en": null, "zh-TW": null }
+    },
+    "source": {
+      "sourceId": "acgf-guarantee-performance",
+      "pageOrSection": "年度營運績效 > 113 年（2024）",
+      "tableOrFigure": "表格「項目／年度」之「貸款金額」列；金額單位：新臺幣千元",
+      "pdfPageIndex": null,
+      "publicationDate": null,
+      "verifiedDate": "2026-09-21"
+    },
+    "comparability": {
+      "status": "reference_only",
+      "level": "institution_specific",
+      "issues": {
+        "en": [
+          "The 2024 table field is labelled loan amount; its guarantee-backed meaning is supported by the same page's 2025 narrative. No cross-institution population or recognition equivalence has been established.",
+          "These values use ACGF calendar-year reporting periods; periods and recognition bases require confirmation before cross-institution comparison.",
+          "This loan-principal measure is distinct from guarantee obligation amount."
+        ],
+        "zh-TW": [
+          "2024 表格原欄名為「貸款金額」，其保證支持意義由同頁 2025 年度敘述交叉確認；尚未建立跨機構統計母體或認列方式的相容性。",
+          "本組數值採 ACGF 曆年期間；跨機構比較前仍須確認期間與認列基礎是否一致。",
+          "此貸款本金指標與保證責任金額不同。"
+        ]
+      }
+    },
+    "verificationStatus": "verified",
+    "manualReviewStatus": "completed",
+    "gates": {
+      "researchVerified": true,
+      "schemaValidated": true,
+      "sourceValidated": true,
+      "comparabilityReviewed": true,
+      "manualReviewRequired": false
+    },
+    "derivation": {
+      "isDerived": false,
+      "derivationMethod": null,
+      "inputSourceIds": [],
+      "calculation": null,
+      "calculatedDate": null
+    },
+    "convertedValue": null,
+    "capitalConcept": null,
+    "institutionTypes": [],
+    "notes": {
+      "en": "Exact reported value, unit and CY2024 period are transcribed from the official ACGF guarantee-performance table. The source page does not state a publication date.",
+      "zh-TW": "精確原始值、單位及 2024 曆年期間均據 ACGF 官方保證績效表記錄；來源頁未載發布日期。"
+    }
+  },
+  {
     "recordId": "acgf-cy2025-guarantee-amount",
     "institutionId": "acgf-tw",
     "indicatorId": "new_guarantee_volume",
@@ -545,8 +637,8 @@
       "method": "Divide the reported thousand-TWD value by 1,000.",
       "status": "unit_conversion",
       "notes": {
-        "en": "The adjacent guaranteed-loan amount of TWD 23,928,298 thousand is not used.",
-        "zh-TW": "未使用相鄰欄位之保證貸款金額新臺幣 23,928,298 千元。"
+        "en": "This record measures the guarantee obligation. Guaranteed Loan Volume is maintained as a distinct indicator.",
+        "zh-TW": "本筆資料衡量保證責任金額；保證貸款金額另以獨立指標記錄。"
       }
     },
     "period": {
@@ -600,8 +692,100 @@
     "capitalConcept": null,
     "institutionTypes": [],
     "notes": {
-      "en": "The annual guarantee amount remains separate from the adjacent guaranteed-loan amount.",
-      "zh-TW": "年度保證金額與相鄰的保證貸款金額維持分開記錄。"
+      "en": "The annual guarantee-obligation amount remains separate from the distinct loan-principal volume supported by guarantees.",
+      "zh-TW": "年度保證責任金額與信用保證所支持的貸款本金規模分開記錄。"
+    }
+  },
+  {
+    "recordId": "acgf-cy2025-guaranteed-loan-volume",
+    "institutionId": "acgf-tw",
+    "indicatorId": "guaranteed_loan_volume",
+    "indicatorDefinitionVersion": "1.1",
+    "reported": {
+      "label": "貸款金額",
+      "value": 23928298,
+      "unit": "新臺幣千元",
+      "currency": "TWD",
+      "periodLabel": "2025",
+      "originalPeriodLabel": "114 年",
+      "population": "114 年度承保保證案件之貸款金額",
+      "originalPopulation": "114 年度承保保證案件",
+      "definition": {
+        "en": "Annual loan principal supported by ACGF guarantees during CY2025; the ACGF page's narrative explicitly calls this measure guaranteed loan amount.",
+        "zh-TW": "ACGF 2025 年度信用保證支持之貸款融資本金；官方頁面敘述明確稱此指標為「保證貸款金額」。"
+      }
+    },
+    "normalized": {
+      "indicatorId": "guaranteed_loan_volume",
+      "value": 23928.298,
+      "unit": "TWD million",
+      "currency": "TWD",
+      "method": "Divide the reported thousand-TWD value by 1,000 to express TWD million; no currency conversion is performed.",
+      "status": "unit_conversion",
+      "notes": {
+        "en": "The exact 114 (CY2025) table value is 23,928,298 thousand TWD; the same page's narrative rounds this measure to TWD 23.9283 billion and calls it guaranteed loan amount. The separate guarantee-amount row remains New Guarantee Volume.",
+        "zh-TW": "114 年（2025）表格精確值為新臺幣 23,928,298 千元；同頁敘述以約 239 億 2,830 萬元表達並稱為保證貸款金額。另列的保證金額仍屬當期新增保證金額。"
+      }
+    },
+    "period": {
+      "reportingPeriodType": "calendar_year",
+      "fiscalYear": null,
+      "calendarYear": 2025,
+      "periodStart": "2025-01-01",
+      "periodEnd": "2025-12-31",
+      "asOfDate": null
+    },
+    "scheme": {
+      "schemeSpecific": false,
+      "schemeId": null,
+      "schemeName": { "en": null, "zh-TW": null }
+    },
+    "source": {
+      "sourceId": "acgf-guarantee-performance",
+      "pageOrSection": "年度營運績效 > 114 年（2025）；保證貸款績效",
+      "tableOrFigure": "表格「項目／年度」之「貸款金額」列；金額單位：新臺幣千元；同頁 114 年度保證貸款績效敘述",
+      "pdfPageIndex": null,
+      "publicationDate": null,
+      "verifiedDate": "2026-09-21"
+    },
+    "comparability": {
+      "status": "reference_only",
+      "level": "institution_specific",
+      "issues": {
+        "en": [
+          "No cross-institution population or recognition equivalence has been established.",
+          "This value uses the ACGF calendar-year reporting period; periods and recognition bases require confirmation before cross-institution comparison.",
+          "This loan-principal measure is distinct from guarantee obligation amount."
+        ],
+        "zh-TW": [
+          "尚未建立跨機構統計母體或認列方式的相容性。",
+          "本數值採 ACGF 曆年期間；跨機構比較前仍須確認期間與認列基礎是否一致。",
+          "此貸款本金指標與保證責任金額不同。"
+        ]
+      }
+    },
+    "verificationStatus": "verified",
+    "manualReviewStatus": "completed",
+    "gates": {
+      "researchVerified": true,
+      "schemaValidated": true,
+      "sourceValidated": true,
+      "comparabilityReviewed": true,
+      "manualReviewRequired": false
+    },
+    "derivation": {
+      "isDerived": false,
+      "derivationMethod": null,
+      "inputSourceIds": [],
+      "calculation": null,
+      "calculatedDate": null
+    },
+    "convertedValue": null,
+    "capitalConcept": null,
+    "institutionTypes": [],
+    "notes": {
+      "en": "The exact reported value, unit and CY2025 period are transcribed from the official guarantee-performance table. The 2025 narrative cross-confirms the supported-loan concept; no publication date is stated.",
+      "zh-TW": "精確原始值、單位及 2025 曆年期間均據官方保證績效表記錄，並由 2025 年度敘述交叉確認貸款融資概念；頁面未載發布日期。"
     }
   },
   {

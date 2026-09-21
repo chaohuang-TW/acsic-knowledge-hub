@@ -1,7 +1,8 @@
 # Indicator Versioning Policy
 
-The frozen pilot dictionary is **ACSIC Comparative Indicator Dictionary v1.0**.
-Every Level 3 record stores `indicatorDefinitionVersion`.
+The current frozen dictionary is **ACSIC Comparative Indicator Dictionary v1.1**.
+Every Level 3 record stores `indicatorDefinitionVersion`; v1.0 records remain
+bound to their original definitions.
 
 ## Semantic versioning
 
@@ -10,6 +11,10 @@ Every Level 3 record stores `indicatorDefinitionVersion`.
   denominator, aggregation or comparison result.
 - Minor (`1.1`): backward-compatible metadata or guidance addition. Existing
   records remain valid under their stored version; they are not relabelled.
+- This additive v1.1 release adds `guaranteed_loan_volume` without changing
+  any v1.0 definition. New ACGF records use v1.1; all pre-existing records
+  remain at v1.0. The new indicator is institution-specific and reference-only,
+  so the minor release does not establish cross-institution comparability.
 - Major (`2.0`): any definition-breaking change, including population,
   recognition basis, time basis, capital concept, formula, allowed aggregation
   or comparability rule.

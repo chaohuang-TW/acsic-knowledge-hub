@@ -1177,6 +1177,28 @@
     }
   },
   {
+    "sourceId": "acgf-guarantee-performance",
+    "institutionIds": ["acgf-tw"],
+    "title": "信用保證業務-保證績效",
+    "publisher": "Agricultural Credit Guarantee Fund",
+    "sourceType": "official_performance_statistics",
+    "tier": "tier_1",
+    "url": "https://www.acgf.org.tw/Page/PageEditor/I6YASZTJ3SLERIRHG52SZEOYWU",
+    "finalResolvedUrl": "https://www.acgf.org.tw/Page/PageEditor/I6YASZTJ3SLERIRHG52SZEOYWU",
+    "originalLanguage": "zh-TW",
+    "publicationDate": null,
+    "documentDate": null,
+    "accessedDate": "2026-09-21",
+    "pageOrSection": "年度營運績效；信用保證業務-保證績效",
+    "accessStatus": "accessible",
+    "stalenessWarning": false,
+    "isPrimarySource": true,
+    "notes": {
+      "en": "The official annual table reports loan amount and guarantee amount in separate rows, with units in thousand New Taiwan dollars. The 2025 narrative explicitly identifies the loan measure as guaranteed loan amount; the 2024 row retains the source label '貸款金額'. No publication date is stated.",
+      "zh-TW": "官方年度表以新臺幣千元分列貸款金額與保證金額。114 年度敘述明確將貸款指標稱為「保證貸款金額」；113 年欄位沿用來源原標「貸款金額」。頁面未載正式發布日期。"
+    }
+  },
+  {
     "sourceId": "acgf-budget-2026",
     "institutionIds": ["acgf-tw"],
     "title": "2026 Approved Budget",

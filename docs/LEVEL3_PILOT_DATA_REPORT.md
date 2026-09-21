@@ -1,6 +1,25 @@
-# ACSIC Level 3 Verified Data Pilot v1 — Data Report
+# ACSIC Level 3 Verified Data Pilot — Data Report
 
-## 1. Pilot scope
+## Current v1.1 addition — 2026-09-21
+
+The frozen v1.1 dictionary adds the institution-specific `guaranteed_loan_volume`
+indicator for ACGF. The current pilot now has 18 verified production records
+across eight indicator IDs; the two records below are additive and do not
+replace the v1.0 historical records.
+
+| Institution | Indicator              | Official reported value | Original unit             | Period | Official source and locator                                                                                                    | Normalized reference   |
+| ----------- | ---------------------- | ----------------------: | ------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------- |
+| ACGF        | Guaranteed Loan Volume |              25,245,745 | 新臺幣千元 / TWD thousand | CY2024 | [信用保證業務－保證績效](https://www.acgf.org.tw/Page/PageEditor/I6YASZTJ3SLERIRHG52SZEOYWU), table row `貸款金額`, 113 column | 25,245.745 TWD million |
+| ACGF        | Guaranteed Loan Volume |              23,928,298 | 新臺幣千元 / TWD thousand | CY2025 | Same official page, table row `貸款金額`, 114 column; accompanying 114-year narrative calls it `保證貸款金額`                  | 23,928.298 TWD million |
+
+The source states that monetary values are in New Taiwan dollars thousand. Its
+separate 2025 `保證金額` row is 18,480,910 and remains the existing
+`new_guarantee_volume` record; it is not overwritten or treated as loan volume.
+For 2024, the exact table field label is `貸款金額`; the source does not print
+an explicit publication date, so the registry keeps that date null. The
+supplied 2025 annual-report URL returned 404 and is not used as evidence.
+
+## Original v1.0 baseline scope
 
 - Institutions: JFC, ACGF and TSMEG only
 - Indicators: seven
@@ -10,7 +29,7 @@
   verified with limitation, 3 definition mismatches, 3 scheme-specific, 2 not
   disclosed and 1 requiring manual review
 
-## 2. Record results
+## Original v1.0 record results
 
 | Institution | Indicator                      | Status                   | Official reported value | Original unit / currency     | Period                      | Official source                   | Page / section                         | Normalization                              | Comparability  |
 | ----------- | ------------------------------ | ------------------------ | ----------------------: | ---------------------------- | --------------------------- | --------------------------------- | -------------------------------------- | ------------------------------------------ | -------------- |
@@ -27,7 +46,7 @@
 | TSMEG       | Partner Financial Institutions | verified_with_limitation |           official list | named institutions           | 2025-12-31                  | TSMEG 2025 Annual Report          | printed pp. 8–9; PDF indexes 9–10      | derived count: 41                          | not comparable |
 | TSMEG       | Capital / Fund Size            | verified_with_limitation |                1,777.09 | TWD hundred million / TWD    | establishment to 2025-12-31 | TSMEG 2025 Annual Report          | printed p. 3; PDF index 4              | unit conversion; contributed capital       | not comparable |
 
-## 3. Missing results
+## Original v1.0 missing results
 
 - JFC: insurance-acceptance count is not disclosed; direct-loan borrower counts
   are definition mismatches; partner-financial-institution and
@@ -38,7 +57,7 @@
 - All three institutions: coverage is scheme-specific. No institution-wide
   synthetic percentage is published.
 
-## 4. Cross-institution findings
+## Original v1.0 cross-institution findings
 
 The provenance chain succeeds, but no pilot monetary chart is valid: JFC uses
 JPY and an FY credit-insurance recognition basis, ACGF uses CY2024 TWD, and

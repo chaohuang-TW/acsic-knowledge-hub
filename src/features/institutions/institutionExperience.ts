@@ -3,6 +3,7 @@ import { institutionPath } from '../../routing';
 import { institutions, sourceById } from '../../data/institutions';
 import type { Institution, Locale, LocalizedText, SourceReference } from '../../types';
 import type { Level3IndicatorRecord, PilotIndicatorId } from '../../types/indicators';
+import { formatFinancialAmount } from '../../utils/metric-format';
 import { systemCards } from './systemEvidence';
 
 export type InstitutionExperienceMetricLimit = 3 | 5;
@@ -151,8 +152,9 @@ export interface InstitutionSnapshot {
 }
 
 const metricPresentationOrder: PilotIndicatorId[] = [
-  'number_of_guarantees',
+  'guaranteed_loan_volume',
   'new_guarantee_volume',
+  'number_of_guarantees',
   'outstanding_guarantee_balance',
   'capital_or_fund_size',
   'beneficiary_enterprises',
@@ -428,6 +430,12 @@ function toSnapshotMetric(
   const definition = indicatorById.get(record.indicatorId);
   const source = sourceById.get(record.source.sourceId);
   if (!definition || !source) return null;
+  const financialAmount = formatFinancialAmount(
+    record.reported.value,
+    record.reported.unit,
+    record.reported.currency,
+    locale,
+  );
 
   return {
     recordId: record.recordId,
@@ -435,7 +443,7 @@ function toSnapshotMetric(
     label: definition.name[locale],
     periodLabel: formatMetricPeriod(record, locale),
     originalPeriodLabel: record.reported.originalPeriodLabel ?? record.reported.periodLabel,
-    formattedValue: formatMetricValue(record.reported.value, locale),
+    formattedValue: financialAmount?.value ?? formatMetricValue(record.reported.value, locale),
     exactValue: record.reported.value,
     qualification:
       record.verificationStatus === 'verified_with_limitation' ||
@@ -443,7 +451,7 @@ function toSnapshotMetric(
         ? record.normalized.notes[locale] || record.comparability.issues[locale].join(' ')
         : null,
     reportedValue: record.reported,
-    unit: formatMetricUnit(record.reported.unit, locale),
+    unit: financialAmount?.unit ?? formatMetricUnit(record.reported.unit, locale),
     originalUnit: record.reported.unit,
     sourceId: source.sourceId,
     sourceLabel: source.title,

@@ -129,6 +129,22 @@
   },
   {
     "institutionId": "acgf-tw",
+    "indicatorId": "guaranteed_loan_volume",
+    "status": "ready",
+    "verificationOutcome": "verified",
+    "officialSourceAvailable": true,
+    "definitionCompatible": true,
+    "periodAvailable": true,
+    "productionEligible": true,
+    "reason": {
+      "en": "The official ACGF guarantee-performance table reports CY2024 and CY2025 loan amounts in thousand TWD; its 2025 narrative explicitly names the measure guaranteed loan amount. The indicator remains institution-specific and reference-only.",
+      "zh-TW": "ACGF 官方保證績效表以新臺幣千元揭露 2024、2025 年貸款金額；114 年度敘述明確稱此指標為保證貸款金額。本指標限 ACGF 個案參照，不作跨機構比較。"
+    },
+    "sourceIds": ["acgf-guarantee-performance"],
+    "reviewedDate": "2026-09-21"
+  },
+  {
+    "institutionId": "acgf-tw",
     "indicatorId": "outstanding_guarantee_balance",
     "status": "ready",
     "verificationOutcome": "verified",

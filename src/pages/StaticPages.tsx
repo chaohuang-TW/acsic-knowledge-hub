@@ -32,6 +32,10 @@ const sourceTypeLabels: Record<SourceType, Record<Locale, string>> = {
   official_press_release: { en: 'Official press release', 'zh-TW': '官方新聞稿' },
   official_event_announcement: { en: 'Official event announcement', 'zh-TW': '官方活動公告' },
   official_strategy_document: { en: 'Official strategy document', 'zh-TW': '官方策略文件' },
+  official_performance_statistics: {
+    en: 'Official performance statistics',
+    'zh-TW': '官方績效統計',
+  },
 };
 
 const accessStatusLabels = {

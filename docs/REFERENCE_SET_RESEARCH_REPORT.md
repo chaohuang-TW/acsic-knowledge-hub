@@ -14,4 +14,4 @@ New evidence includes official annual reports, budgets, statutes, institutional 
 - Missing values were not converted to `not applicable`.
 - No Level 3 production value or institutional ranking was introduced.
 
-The site exposes reference roles, completion, evidence, priority and gaps, plus a 21-indicator bilingual framework and five-institution pilot-readiness table.
+The site exposes reference roles, completion, evidence, priority and gaps, plus a 22-indicator bilingual framework and five-institution pilot-readiness table.
