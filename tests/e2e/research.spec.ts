@@ -188,12 +188,12 @@ test('detail view is readable, linked and preserves filter and record when langu
       exact: true,
     }),
   ).toBeVisible();
-  await expect(
-    detail.getByText('一般社団法人 全国信用保証協会連合会 (ja)', { exact: true }),
-  ).toBeVisible();
   const research = detail.locator('.research-details');
   await expect(research).not.toHaveAttribute('open', '');
   await research.locator('summary').click();
+  await expect(
+    research.getByText('一般社団法人 全国信用保証協会連合会 (ja)', { exact: true }),
+  ).toBeVisible();
   await expect(
     research.getByRole('heading', { name: 'Documented non-applicable fields' }),
   ).toBeVisible();
