@@ -67,7 +67,7 @@ test.describe('ACSIC Members Directory', () => {
     await kodit.getByRole('link', { name: 'View profile' }).click();
     await expect(page).toHaveURL(/#\/en\/institutions\/kodit-kr$/);
     await expect(page.getByRole('heading', { name: 'Korea Credit Guarantee Fund' })).toBeVisible();
-    await page.getByRole('link', { name: 'Back to all institutions' }).click();
+    await page.getByRole('link', { name: 'Back to all institutions', exact: true }).click();
     await expect(page).toHaveURL(/#\/en\/members$/);
     await expect(page.locator('.directory-card')).toHaveCount(21);
   });

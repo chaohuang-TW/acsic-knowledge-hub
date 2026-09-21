@@ -1,7 +1,8 @@
 import { Component, type ReactNode, useCallback, useEffect, useState } from 'react';
-import type { Institution, Locale } from '../../types';
-import { institutionPath } from '../../routing';
+import type { Locale } from '../../types';
 import { getMembershipStats } from '../institutions/directoryUtils';
+import { InstitutionSnapshotCard } from '../institutions/InstitutionSnapshot';
+import { institutionExperienceCopy } from '../institutions/institutionExperience';
 import { NetworkExplorerFallback } from './NetworkExplorerFallback';
 import { NetworkScene } from './NetworkScene';
 import { getWebGLCapability, reportNetworkDiagnostic, type NetworkFallbackReason } from './webgl';
@@ -115,6 +116,15 @@ export default function NetworkExplorer({ locale }: Props) {
     selected && counts
       ? c.networkStatus(selected.label[locale], counts.members, counts.observers)
       : c.overviewStatus(stats.members, stats.economies, stats.observers);
+  const selectedInstitutionRecord = selected
+    ? getRegionInstitutions(selected).find((institution) => institution.id === selectedInstitution)
+    : undefined;
+  const liveAnnouncement = selectedInstitutionRecord
+    ? institutionExperienceCopy[locale].selectedAnnouncement.replace(
+        '{name}',
+        selectedInstitutionRecord.name[locale],
+      )
+    : regionStatus;
 
   if (fallbackReason) {
     return (
@@ -183,7 +193,7 @@ export default function NetworkExplorer({ locale }: Props) {
             aria-labelledby="network-region-title"
           >
             <p className="network-live" aria-live="polite">
-              {regionStatus}
+              {liveAnnouncement}
             </p>
             {selected && counts ? (
               <>
@@ -199,11 +209,10 @@ export default function NetworkExplorer({ locale }: Props) {
                 </div>
                 <div className="institution-card-grid">
                   {getRegionInstitutions(selected).map((institution) => (
-                    <InstitutionCard
+                    <InstitutionSnapshotCard
                       key={institution.id}
                       institution={institution}
                       locale={locale}
-                      copy={c}
                       selected={institution.id === selectedInstitution}
                       onSelect={() => setSelectedInstitution(institution.id)}
                     />
@@ -304,65 +313,6 @@ function EconomyControls({
         </select>
       </label>
     </>
-  );
-}
-
-function InstitutionCard({
-  institution,
-  locale,
-  copy,
-  selected,
-  onSelect,
-}: {
-  institution: Institution;
-  locale: Locale;
-  copy: {
-    member: string;
-    observer: string;
-    profile: string;
-    website: string;
-    select: string;
-    selectedInstitution: string;
-  };
-  selected: boolean;
-  onSelect: () => void;
-}) {
-  const status = institution.acsicMembershipStatus === 'observer' ? copy.observer : copy.member;
-  return (
-    <article
-      className={selected ? 'network-institution-card is-selected' : 'network-institution-card'}
-    >
-      <div className="network-card-heading">
-        <span
-          className={
-            institution.acsicMembershipStatus === 'observer'
-              ? 'network-badge observer'
-              : 'network-badge'
-          }
-        >
-          {status}
-        </span>
-        <span className="network-abbreviation">{institution.institutionAbbreviation}</span>
-      </div>
-      <h3>{institution.name[locale]}</h3>
-      <p>{institution.summary[locale]}</p>
-      <div className="network-card-actions">
-        <button
-          type="button"
-          className="button secondary network-card-select"
-          aria-pressed={selected}
-          onClick={onSelect}
-        >
-          {selected ? copy.selectedInstitution : copy.select}
-        </button>
-        <a className="button secondary" href={`#${institutionPath(locale, institution.id)}`}>
-          {copy.profile}
-        </a>
-        <a href={institution.officialWebsite} target="_blank" rel="noreferrer">
-          {copy.website}
-        </a>
-      </div>
-    </article>
   );
 }
 

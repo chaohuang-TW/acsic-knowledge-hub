@@ -1222,3 +1222,245 @@ html[lang='zh-TW'] .network-hero-page .hero-copy h1 {
     grid-template-columns: 1fr;
   }
 }
+
+/* Institution experience: a compact, provenance-led layer over the existing jade theme. */
+.institution-snapshot-card,
+.institution-profile-hero,
+.institution-at-a-glance,
+.institution-official-metrics,
+.institution-research-details,
+.institution-evidence {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.institution-snapshot-card {
+  display: grid;
+  gap: 1rem;
+  border: 1px solid color-mix(in srgb, var(--jade) 22%, var(--line));
+  border-radius: var(--radius-card);
+  background: linear-gradient(
+    145deg,
+    var(--surface),
+    color-mix(in srgb, var(--surface-strong) 45%, var(--surface))
+  );
+  padding: clamp(1rem, 2vw, 1.45rem);
+  box-shadow: 0 8px 24px rgb(54 91 83 / 6%);
+}
+.institution-snapshot-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 0.8rem 1rem;
+}
+.institution-snapshot-header h2,
+.institution-snapshot-header h3,
+.institution-snapshot-header p {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.institution-snapshot-header h2,
+.institution-snapshot-header h3 {
+  color: var(--accent-strong);
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  line-height: 1.4;
+}
+.institution-snapshot-header p {
+  margin-top: 0.25rem;
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+.institution-snapshot-highlights {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.institution-snapshot-highlights > li {
+  border-inline-start: 2px solid color-mix(in srgb, var(--jade) 62%, var(--line));
+  padding: 0.1rem 0 0.1rem 0.75rem;
+  color: var(--text);
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+.institution-metric-strip,
+.institution-official-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+  min-width: 0;
+}
+.institution-metric {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+  min-width: 0;
+  border: 1px solid color-mix(in srgb, var(--jade) 15%, var(--line));
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--surface-strong) 60%, var(--surface));
+  padding: 0.8rem;
+  overflow-wrap: anywhere;
+}
+.institution-metric :is(dt, .institution-metric-label, h3) {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.institution-metric :is(dd, .institution-metric-value, strong) {
+  margin: 0;
+  color: var(--accent-strong);
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  font-weight: 600;
+  line-height: 1.35;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.institution-metric :is(small, .institution-metric-period, .institution-metric-unit) {
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.institution-profile-hero {
+  display: grid;
+  gap: 1rem;
+  border: 1px solid color-mix(in srgb, var(--jade) 20%, var(--line));
+  border-radius: var(--radius-card);
+  background:
+    radial-gradient(
+      ellipse at 100% 0%,
+      color-mix(in srgb, var(--jade) 15%, transparent),
+      transparent 25rem
+    ),
+    linear-gradient(
+      150deg,
+      var(--surface),
+      color-mix(in srgb, var(--surface-strong) 46%, var(--surface))
+    );
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+.institution-profile-hero h1,
+.institution-profile-hero p {
+  max-width: 68ch;
+  margin-block: 0;
+  overflow-wrap: anywhere;
+}
+.institution-profile-hero h1 {
+  margin-top: 0.25rem;
+}
+.institution-profile-hero p {
+  color: var(--muted);
+  line-height: 1.75;
+}
+.institution-profile-hero a,
+.institution-snapshot-card a,
+.institution-evidence a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  max-width: 100%;
+  padding-block: 0.35rem;
+  overflow-wrap: anywhere;
+  text-underline-offset: 0.2em;
+}
+.institution-profile-hero a:focus-visible,
+.institution-snapshot-card a:focus-visible,
+.institution-evidence a:focus-visible,
+.institution-research-details > summary:focus-visible {
+  outline: 3px solid var(--accent-strong);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+.institution-at-a-glance {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+.institution-at-a-glance > * {
+  min-width: 0;
+  border-inline-start: 2px solid var(--jade);
+  padding: 0.2rem 0.85rem;
+  overflow-wrap: anywhere;
+}
+.institution-at-a-glance :is(dt, h3, .institution-at-a-glance-label) {
+  margin: 0 0 0.25rem;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.institution-at-a-glance :is(dd, p, .institution-at-a-glance-value) {
+  margin: 0;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.institution-research-details {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: color-mix(in srgb, var(--surface-strong) 38%, var(--surface));
+}
+.institution-research-details > summary {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  color: var(--accent-strong);
+  font-weight: 600;
+  line-height: 1.5;
+  cursor: pointer;
+}
+.institution-research-details[open] > summary {
+  border-bottom: 1px solid var(--line);
+}
+.institution-research-details > :not(summary) {
+  margin-inline: 1rem;
+}
+.institution-evidence {
+  border: 1px solid color-mix(in srgb, var(--jade) 18%, var(--line));
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  padding: 0.9rem 1rem;
+  line-height: 1.65;
+}
+.institution-evidence :is(h3, h4, p) {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .institution-snapshot-header,
+  .institution-metric-strip,
+  .institution-official-metrics,
+  .institution-at-a-glance {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .institution-snapshot-card,
+  .institution-profile-hero {
+    border-radius: var(--radius-control);
+    padding: 1rem;
+  }
+  .institution-metric {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    align-items: center;
+    column-gap: 0.65rem;
+  }
+  .institution-metric > :is(dd, .institution-metric-value, strong) {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    text-align: end;
+  }
+  .institution-metric > :is(small, .institution-metric-period, .institution-metric-unit) {
+    grid-column: 1 / -1;
+  }
+  .institution-research-details > :not(summary) {
+    margin-inline: 0.75rem;
+  }
+  .institution-evidence {
+    padding: 0.75rem;
+  }
+}

@@ -66,7 +66,7 @@ test('bilingual map stage preserves geographic focus and profile navigation', as
     const card = page.locator('.network-institution-card').filter({ hasText: 'CGCC' });
     await expect(card.locator('a[target="_blank"]')).toHaveAttribute('href', /^https:\/\//);
     await card
-      .getByRole('link', { name: locale === 'en' ? 'View profile' : '查看機構檔案' })
+      .getByRole('link', { name: locale === 'en' ? 'View full profile' : '查看完整機構檔案' })
       .click();
     await expect(page).toHaveURL(new RegExp(`#/${locale}/institutions/cgcc-kh$`));
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
@@ -134,7 +134,7 @@ test('institution actions use governed profile and official website links', asyn
   await page.goto('./#/en/');
   await chooseEconomy(page, 'TW', 'Taiwan');
   const tsmeg = page.locator('.network-institution-card').filter({ hasText: 'TSMEG' });
-  await expect(tsmeg.getByRole('link', { name: 'View profile' })).toHaveAttribute(
+  await expect(tsmeg.getByRole('link', { name: 'View full profile' })).toHaveAttribute(
     'href',
     '#/en/institutions/tsmeg-tw',
   );
@@ -212,7 +212,7 @@ test('DOM fallback keeps all economy navigation and selected institution coverag
   await expect(page.getByText('CGCC', { exact: true })).toBeVisible();
   await expect(page.locator('.network-institution-card')).toHaveCount(1);
   await expect(page.getByRole('button', { name: 'Select institution' })).toHaveCount(0);
-  await expect(page.getByRole('link', { name: 'View profile' })).toHaveAttribute(
+  await expect(page.getByRole('link', { name: 'View full profile' })).toHaveAttribute(
     'href',
     '#/en/institutions/cgcc-kh',
   );
@@ -240,7 +240,7 @@ test('Traditional Chinese economy labels and actions stay governed', async ({ pa
   await expect(
     page.locator('.network-standard-selected').getByText('觀察員', { exact: true }),
   ).toBeVisible();
-  await expect(page.getByRole('link', { name: '查看機構檔案' }).first()).toHaveAttribute(
+  await expect(page.getByRole('link', { name: '查看完整機構檔案' }).first()).toHaveAttribute(
     'href',
     '#/zh-TW/institutions/tsmeg-tw',
   );
@@ -280,6 +280,6 @@ test('mobile standard explorer uses a compact selector without horizontal overfl
     await page.getByRole('combobox', { name: 'Choose an economy' }).selectOption('JP');
     await expect(page.getByRole('heading', { name: 'Japan', exact: true })).toBeVisible();
     await expect(page.getByText('JFC', { exact: true })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'View profile' }).first()).toBeVisible();
+    await expect(page.getByRole('link', { name: 'View full profile' }).first()).toBeVisible();
   }
 });

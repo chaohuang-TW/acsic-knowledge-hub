@@ -15,6 +15,7 @@ import type {
   IndicatorReadinessStatus,
   ProductionVerificationStatus,
 } from '../../types/indicators';
+import { latestCompleteCalendarYear } from '../../utils/indicatorSelection';
 
 const pilotInstitutionIds = ['jfc-jp', 'acgf-tw', 'tsmeg-tw'] as const;
 const acgfSeriesIndicatorIds = [
@@ -27,10 +28,10 @@ const isAcgfSeriesRecord = (record: (typeof productionLevel3Values)[number]) =>
   record.institutionId === 'acgf-tw' &&
   acgfSeriesIndicatorIds.includes(record.indicatorId as (typeof acgfSeriesIndicatorIds)[number]);
 const acgfHistoricalRecords = productionLevel3Values.filter(isAcgfSeriesRecord);
-const acgfLatestCompleteYear = Math.max(
-  ...acgfHistoricalRecords
-    .map((record) => record.period.calendarYear)
-    .filter((year): year is number => year !== null),
+const acgfLatestCompleteYear = latestCompleteCalendarYear(
+  productionLevel3Values,
+  'acgf-tw',
+  acgfSeriesIndicatorIds,
 );
 
 const statusLabels: Record<

@@ -1,6 +1,6 @@
-import { institutionPath } from '../../routing';
-import type { Institution, Locale } from '../../types';
+import type { Locale } from '../../types';
 import { getMembershipStats } from '../institutions/directoryUtils';
+import { InstitutionSnapshotCard } from '../institutions/InstitutionSnapshot';
 import {
   getRegion,
   getRegionInstitutions,
@@ -29,13 +29,10 @@ const copy = {
     contextLost: 'The 3D view was interrupted. The standard explorer is available below.',
     manualTest: 'Manual standard-explorer mode is active for QA.',
     prompt: 'Choose an economy to explore its ACSIC institutions.',
-    member: 'Member',
-    observer: 'Observer',
     members: 'Members',
+    observer: 'Observer',
     economies: 'Economies',
     institutions: 'institutions',
-    profile: 'View profile',
-    website: 'Official website ↗',
     back: 'Back to Asia overview',
     economySelector: 'Choose an economy',
     schematic: 'Schematic ACSIC network visualization - not to scale.',
@@ -55,13 +52,10 @@ const copy = {
     contextLost: '3D 互動檢視已中斷，已切換為一般瀏覽模式。',
     manualTest: '目前為 QA 用的一般探索模式。',
     prompt: '選擇一個國家／經濟體，探索當地 ACSIC 機構。',
-    member: '正式會員',
-    observer: '觀察員',
     members: '正式會員',
+    observer: '觀察員',
     economies: '國家／經濟體',
     institutions: '家機構',
-    profile: '查看機構檔案',
-    website: '官方網站 ↗',
     back: '返回亞洲總覽',
     economySelector: '選擇國家／經濟體',
     schematic: 'ACSIC 網絡示意圖，非依比例繪製。',
@@ -217,11 +211,11 @@ export function NetworkExplorerFallback({
             {selectedCounts && getRegionInstitutions(selected).length ? (
               <div className="institution-card-grid network-standard-institutions">
                 {getRegionInstitutions(selected).map((institution) => (
-                  <InstitutionCard
+                  <InstitutionSnapshotCard
                     key={institution.id}
                     institution={institution}
                     locale={locale}
-                    copy={c}
+                    headingLevel={4}
                   />
                 ))}
               </div>
@@ -232,48 +226,5 @@ export function NetworkExplorerFallback({
         )}
       </div>
     </section>
-  );
-}
-
-function InstitutionCard({
-  institution,
-  locale,
-  copy,
-}: {
-  institution: Institution;
-  locale: Locale;
-  copy: {
-    member: string;
-    observer: string;
-    profile: string;
-    website: string;
-  };
-}) {
-  const status = institution.acsicMembershipStatus === 'observer' ? copy.observer : copy.member;
-  return (
-    <article className="network-institution-card">
-      <div className="network-card-heading">
-        <span
-          className={
-            institution.acsicMembershipStatus === 'observer'
-              ? 'network-badge observer'
-              : 'network-badge'
-          }
-        >
-          {status}
-        </span>
-        <span className="network-abbreviation">{institution.institutionAbbreviation}</span>
-      </div>
-      <h4>{institution.name[locale]}</h4>
-      <p>{institution.summary[locale]}</p>
-      <div className="network-card-actions">
-        <a className="button secondary" href={`#${institutionPath(locale, institution.id)}`}>
-          {copy.profile}
-        </a>
-        <a href={institution.officialWebsite} target="_blank" rel="noreferrer">
-          {copy.website}
-        </a>
-      </div>
-    </article>
   );
 }
