@@ -40,4 +40,8 @@ A frozen local rerun passed all 175 Chromium/mobile/WebKit cases with zero skips
 
 The follow-up PR records the exact candidate SHA, complete CI result, measured before/after performance, artifact download/digest/expiration, merged release SHA, main CI, completed Pages deployment and bilingual production read-back. The downloadable main artifact's manifest identifies its exact source checkout; a candidate artifact is not a substitute for deployed-main verification.
 
+The next exact-head run passed 210 unit and 182 Linux browser cases and measured mobile 100 / desktop 97, but correctly failed its accessibility gate: the deferred loading canvas overflowed by 4px at the 768px breakpoint in both languages. Its inherited 29rem minimum height expanded the aspect-ratio box beyond its container. A skeleton-only width/min-height rule fixes that state without clipping content or changing the real explorer. Blocked-chunk cases now include 768px and assert both document and body bounds while loading; the 144-case accessibility matrix and its overflow gate remain unchanged.
+
+The repaired frozen local build passed all 144 strict accessibility samples (zero axe violations, zero overflow) and all 179 Chromium/mobile/WebKit cases (zero skips, unexpected or flaky cases). The exact committed Linux run must still execute all 186 browser cases, including Firefox, before release acceptance.
+
 The final release must verify every deployed build asset against the main artifact's hashes and actually exercise both language versions, institution lookup and return, Taiwan/Japan/Korea selection, historical data and downloads. Neither a successful HTTP response nor candidate CI alone establishes production acceptance.

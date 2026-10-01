@@ -29,6 +29,10 @@
 .network-skeleton-footer {
   height: 5rem;
 }
+.network-explorer-skeleton .network-skeleton-canvas {
+  width: 100%;
+  min-height: 0;
+}
 
 .network-explorer-heading {
   display: flex;

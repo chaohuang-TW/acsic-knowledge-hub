@@ -28,7 +28,7 @@ async function documentBox(locator: Locator) {
 }
 
 for (const locale of ['en', 'zh-TW'] as const) {
-  for (const width of [390, 1440]) {
+  for (const width of [390, 768, 1440]) {
     test(`${locale} ${width}px primary entry points work while the explorer chunk is held`, async ({
       page,
     }) => {
@@ -89,6 +89,14 @@ for (const locale of ['en', 'zh-TW'] as const) {
         await expect(page.locator('.network-map-svg')).toHaveCount(0);
         expect(requestedChunks.filter((url) => threeChunk.test(url))).toEqual([]);
 
+        const loadingLayout = await page.evaluate(() => ({
+          viewport: innerWidth,
+          document: document.documentElement.scrollWidth,
+          body: document.body.scrollWidth,
+        }));
+        expect(loadingLayout.document).toBeLessThanOrEqual(loadingLayout.viewport);
+        expect(loadingLayout.body).toBeLessThanOrEqual(loadingLayout.viewport);
+
         const reservedMap = await loading.locator('.network-skeleton-canvas').boundingBox();
         expect(reservedMap).not.toBeNull();
         expect(reservedMap!.width).toBeGreaterThan(0);
@@ -124,6 +132,9 @@ for (const locale of ['en', 'zh-TW'] as const) {
         const stage = page.getByTestId('asia-map-stage');
         await expect(stage.locator('.network-map-svg')).toBeVisible();
         await expect(loading).toHaveCount(0);
+        expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+          width,
+        );
         await expect(stage).toHaveAttribute('data-selected-economy', '');
         const loadedMap = await stage.boundingBox();
         expect(loadedMap).not.toBeNull();
