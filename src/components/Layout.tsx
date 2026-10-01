@@ -3,8 +3,8 @@ import { useLocale } from '../i18n';
 import { routePath, type PageId } from '../routing';
 
 const navigation: Array<[PageId, keyof ReturnType<typeof useLocale>['t']['nav']]> = [
-  ['overview', 'overview'],
   ['members', 'members'],
+  ['systems', 'systems'],
   ['compare', 'compare'],
   ['data-pilot', 'dataPilot'],
   ['resources', 'resources'],
@@ -28,25 +28,42 @@ export function Layout({ page, children }: { page: PageId; children: ReactNode }
   const { locale, setLocale, t } = useLocale();
   return (
     <>
-      <a className="skip-link" href="#main-content">
+      <a
+        className="skip-link"
+        href="#main-content"
+        onClick={(event) => {
+          event.preventDefault();
+          const main = document.getElementById('main-content');
+          main?.focus();
+          main?.scrollIntoView({ block: 'start' });
+        }}
+      >
         {t.skip}
       </a>
       <div className="disclaimer-strip" role="note">
         <strong>{t.unofficial}</strong>
-        <span>{t.disclaimer}</span>
+        <a href={`#${routePath(locale, 'disclaimer')}`}>
+          {locale === 'en' ? 'Not an official ACSIC website' : '非 ACSIC 官方網站'}
+        </a>
       </div>
       <header className="site-header">
         <a
           className="brand"
           href={`#${routePath(locale, 'home')}`}
-          aria-label={`${t.brand} ${t.fullName}`}
+          aria-label={`${t.brand} ${locale === 'en' ? 'Connecting Asia’s Credit Guarantee Knowledge' : '串聯亞洲信用保證知識'} ${t.fullName}`}
         >
           <span className="brand-mark" aria-hidden="true">
-            AK
+            <svg viewBox="0 0 40 40" focusable="false">
+              <path d="M8 29V11l12 6 12-6v18l-12 6zM20 17v18M8 11l12-6 12 6" />
+            </svg>
           </span>
           <span>
             <strong>{t.brand}</strong>
-            <small>{t.fullName}</small>
+            <small>
+              {locale === 'en'
+                ? 'Connecting Asia’s Credit Guarantee Knowledge'
+                : '串聯亞洲信用保證知識'}
+            </small>
           </span>
         </a>
         <nav aria-label={locale === 'en' ? 'Primary navigation' : '主要導覽'}>
@@ -95,6 +112,12 @@ export function Layout({ page, children }: { page: PageId; children: ReactNode }
             {locale === 'en' ? 'Data governance' : '資料治理'}
           </a>
           <a href={`#${routePath(locale, 'about')}`}>{locale === 'en' ? 'About' : '關於平台'}</a>
+          <a href={`#${routePath(locale, 'overview')}`}>
+            {locale === 'en' ? 'ACSIC overview' : 'ACSIC 概覽'}
+          </a>
+          <a href={`#${routePath(locale, 'reports')}`}>
+            {locale === 'en' ? 'Report templates' : '報告範本'}
+          </a>
           <a href={`#${routePath(locale, 'disclaimer')}`}>
             {locale === 'en' ? 'Disclaimer' : '免責聲明'}
           </a>

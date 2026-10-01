@@ -17,6 +17,7 @@ import type {
   ProductionVerificationStatus,
 } from '../../types/indicators';
 import { latestCompleteCalendarYear } from '../../utils/indicatorSelection';
+import '../../styles/research-tools.css';
 
 const pilotInstitutionIds = ['jfc-jp', 'acgf-tw', 'tsmeg-tw'] as const;
 const acgfSeriesIndicatorIds = [
@@ -207,6 +208,12 @@ function formatReportedValue(record: (typeof productionLevel3Values)[number], lo
   return `${formatNumber(record.reported.value, locale)} ${record.reported.unit}`;
 }
 
+function formatRawValue(record: (typeof productionLevel3Values)[number], locale: Locale) {
+  if (record.reported.value === null) return locale === 'en' ? 'Not disclosed' : '官方未揭露';
+  const value = formatNumber(record.reported.value, locale);
+  return `${value} ${record.reported.unit}${record.reported.currency ? ` · ${record.reported.currency}` : ''}`;
+}
+
 function downloadFile(filename: string, body: string, type: string) {
   const url = URL.createObjectURL(new Blob([body], { type }));
   const anchor = document.createElement('a');
@@ -335,9 +342,9 @@ export function DataPilotPage() {
   };
 
   return (
-    <section className="section-shell page-section data-pilot-page">
+    <section className="section-shell page-section data-pilot-page research-tool-page research-data-page">
       <PageHeader title={c.title} intro={c.intro} />
-      <div className="pilot-summary" aria-label={c.boundary}>
+      <div className="pilot-summary research-metrics" aria-label={c.boundary}>
         <div>
           <strong>{productionLevel3Values.length}</strong>
           <span>{c.records}</span>
@@ -351,11 +358,19 @@ export function DataPilotPage() {
           <span>{c.indicators}</span>
         </div>
       </div>
-      <p className="pilot-boundary">
+      <p className="pilot-boundary research-boundary">
         <strong>{c.boundary}:</strong> {c.boundaryText}
       </p>
 
-      <div className="pilot-toolbar">
+      <section className="pilot-toolbar research-controls" aria-labelledby="data-filters-title">
+        <div className="research-controls-heading">
+          <h2 id="data-filters-title">{locale === 'en' ? 'Filter records' : '篩選資料'}</h2>
+          <p>
+            {locale === 'en'
+              ? 'Keep the reporting period and source visible while narrowing the view.'
+              : '縮小檢視範圍時，仍保留報告期間與來源脈絡。'}
+          </p>
+        </div>
         <label>
           <span>{c.institution}</span>
           <select
@@ -386,8 +401,8 @@ export function DataPilotPage() {
             ))}
           </select>
         </label>
-      </div>
-      <details className="download-details">
+      </section>
+      <details className="download-details research-collapsible">
         <summary>{c.download}</summary>
         <div className="button-row">
           <button className="button secondary" type="button" onClick={exportJson}>
@@ -403,13 +418,13 @@ export function DataPilotPage() {
       </details>
 
       {(institutionFilter === 'all' || institutionFilter === 'acgf-tw') && (
-        <details className="research-details historical-series">
+        <details className="research-details historical-series research-collapsible">
           <summary>
             {c.historicalSeriesTitle} · {c.latestCompleteYear} {acgfLatestCompleteYear}
           </summary>
           <p>{c.historicalSeriesIntro}</p>
-          <div className="table-scroll">
-            <table>
+          <div className="table-scroll research-table-wrap">
+            <table className="research-table">
               <thead>
                 <tr>
                   <th>{c.historicalIndicator}</th>
@@ -461,7 +476,7 @@ export function DataPilotPage() {
         </details>
       )}
 
-      <div className="pilot-records" aria-live="polite">
+      <div className="pilot-records research-record-list" aria-live="polite">
         {records.map((record) => {
           const source = sourceRegistry.find((item) => item.sourceId === record.source.sourceId)!;
           const scheme =
@@ -472,7 +487,7 @@ export function DataPilotPage() {
                 ? 'Institution-wide reported value'
                 : '機構整體公布值');
           return (
-            <article className="pilot-record-card" key={record.recordId}>
+            <article className="pilot-record-card research-record-card" key={record.recordId}>
               <div className="record-title">
                 <div>
                   <span className="eyebrow">
@@ -485,7 +500,23 @@ export function DataPilotPage() {
                   {statusLabels[record.verificationStatus][locale]}
                 </span>
               </div>
-              <dl className="pilot-record-grid">
+              <div className="record-reading" aria-label={`${c.reportedValue} · ${c.period}`}>
+                <div>
+                  <span>{c.reportedValue}</span>
+                  <strong>{formatReportedValue(record, locale)}</strong>
+                </div>
+                <div>
+                  <span>{c.period}</span>
+                  <strong>{formatDisplayPeriod(record.period, locale)}</strong>
+                </div>
+                <div className="record-reading-raw">
+                  <span>
+                    {c.reportedValue} · {c.originalCurrency}
+                  </span>
+                  <strong>{formatRawValue(record, locale)}</strong>
+                </div>
+              </div>
+              <dl className="pilot-record-grid research-record-grid">
                 <div>
                   <dt>{c.reportedValue}</dt>
                   <dd className="reported-number">{formatReportedValue(record, locale)}</dd>
@@ -516,7 +547,7 @@ export function DataPilotPage() {
                 </div>
               </dl>
 
-              <details className="provenance-viewer">
+              <details className="provenance-viewer research-provenance">
                 <summary>{c.viewProvenance}</summary>
                 <dl className="pilot-record-grid methodology-grid">
                   <div>
@@ -608,7 +639,10 @@ export function DataPilotPage() {
         })}
       </div>
 
-      <section className="comparison-guard" aria-labelledby="comparison-guard-title">
+      <section
+        className="comparison-guard research-note-panel"
+        aria-labelledby="comparison-guard-title"
+      >
         <h2 id="comparison-guard-title">{c.comparisonTitle}</h2>
         <p>
           <strong>{c.comparisonUnavailable}</strong>
@@ -621,13 +655,13 @@ export function DataPilotPage() {
         <p>{c.noChart}</p>
       </section>
 
-      <details className="research-details readiness-section">
+      <details className="research-details readiness-section research-collapsible">
         <summary>
           {locale === 'en' ? 'Research methodology: data availability' : '研究方法：資料可用性'}
         </summary>
         <p>{c.readinessIntro}</p>
-        <div className="table-scroll">
-          <table>
+        <div className="table-scroll research-table-wrap">
+          <table className="research-table">
             <thead>
               <tr>
                 <th>{c.institution}</th>

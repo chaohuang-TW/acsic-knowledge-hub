@@ -9,6 +9,7 @@ import type { Institution, Locale, LocalizedText } from '../../types';
 import { displayValue } from '../../utils/core';
 import { buildInstitutionSnapshot, institutionExperienceCopy } from './institutionExperience';
 import { InstitutionMetrics } from './InstitutionSnapshot';
+import './institutions.css';
 
 const copy = {
   en: {
@@ -207,6 +208,24 @@ export function InstitutionDetailPage({ institutionId }: { institutionId: string
         </div>
       </section>
 
+      <section
+        className="detail-section institution-mandate-section"
+        aria-labelledby="institution-mandate-title"
+      >
+        <h2 id="institution-mandate-title">{c.mandate}</h2>
+        <p className="institution-mandate-lead">{record.mandate[locale]}</p>
+        <div className="detail-grid institution-service-grid">
+          <section>
+            <h3>{c.serviceTargets}</h3>
+            {list(record.serviceTargets, locale, c.noItems)}
+          </section>
+          <section>
+            <h3>{c.functions}</h3>
+            {list(record.majorFunctions, locale, c.noItems)}
+          </section>
+        </div>
+      </section>
+
       {snapshot.latestMetrics.length > 0 ? (
         <section className="detail-section" aria-labelledby="institution-official-data-title">
           <h2 id="institution-official-data-title">{c.officialData}</h2>
@@ -245,20 +264,6 @@ export function InstitutionDetailPage({ institutionId }: { institutionId: string
 
       <details className="research-details institution-research-details">
         <summary>{c.research}</summary>
-        <section className="detail-section">
-          <h2>{c.mandate}</h2>
-          <p>{record.mandate[locale]}</p>
-          <div className="detail-grid">
-            <section>
-              <h3>{c.serviceTargets}</h3>
-              {list(record.serviceTargets, locale, c.noItems)}
-            </section>
-            <section>
-              <h3>{c.functions}</h3>
-              {list(record.majorFunctions, locale, c.noItems)}
-            </section>
-          </div>
-        </section>
         <section className="detail-section">
           <h2>{c.framework}</h2>
           <div className="detail-grid">

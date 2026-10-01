@@ -11,6 +11,7 @@ import {
   comparisonMarkdown,
   displayValue,
 } from '../../utils/core';
+import '../../styles/research-tools.css';
 
 function download(filename: string, content: string, type: string) {
   const url = URL.createObjectURL(new Blob([content], { type: `${type};charset=utf-8` }));
@@ -26,6 +27,10 @@ const ui = {
     intro:
       'Select two to four institutions, then review the documented differences that matter most to users.',
     select: 'Select institutions',
+    selected: 'Selected for comparison',
+    remove: 'Remove',
+    selectionHelp:
+      'Choose two to four institutions. Remove a selection from this tray at any time.',
     minimum: 'Select at least two institutions',
     maximum: 'The table supports up to four institutions.',
     table: 'Public-data comparison',
@@ -40,6 +45,9 @@ const ui = {
     title: '會員機構比較',
     intro: '先選擇二至四個機構，再查看使用者真正關心的制度差異。',
     select: '選擇機構',
+    selected: '目前比較清單',
+    remove: '移除',
+    selectionHelp: '請選擇二至四個機構；可隨時從下方清單移除選取項目。',
     minimum: '請至少選擇兩筆資料',
     maximum: '比較表最多同時呈現四個機構。',
     table: '公開資料比較表',
@@ -124,16 +132,41 @@ export function ComparisonPage() {
     ],
   ] as const;
   return (
-    <section className="section-shell page-section">
+    <section className="section-shell page-section research-tool-page research-compare-page">
       <PageHeader title={c.title} intro={c.intro} />
-      <div className="comparison-picker">
+      <section className="comparison-picker research-panel">
         <div className="section-heading-row">
           <h2>{c.select}</h2>
           <span>{selected.length} / 4</span>
         </div>
+        <div className="selection-tray" aria-live="polite">
+          <div className="selection-tray-heading">
+            <strong>{c.selected}</strong>
+            <span>{selected.length} / 4</span>
+          </div>
+          <div className="selection-chips">
+            {selected.length ? (
+              selected.map((record) => (
+                <span className="selection-chip" key={record.id}>
+                  <span>{record.name[locale]}</span>
+                  <button
+                    type="button"
+                    aria-label={`${c.remove} ${record.name[locale]}`}
+                    onClick={() => toggle(record.id)}
+                  >
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </span>
+              ))
+            ) : (
+              <span className="selection-empty">{c.minimum}</span>
+            )}
+          </div>
+          <p>{c.selectionHelp}</p>
+        </div>
         <div className="selector-grid">
           {institutions.map((record) => (
-            <label key={record.id} className="selector-item">
+            <label key={record.id} className="selector-item research-option">
               <input
                 type="checkbox"
                 checked={selectedIds.includes(record.id)}
@@ -141,7 +174,7 @@ export function ComparisonPage() {
                 onChange={() => toggle(record.id)}
               />
               <span>
-                <strong>{record.name[locale]}</strong>
+                <strong>{record.name[locale]}</strong>{' '}
                 <small>
                   {locale === 'en' ? record.countryNameEn : record.countryNameZhTw} |{' '}
                   {record.institutionAbbreviation}
@@ -150,14 +183,14 @@ export function ComparisonPage() {
             </label>
           ))}
         </div>
-      </div>
+      </section>
       {selected.length < 2 ? (
         <div className="state-message" role="status">
           <h2>{c.minimum}</h2>
           <p>{c.maximum}</p>
         </div>
       ) : (
-        <section className="comparison-result" aria-labelledby="comparison-title">
+        <section className="comparison-result research-panel" aria-labelledby="comparison-title">
           <div className="section-heading-row">
             <h2 id="comparison-title">{c.table}</h2>
             <div className="export-toolbar">
@@ -222,8 +255,19 @@ export function ComparisonPage() {
               </p>
             </div>
           )}
-          <div className="table-scroll" tabIndex={0} aria-label={c.table}>
-            <table>
+          <p className="comparison-scroll-hint" id="comparison-scroll-hint">
+            {locale === 'en'
+              ? '↔ Scroll within the table to see every institution. With a keyboard, focus the table and use the arrow keys.'
+              : '↔ 左右滑動此表格，查看全部機構；鍵盤操作時，先聚焦表格再使用方向鍵。'}
+          </p>
+          <div
+            className="table-scroll research-table-wrap"
+            tabIndex={0}
+            role="region"
+            aria-label={c.table}
+            aria-describedby="comparison-scroll-hint"
+          >
+            <table className="research-table">
               <thead>
                 <tr>
                   <th scope="col">{c.field}</th>
@@ -246,7 +290,7 @@ export function ComparisonPage() {
               </tbody>
             </table>
           </div>
-          <section className="comparison-sources">
+          <section className="comparison-sources research-sources">
             <h3>{c.sourcesTitle}</h3>
             {selected.map((record) => (
               <details key={record.id}>

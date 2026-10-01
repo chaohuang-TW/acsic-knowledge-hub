@@ -37,6 +37,7 @@ test.describe('ACSIC Members Directory', () => {
     ).toBeVisible();
     await page.locator('.directory-filters').getByRole('button', { name: 'Clear filters' }).click();
     await page.getByLabel('Economy').selectOption('TW');
+    await page.getByText('More filters', { exact: true }).click();
     await page.getByLabel('Membership').selectOption('member');
     await expect(page.locator('.directory-card')).toHaveCount(1);
     await expect(page.locator('.directory-card')).toContainText('TSMEG');
@@ -77,6 +78,7 @@ test.describe('ACSIC Members Directory', () => {
     await expect(page.getByRole('heading', { name: 'ACSIC 會員機構', exact: true })).toBeVisible();
     await expect(page.getByLabel('搜尋機構')).toBeVisible();
     await expect(page.getByLabel('國家／經濟體')).toBeVisible();
+    await page.getByText('更多篩選', { exact: true }).click();
     await expect(page.getByLabel('機構類型')).toBeVisible();
     await expect(page.getByLabel('會員身分')).toBeVisible();
     await expect(page.getByRole('heading', { name: '臺灣', exact: true })).toBeVisible();

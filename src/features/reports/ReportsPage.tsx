@@ -4,6 +4,7 @@ import { institutions } from '../../data/institutions';
 import { useLocale } from '../../i18n';
 import type { Locale, ReportType } from '../../types';
 import { generateReport } from '../../utils/core';
+import '../../styles/research-tools.css';
 
 const options: Record<Locale, Array<[ReportType, string, string]>> = {
   en: [
@@ -44,6 +45,8 @@ const ui = {
     note: 'Output separates verified facts, analysis and pending research.',
     preview: 'Markdown preview',
     export: 'Export Markdown',
+    selectedCount: 'Selected institutions',
+    previewHint: 'The preview updates from the selected template, language and institutions.',
     empty: 'No institution selected',
     emptyText: 'Select at least one institution. The system will not invent content.',
   },
@@ -57,6 +60,8 @@ const ui = {
     note: '輸出明確區分已查證事實、分析推論與待查證事項。',
     preview: 'Markdown 預覽',
     export: '匯出 Markdown',
+    selectedCount: '目前選擇機構',
+    previewHint: '預覽會依目前的範本、語言與機構選擇更新。',
     empty: '尚未選擇機構',
     emptyText: '請至少選擇一個機構，系統不會自動填補內容。',
   },
@@ -90,10 +95,10 @@ export function ReportsPage() {
     );
   const reportOptions = options[locale];
   return (
-    <section className="section-shell page-section">
+    <section className="section-shell page-section research-tool-page research-reports-page">
       <PageHeader title={c.title} intro={c.intro} />
       <div className="report-layout">
-        <section className="report-controls" aria-labelledby="report-settings">
+        <section className="report-controls research-panel" aria-labelledby="report-settings">
           <h2 id="report-settings">{c.settings}</h2>
           <label>
             <span>{c.type}</span>
@@ -141,12 +146,16 @@ export function ReportsPage() {
               </label>
             ))}
           </fieldset>
+          <div className="report-selection-summary" aria-live="polite">
+            <span>{c.selectedCount}</span>
+            <strong>{selected.length} / 4</strong>
+          </div>
           <div className="info-note">
             <ResearchBadge />
             <p>{c.note}</p>
           </div>
         </section>
-        <section className="report-preview" aria-labelledby="report-preview-title">
+        <section className="report-preview research-panel" aria-labelledby="report-preview-title">
           <div className="section-heading-row">
             <h2 id="report-preview-title">{c.preview}</h2>
             <button
@@ -157,8 +166,11 @@ export function ReportsPage() {
               {c.export}
             </button>
           </div>
+          <p className="report-preview-hint">{c.previewHint}</p>
           {selected.length ? (
-            <pre tabIndex={0}>{report}</pre>
+            <pre className="report-markdown-preview" tabIndex={0}>
+              {report}
+            </pre>
           ) : (
             <div className="state-message">
               <h3>{c.empty}</h3>

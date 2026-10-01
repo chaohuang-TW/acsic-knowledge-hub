@@ -23,6 +23,134 @@ export type DirectoryFilters = {
   membership: AcsicMembershipStatus | 'all';
 };
 
+export const directorySessionStorageKey = 'acsic-knowledge-hub-directory-session';
+
+export type DirectorySession = {
+  filters: DirectoryFilters;
+  scrollY: number;
+  savedAt: number;
+};
+
+const emptyDirectoryFilters: DirectoryFilters = {
+  query: '',
+  economy: 'all',
+  type: 'all',
+  membership: 'all',
+};
+
+function getSessionStorage(): Storage | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    return window.sessionStorage;
+  } catch {
+    return null;
+  }
+}
+
+function isRoleCategory(value: unknown): value is InstitutionRoleCategory {
+  return typeof value === 'string' && value in roleCategoryLabels;
+}
+
+function isMembership(value: unknown): value is AcsicMembershipStatus {
+  return value === 'member' || value === 'observer';
+}
+
+/** Keep session-restored filters inside the same governed vocabulary as the UI. */
+export function normalizeDirectoryFilters(
+  value: Partial<DirectoryFilters> | null | undefined,
+): DirectoryFilters {
+  return {
+    query: typeof value?.query === 'string' ? value.query : emptyDirectoryFilters.query,
+    economy: typeof value?.economy === 'string' ? value.economy : emptyDirectoryFilters.economy,
+    type: isRoleCategory(value?.type) ? value.type : emptyDirectoryFilters.type,
+    membership: isMembership(value?.membership)
+      ? value.membership
+      : emptyDirectoryFilters.membership,
+  };
+}
+
+/** Read a directory hand-off saved before opening an institution profile. */
+export function readDirectorySession(
+  storage: Storage | null = getSessionStorage(),
+): DirectorySession | null {
+  if (!storage) return null;
+  try {
+    const raw = storage.getItem(directorySessionStorageKey);
+    if (!raw) return null;
+    const parsed: unknown = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') return null;
+    const candidate = parsed as Partial<DirectorySession>;
+    return {
+      filters: normalizeDirectoryFilters(candidate.filters),
+      scrollY:
+        typeof candidate.scrollY === 'number' && Number.isFinite(candidate.scrollY)
+          ? Math.max(0, candidate.scrollY)
+          : 0,
+      savedAt:
+        typeof candidate.savedAt === 'number' && Number.isFinite(candidate.savedAt)
+          ? candidate.savedAt
+          : 0,
+    };
+  } catch {
+    return null;
+  }
+}
+
+/** Save the current directory context so profile links behave like a reversible research trail. */
+export function writeDirectorySession(
+  filters: DirectoryFilters,
+  scrollY: number,
+  storage: Storage | null = getSessionStorage(),
+): void {
+  if (!storage) return;
+  try {
+    storage.setItem(
+      directorySessionStorageKey,
+      JSON.stringify({
+        filters: normalizeDirectoryFilters(filters),
+        scrollY: Math.max(0, Number.isFinite(scrollY) ? scrollY : 0),
+        savedAt: Date.now(),
+      } satisfies DirectorySession),
+    );
+  } catch {
+    // Storage can be disabled in private browsing; directory navigation remains usable.
+  }
+}
+
+export function clearDirectorySession(storage: Storage | null = getSessionStorage()): void {
+  try {
+    storage?.removeItem(directorySessionStorageKey);
+  } catch {
+    // Storage can be disabled in private browsing; directory navigation remains usable.
+  }
+}
+
+/** Accept q/economy/type/membership from a Pages-safe query string or hash hand-off. */
+export function parseDirectoryQuery(
+  search = typeof window === 'undefined' ? '' : window.location.search,
+  hash = typeof window === 'undefined' ? '' : window.location.hash,
+): Partial<DirectoryFilters> {
+  const result: Partial<DirectoryFilters> = {};
+  const queryStrings = [search];
+  const hashQueryIndex = hash.indexOf('?');
+  if (hashQueryIndex >= 0) queryStrings.push(hash.slice(hashQueryIndex));
+
+  for (const queryString of queryStrings) {
+    const params = new URLSearchParams(queryString);
+    const query = params.get('q') ?? params.get('query');
+    const economy = params.get('economy') ?? params.get('country');
+    const type = params.get('type');
+    const membership = params.get('membership');
+    if (query && result.query === undefined) result.query = query;
+    if (economy && result.economy === undefined) result.economy = economy;
+    if (type && result.type === undefined) result.type = type as InstitutionRoleCategory;
+    if (membership && result.membership === undefined) {
+      result.membership = membership as AcsicMembershipStatus;
+    }
+  }
+  return result;
+}
+
 /** Derive economy labels from the governed institution records only. */
 export function getEconomies(records: readonly Institution[] = institutions): EconomyOption[] {
   const unique = new Map<string, LocalizedText>();

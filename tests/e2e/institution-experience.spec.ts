@@ -1,4 +1,13 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Locator, type Page } from '@playwright/test';
+
+async function openSnapshotDisclosure(card: Locator) {
+  const disclosure = card.locator('.institution-snapshot-disclosure');
+  await expect(disclosure).toBeVisible();
+  if ((await disclosure.getAttribute('open')) === null) {
+    await disclosure.locator('summary').click();
+  }
+  await expect(disclosure).toHaveAttribute('open', '');
+}
 
 async function chooseEconomy(page: Page, id: string, en: string, zh: string, locale = 'en') {
   if ((page.viewportSize()?.width ?? 1280) <= 767) {
@@ -8,7 +17,14 @@ async function chooseEconomy(page: Page, id: string, en: string, zh: string, loc
       })
       .selectOption(id);
   } else {
-    await page.getByRole('button', { name: locale === 'en' ? en : zh, exact: true }).click();
+    const destinationControls = page.locator('.network-destination-controls');
+    if (await destinationControls.isVisible()) {
+      await destinationControls
+        .getByRole('button', { name: locale === 'en' ? en : zh, exact: true })
+        .click();
+    } else {
+      await page.getByRole('button', { name: locale === 'en' ? en : zh, exact: true }).click();
+    }
   }
 }
 
@@ -21,11 +37,13 @@ test('English snapshots explain Taiwan institutions and link through to profile 
   const tsmeg = page.locator('.institution-snapshot-card[data-institution-id="tsmeg-tw"]');
   const acgf = page.locator('.institution-snapshot-card[data-institution-id="acgf-tw"]');
   await expect(tsmeg).toBeVisible();
+  await openSnapshotDisclosure(tsmeg);
   await expect(tsmeg.getByText('Direct guarantee', { exact: true })).toBeVisible();
   await expect(tsmeg.locator('.institution-metric')).toHaveCount(3);
   await expect(tsmeg.locator('.institution-official-metrics')).toContainText('CY2025');
   await expect(tsmeg.locator('a[target="_blank"]')).toHaveAttribute('href', /^https:\/\//);
   await expect(acgf).toBeVisible();
+  await openSnapshotDisclosure(acgf);
   await expect(acgf.getByText('Observer', { exact: true })).toBeVisible();
   const snapshotLoanVolume = acgf.locator('.institution-metric').nth(0);
   const snapshotGuaranteeVolume = acgf.locator('.institution-metric').nth(1);
@@ -85,6 +103,7 @@ test('Japan and Korea cards keep their existing metric and evidence boundaries',
   await expect(page.locator('[data-institution-id="jfc-jp"]')).toBeVisible();
   await expect(page.locator('[data-institution-id="jfg-jp"]')).toBeVisible();
   const jfc = page.locator('.institution-snapshot-card[data-institution-id="jfc-jp"]');
+  await openSnapshotDisclosure(jfc);
   await expect(jfc.locator('.institution-metric')).toHaveCount(2);
   await expect(jfc).toContainText('Credit insurance coverage');
   await expect(jfc).toContainText('of the subrogated amount');
@@ -97,8 +116,10 @@ test('Japan and Korea cards keep their existing metric and evidence boundaries',
     ).toBeVisible();
   }
   const koreg = page.locator('.institution-snapshot-card[data-institution-id="koreg-kr"]');
+  await openSnapshotDisclosure(koreg);
   await expect(koreg.locator('.institution-official-metrics')).toHaveCount(0);
   const kotec = page.locator('.institution-snapshot-card[data-institution-id="kotec-kr"]');
+  await openSnapshotDisclosure(kotec);
   await expect(kotec).toContainText('AIRATE technology appraisal');
   await expect(kotec).toContainText('AI-assisted');
   await expect(kotec).not.toContainText(/AI automatically approves|automated approval/i);
@@ -110,6 +131,7 @@ test('Traditional Chinese has the same snapshot behavior and canonical profile l
   await page.goto('./#/zh-TW/');
   await chooseEconomy(page, 'TW', 'Taiwan', '臺灣', 'zh-TW');
   const acgf = page.locator('.institution-snapshot-card[data-institution-id="acgf-tw"]');
+  await openSnapshotDisclosure(acgf);
   await expect(acgf.getByText('觀察員', { exact: true })).toBeVisible();
   await expect(acgf.getByRole('link', { name: '查看完整機構檔案' })).toHaveAttribute(
     'href',
@@ -126,7 +148,7 @@ test('Traditional Chinese has the same snapshot behavior and canonical profile l
   await acgf.getByRole('link', { name: '查看完整機構檔案' }).click();
   await expect(page).toHaveURL(/#\/zh-TW\/institutions\/acgf-tw$/);
   await expect(
-    page.getByRole('heading', { name: '財團法人農業信用保證基金', exact: true }),
+    page.getByRole('heading', { level: 1, name: '財團法人農業信用保證基金', exact: true }),
   ).toBeVisible();
   const profileMetrics = page.locator('.institution-metric');
   await expect(
@@ -151,6 +173,7 @@ test('fallback uses the same institution snapshot content and links', async ({ p
   await expect(page.locator('.network-explorer-fallback')).toBeVisible();
   await chooseEconomy(page, 'TW', 'Taiwan', '臺灣');
   const card = page.locator('.institution-snapshot-card[data-institution-id="acgf-tw"]');
+  await openSnapshotDisclosure(card);
   await expect(card.getByText('Observer', { exact: true })).toBeVisible();
   await expect(card.locator('.institution-metric').nth(0).locator('strong')).toHaveText(
     'TWD 23.928',
@@ -171,6 +194,7 @@ test('snapshot and profile remain readable at 390px and 320px widths', async ({ 
     await chooseEconomy(page, 'TW', 'Taiwan', '臺灣', 'zh-TW');
     const acgf = page.locator('.institution-snapshot-card[data-institution-id="acgf-tw"]');
     await expect(acgf).toBeVisible();
+    await openSnapshotDisclosure(acgf);
     await expect(acgf.getByText('觀察員', { exact: true })).toBeVisible();
     await expect(acgf.locator('.institution-metric')).toHaveCount(3);
     await expect(acgf.locator('.institution-metric-label').nth(0)).toHaveText('保證貸款金額');

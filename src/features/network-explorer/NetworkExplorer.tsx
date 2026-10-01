@@ -1,10 +1,9 @@
-import { Component, type ReactNode, useCallback, useEffect, useState } from 'react';
+import { Component, lazy, Suspense, type ReactNode, useCallback, useEffect, useState } from 'react';
 import type { Locale } from '../../types';
 import { getMembershipStats } from '../institutions/directoryUtils';
-import { InstitutionSnapshotCard } from '../institutions/InstitutionSnapshot';
-import { institutionExperienceCopy } from '../institutions/institutionExperience';
+import { DeferredInstitutionSnapshot as InstitutionSnapshotCard } from './DeferredInstitutionSnapshot';
+import { AtlasSvg } from './AtlasSvg';
 import { NetworkExplorerFallback } from './NetworkExplorerFallback';
-import { NetworkScene } from './NetworkScene';
 import { getWebGLCapability, reportNetworkDiagnostic, type NetworkFallbackReason } from './webgl';
 import {
   getRegion,
@@ -13,12 +12,17 @@ import {
   networkRegions,
   type NetworkRegion,
 } from './networkSceneData';
+import './network.css';
+
+const LazyNetworkScene = lazy(() =>
+  import('./NetworkScene').then((module) => ({ default: module.NetworkScene })),
+);
 
 type Props = { locale: Locale };
 
 const copy = {
   en: {
-    eyebrow: 'Interactive 3D network explorer',
+    eyebrow: 'Interactive Asia network explorer',
     title: 'ACSIC Network Explorer',
     description: 'Choose an economy to explore its ACSIC institutions across the region.',
     overview: 'Asia overview',
@@ -34,6 +38,12 @@ const copy = {
     website: 'Official website ↗',
     exploreAll: 'Explore all institutions',
     back: 'Back to Asia overview',
+    standardMode: 'Use standard explorer',
+    mapMode: 'Use map preview',
+    threeMode: 'Try 3D view',
+    svgMode: 'Use SVG map',
+    acronymsTitle: 'Research abbreviations',
+    acronyms: 'ACGF · JFC · JFG · KODIT · KOTEC',
     select: 'Select institution',
     selectedInstitution: 'Selected',
     networkStatus: (name: string, members: number, observers: number) =>
@@ -44,7 +54,7 @@ const copy = {
       `ACSIC Asia overview. ${members} members across ${economies} economies and ${observers} observer.`,
   },
   'zh-TW': {
-    eyebrow: '互動式 3D 網絡探索器',
+    eyebrow: '互動式亞洲網絡探索器',
     title: 'ACSIC 網絡探索器',
     description: '選擇一個國家／經濟體，探索亞洲各地的 ACSIC 機構。',
     overview: '亞洲總覽',
@@ -60,6 +70,12 @@ const copy = {
     website: '官方網站 ↗',
     exploreAll: '查看全部會員機構',
     back: '返回亞洲總覽',
+    standardMode: '使用一般探索模式',
+    mapMode: '使用地圖預覽',
+    threeMode: '試用 3D 檢視',
+    svgMode: '使用 SVG 地圖',
+    acronymsTitle: '研究縮寫',
+    acronyms: 'ACGF · JFC · JFG · KODIT · KOTEC',
     select: '選取機構',
     selectedInstitution: '已選取',
     networkStatus: (name: string, members: number, observers: number) =>
@@ -76,6 +92,12 @@ export default function NetworkExplorer({ locale }: Props) {
   const [selectedRegion, setSelectedRegion] = useState<NetworkRegion['id'] | null>(null);
   const [selectedInstitution, setSelectedInstitution] = useState<string | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [webglAvailable, setWebglAvailable] = useState(false);
+  const [standardMode, setStandardMode] = useState(false);
+  const [threeMode, setThreeMode] = useState(false);
+  const [threeReady, setThreeReady] = useState(false);
+  const handleSceneReady = useCallback(() => setThreeReady(true), []);
   const [fallbackReason, setFallbackReason] = useState<NetworkFallbackReason | null>(null);
   const selected = getRegion(selectedRegion);
   const stats = getMembershipStats();
@@ -84,14 +106,29 @@ export default function NetworkExplorer({ locale }: Props) {
   const handleSceneIssue = useCallback((reason: NetworkFallbackReason) => {
     reportNetworkDiagnostic(reason);
     setFallbackReason(reason);
+    setStandardMode(true);
+    setThreeMode(false);
   }, []);
+
+  const handleUseMapPreview = useCallback(() => {
+    setStandardMode(false);
+    if (fallbackReason === 'context-lost' || fallbackReason === 'scene-error') {
+      setWebglAvailable(false);
+    }
+  }, [fallbackReason]);
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const update = () => setReducedMotion(media.matches);
+    const viewport = window.matchMedia('(min-width: 768px)');
+    const update = () => {
+      setReducedMotion(media.matches);
+      setIsDesktop(viewport.matches);
+    };
     update();
     media.addEventListener?.('change', update);
+    viewport.addEventListener?.('change', update);
     const capability = getWebGLCapability();
+    setWebglAvailable(capability.available);
     if (!capability.available) {
       const reason: NetworkFallbackReason =
         capability.reason === 'manual-test' ? 'manual-test' : 'capability-unavailable';
@@ -100,8 +137,12 @@ export default function NetworkExplorer({ locale }: Props) {
         capabilityReason: capability.reason,
       });
       setFallbackReason(reason);
+      setStandardMode(true);
     }
-    return () => media.removeEventListener?.('change', update);
+    return () => {
+      media.removeEventListener?.('change', update);
+      viewport.removeEventListener?.('change', update);
+    };
   }, []);
 
   const selectRegion = (regionId: NetworkRegion['id']) => {
@@ -120,23 +161,27 @@ export default function NetworkExplorer({ locale }: Props) {
     ? getRegionInstitutions(selected).find((institution) => institution.id === selectedInstitution)
     : undefined;
   const liveAnnouncement = selectedInstitutionRecord
-    ? institutionExperienceCopy[locale].selectedAnnouncement.replace(
-        '{name}',
-        selectedInstitutionRecord.name[locale],
-      )
+    ? locale === 'en'
+      ? `Selected ${selectedInstitutionRecord.name[locale]}.`
+      : `已選取${selectedInstitutionRecord.name[locale]}。`
     : regionStatus;
 
-  if (fallbackReason) {
+  if (standardMode) {
     return (
       <NetworkExplorerFallback
         locale={locale}
         selectedRegion={selectedRegion}
+        selectedInstitutionId={selectedInstitution}
         onSelectRegion={selectRegion}
+        onSelectInstitution={setSelectedInstitution}
         onReturnToOverview={returnToOverview}
-        reason={fallbackReason}
+        onUseMapPreview={handleUseMapPreview}
+        reason={fallbackReason ?? 'manual-test'}
       />
     );
   }
+
+  const shouldRenderThree = threeMode && isDesktop && !reducedMotion && webglAvailable;
 
   return (
     <NetworkErrorBoundary
@@ -146,6 +191,7 @@ export default function NetworkExplorer({ locale }: Props) {
       onReturnToOverview={returnToOverview}
       selectedInstitutionId={selectedInstitution}
       onSelectInstitution={setSelectedInstitution}
+      onUseMapPreview={handleUseMapPreview}
     >
       <section className="network-explorer" aria-labelledby="network-explorer-title">
         <div className="network-explorer-heading">
@@ -162,19 +208,39 @@ export default function NetworkExplorer({ locale }: Props) {
               className="network-canvas-frame asia-map-frame"
               data-testid="asia-map-stage"
               data-selected-economy={selectedRegion ?? ''}
-              role="img"
+              role="group"
               aria-label={c.schematic}
               aria-describedby="network-canvas-description"
             >
-              <NetworkScene
-                locale={locale}
-                selectedRegion={selectedRegion}
-                reducedMotion={reducedMotion}
-                onSelectRegion={selectRegion}
-                onSelectInstitution={setSelectedInstitution}
-                selectedInstitutionId={selectedInstitution}
-                onSceneIssue={handleSceneIssue}
-              />
+              <div
+                className={`network-map-visual${shouldRenderThree && threeReady ? ' has-three' : ''}`}
+              >
+                <AtlasSvg
+                  locale={locale}
+                  selectedRegion={selectedRegion}
+                  selectedInstitutionId={selectedInstitution}
+                  onSelectRegion={selectRegion}
+                  onSelectInstitution={setSelectedInstitution}
+                  ariaLabel={c.schematic}
+                  mascotAlt={locale === 'en' ? 'Meng-Ge guide' : '萌哥導覽員'}
+                />
+                {shouldRenderThree ? (
+                  <div className="network-three-layer" aria-hidden="true">
+                    <Suspense fallback={null}>
+                      <LazyNetworkScene
+                        locale={locale}
+                        selectedRegion={selectedRegion}
+                        reducedMotion={reducedMotion}
+                        onSelectRegion={selectRegion}
+                        onSelectInstitution={setSelectedInstitution}
+                        selectedInstitutionId={selectedInstitution}
+                        onSceneIssue={handleSceneIssue}
+                        onReady={handleSceneReady}
+                      />
+                    </Suspense>
+                  </div>
+                ) : null}
+              </div>
             </div>
             <p className="visually-hidden" id="network-canvas-description">
               {c.schematic}
@@ -213,6 +279,7 @@ export default function NetworkExplorer({ locale }: Props) {
                       key={institution.id}
                       institution={institution}
                       locale={locale}
+                      compact
                       selected={institution.id === selectedInstitution}
                       onSelect={() => setSelectedInstitution(institution.id)}
                     />
@@ -234,23 +301,32 @@ export default function NetworkExplorer({ locale }: Props) {
                 <span className="eyebrow">{c.overview}</span>
                 <h2 id="network-region-title">{c.overview}</h2>
                 <p>{c.overviewPrompt}</p>
-                <div
-                  className="network-overview-counts"
-                  aria-label={c.overviewStatus(stats.members, stats.economies, stats.observers)}
-                >
-                  <span>
-                    <strong>{stats.members}</strong> {c.members}
-                  </span>
-                  <span>
-                    <strong>{stats.economies}</strong> {c.economies}
-                  </span>
-                  <span>
-                    <strong>{stats.observers}</strong> {c.observer}
-                  </span>
-                </div>
+                <dl className="network-overview-acronyms">
+                  <div>
+                    <dt>{c.acronymsTitle}</dt>
+                    <dd>{c.acronyms}</dd>
+                  </div>
+                </dl>
               </div>
             )}
           </aside>
+        </div>
+        <div className="network-explorer-actions">
+          <button
+            className="button secondary network-standard-toggle"
+            type="button"
+            onClick={() => setStandardMode(true)}
+          >
+            {c.standardMode}
+          </button>
+          <button
+            className="button secondary network-three-toggle"
+            type="button"
+            disabled={!isDesktop || reducedMotion || !webglAvailable}
+            onClick={() => setThreeMode((active) => !active)}
+          >
+            {shouldRenderThree ? c.svgMode : c.threeMode}
+          </button>
         </div>
       </section>
     </NetworkErrorBoundary>
@@ -325,6 +401,7 @@ class NetworkErrorBoundary extends Component<
     onReturnToOverview: () => void;
     selectedInstitutionId: string | null;
     onSelectInstitution: (institutionId: string) => void;
+    onUseMapPreview: () => void;
   },
   { hasError: boolean }
 > {
@@ -337,12 +414,19 @@ class NetworkErrorBoundary extends Component<
   }
   render() {
     if (this.state.hasError) {
+      const useMapPreview = () => {
+        this.setState({ hasError: false });
+        this.props.onUseMapPreview();
+      };
       return (
         <NetworkExplorerFallback
           locale={this.props.locale}
           selectedRegion={this.props.selectedRegion}
           onSelectRegion={this.props.onSelectRegion}
           onReturnToOverview={this.props.onReturnToOverview}
+          selectedInstitutionId={this.props.selectedInstitutionId}
+          onSelectInstitution={this.props.onSelectInstitution}
+          onUseMapPreview={useMapPreview}
           reason="scene-error"
         />
       );

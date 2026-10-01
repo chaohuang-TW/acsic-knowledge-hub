@@ -1,0 +1,830 @@
+/*
+ * Network Explorer feature surface. The explorer owns this layout so the
+ * shared page theme can evolve without changing the map's interaction model.
+ */
+.network-explorer {
+  --network-ink: var(--text, #203b34);
+  --network-deep: var(--accent-strong, #214e43);
+  --network-jade: var(--jade, #6f9d91);
+  --network-soft: var(--surface-strong, #e2ebe3);
+  --network-paper: var(--surface, #faf7f1);
+  --network-rule: var(--line, #b7c7bc);
+  --network-water: #f3f7f1;
+  --network-land-start: #dcebe2;
+  --network-land-end: #c4ddd1;
+  width: 100%;
+  min-width: 0;
+  color: var(--network-ink);
+}
+
+.network-explorer-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.network-explorer-heading .eyebrow {
+  display: none;
+}
+
+.network-explorer-heading h2 {
+  margin: 0 0 0.35rem;
+  color: var(--network-deep);
+  font-family: inherit;
+  font-size: 1.15rem;
+  letter-spacing: -0.03em;
+}
+
+.network-explorer-heading p {
+  max-width: 54ch;
+  margin: 0;
+  color: color-mix(in srgb, var(--network-ink) 73%, transparent);
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.network-explorer-heading .network-schematic-note {
+  max-width: 22ch;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  text-align: right;
+}
+
+.network-explorer-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(21rem, 0.85fr);
+  gap: clamp(1rem, 2.2vw, 1.8rem);
+  min-width: 0;
+}
+
+.network-explorer-layout:has(.network-panel-overview) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.network-stage,
+.network-panel,
+.network-canvas-frame,
+.network-standard-shell,
+.network-standard-overview,
+.network-standard-selected {
+  min-width: 0;
+}
+
+.network-canvas-frame,
+.network-standard-map {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 0;
+  aspect-ratio: 1000 / 620;
+  border: 1px solid var(--network-rule);
+  border-radius: var(--radius-panel, 0.75rem);
+  background: var(--network-water);
+  box-shadow: var(--shadow, 0 6px 20px rgb(33 78 67 / 6%));
+}
+
+.network-explorer-layout:has(.network-panel-overview) .network-canvas-frame {
+  min-height: 0;
+  aspect-ratio: 1000 / 620;
+}
+
+.network-map-visual,
+.network-map-svg-wrap,
+.network-map-svg,
+.network-three-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.network-map-visual {
+  overflow: hidden;
+}
+
+.network-stage {
+  display: flex;
+  flex-direction: column;
+}
+.network-stage .network-canvas-frame {
+  order: 1;
+}
+.network-stage .network-destination-controls,
+.network-stage .network-mobile-economy-control {
+  order: 2;
+}
+
+.network-map-svg-wrap {
+  z-index: 0;
+  display: grid;
+  place-items: stretch;
+  padding: clamp(0.35rem, 1.5vw, 1rem);
+  background:
+    radial-gradient(circle at 18% 18%, rgb(255 255 255 / 66%), transparent 34%),
+    linear-gradient(135deg, #eff6ee 0%, #e5f0e7 55%, #dbeae0 100%);
+}
+
+.network-map-svg {
+  display: block;
+  overflow: visible;
+  transition: opacity 220ms ease;
+}
+
+.network-map-visual.has-three .network-map-svg {
+  opacity: 1;
+}
+
+.network-map-visual.has-three .network-map-svg-wrap {
+  display: none;
+}
+
+.network-map-visual.has-three .network-map-mascot-group {
+  opacity: 0;
+}
+
+.network-three-layer {
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.network-three-layer .network-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+}
+
+.network-map-water {
+  fill: var(--network-water);
+}
+
+.network-map-coastline path {
+  stroke: color-mix(in srgb, var(--network-deep) 42%, transparent);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.network-map-graticule {
+  stroke: color-mix(in srgb, var(--network-jade) 24%, transparent);
+  stroke-width: 1.2;
+  stroke-dasharray: 4 9;
+  vector-effect: non-scaling-stroke;
+}
+
+.network-map-marker,
+.network-map-institution-node {
+  cursor: pointer;
+  outline: none;
+}
+
+.network-map-hit-area {
+  fill: transparent;
+  stroke: transparent;
+  pointer-events: all;
+}
+
+.network-map-marker:focus-visible,
+.network-map-institution-node:focus-visible {
+  filter: drop-shadow(0 0 0.25rem color-mix(in srgb, var(--network-deep) 60%, transparent));
+}
+
+.network-map-leader {
+  stroke: color-mix(in srgb, var(--network-deep) 56%, transparent);
+  stroke-width: 1.35;
+  stroke-dasharray: 3 4;
+  vector-effect: non-scaling-stroke;
+}
+
+.network-map-marker-ring {
+  fill: color-mix(in srgb, var(--network-jade) 16%, transparent);
+  stroke: color-mix(in srgb, var(--network-deep) 47%, transparent);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+  transition:
+    fill 160ms ease,
+    stroke 160ms ease;
+}
+
+.network-map-marker-dot {
+  fill: var(--network-deep);
+  stroke: var(--network-paper);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.network-map-marker:hover .network-map-marker-ring,
+.network-map-marker.is-selected .network-map-marker-ring {
+  fill: color-mix(in srgb, var(--network-jade) 46%, transparent);
+  stroke: var(--network-deep);
+}
+
+.network-map-label-plate {
+  fill: color-mix(in srgb, var(--network-paper) 91%, transparent);
+  stroke: color-mix(in srgb, var(--network-jade) 45%, transparent);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.network-map-label {
+  fill: var(--network-deep);
+  font-family: var(--font-body, ui-sans-serif, sans-serif);
+  font-size: 15px;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.network-map-institution-node circle {
+  fill: var(--network-paper);
+  stroke: var(--network-deep);
+  stroke-width: 1.6;
+  vector-effect: non-scaling-stroke;
+}
+
+.network-map-institution-node.is-selected circle {
+  fill: var(--network-jade);
+  stroke: var(--network-deep);
+}
+
+.network-map-institution-node text {
+  fill: var(--network-deep);
+  font-family: var(--font-body, ui-sans-serif, sans-serif);
+  font-size: 8px;
+  font-weight: 800;
+  pointer-events: none;
+}
+
+.network-map-institution-node.is-selected text {
+  fill: var(--network-paper);
+}
+
+.network-map-mascot {
+  pointer-events: none;
+  opacity: 0.96;
+  filter: drop-shadow(0 6px 4px rgb(33 78 67 / 14%));
+}
+
+.network-map-mascot-group {
+  pointer-events: none;
+}
+
+.network-map-mascot-shadow {
+  fill: color-mix(in srgb, var(--network-deep) 22%, transparent);
+}
+
+.network-map-guide-note {
+  position: absolute;
+  right: 1.1rem;
+  bottom: 0.75rem;
+  margin: 0;
+  color: color-mix(in srgb, var(--network-ink) 54%, transparent);
+  font-size: 0.66rem;
+}
+
+.network-destination-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+
+.network-destination-controls button {
+  min-height: 2.55rem;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--network-rule);
+  border-radius: var(--radius-control, 0.375rem);
+  background: transparent;
+  color: var(--network-deep);
+  font-size: 0.76rem;
+  font-weight: 650;
+}
+
+.network-destination-controls button:hover,
+.network-destination-controls button.is-selected {
+  border-color: var(--network-deep);
+  background: var(--network-deep);
+  color: var(--network-paper);
+}
+
+.network-mobile-economy-control {
+  display: none;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+  color: var(--network-deep);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.network-mobile-economy-control select {
+  width: 100%;
+}
+
+.network-panel {
+  display: grid;
+  align-content: start;
+  min-height: 100%;
+  padding: clamp(1rem, 2vw, 1.45rem);
+  border: 1px solid var(--network-rule);
+  border-radius: var(--radius-panel, 0.75rem);
+  background: color-mix(in srgb, var(--network-paper) 82%, transparent);
+}
+
+.network-panel-overview {
+  align-content: center;
+  min-height: 0;
+  padding-block: 1rem;
+}
+
+.network-panel-overview .network-overview-panel {
+  display: grid;
+  grid-template-columns: minmax(9rem, 0.35fr) minmax(0, 1.65fr);
+  align-items: center;
+  gap: 0.8rem 1.5rem;
+}
+
+.network-panel-overview .network-overview-panel .eyebrow {
+  display: none;
+}
+
+.network-panel-overview .network-overview-panel h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.network-panel-overview .network-overview-panel p {
+  max-width: none;
+  margin: 0;
+  font-size: 0.86rem;
+}
+
+.network-panel-overview .network-overview-acronyms {
+  grid-column: 2;
+  margin: 0;
+  padding: 0;
+  border-top: 0;
+}
+
+.network-explorer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.network-live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.network-panel-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--network-rule);
+}
+
+.network-panel-heading h2,
+.network-overview-panel h2 {
+  margin: 0.4rem 0 0;
+  color: var(--network-deep);
+  font-family: inherit;
+  font-size: clamp(1.45rem, 2.4vw, 2.15rem);
+  letter-spacing: -0.035em;
+}
+
+.network-count {
+  flex: 0 1 auto;
+  color: color-mix(in srgb, var(--network-ink) 66%, transparent);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  text-align: right;
+}
+
+.network-overview-panel p {
+  max-width: 30ch;
+  margin: 1rem 0 0;
+  color: color-mix(in srgb, var(--network-ink) 73%, transparent);
+  line-height: 1.7;
+}
+
+.network-overview-acronyms {
+  margin: 1.65rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--network-rule);
+}
+
+.network-overview-acronyms dt {
+  color: color-mix(in srgb, var(--network-ink) 58%, transparent);
+  font-size: 0.7rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.network-overview-acronyms dd {
+  margin-top: 0.35rem;
+  color: var(--network-deep);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+.institution-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: 0.8rem;
+  min-width: 0;
+}
+
+.network-panel .institution-card-grid {
+  max-height: min(48rem, 72vh);
+  overflow: auto;
+  padding-right: 0.2rem;
+  overscroll-behavior: contain;
+}
+
+.network-panel .institution-snapshot-card {
+  width: 100%;
+  min-width: 0;
+}
+
+.network-panel .institution-snapshot-disclosure,
+.network-standard-selected .institution-snapshot-disclosure {
+  min-width: 0;
+  border-top: 1px solid var(--network-rule);
+}
+
+.network-panel .institution-snapshot-disclosure > summary,
+.network-standard-selected .institution-snapshot-disclosure > summary {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  color: var(--network-deep);
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.network-panel .network-badge {
+  padding: 0.24rem 0.4rem;
+}
+
+.network-panel .institution-snapshot-card .institution-metric-strip,
+.network-standard-selected .institution-snapshot-card .institution-metric-strip {
+  grid-template-columns: repeat(auto-fit, minmax(9.4rem, 1fr));
+}
+
+.network-back,
+.network-explore-all,
+.network-standard-toggle {
+  margin-top: 1rem;
+}
+
+.network-card-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.network-standard-toggle {
+  justify-self: start;
+}
+
+/* Standard mode deliberately retains the map as a first-class fallback. */
+.network-explorer-fallback {
+  width: 100%;
+}
+
+.network-standard-shell {
+  display: grid;
+  gap: 1.25rem;
+  padding: clamp(1rem, 2.5vw, 1.6rem);
+  border: 1px solid var(--network-rule);
+  border-radius: var(--radius-panel, 0.75rem);
+  background: color-mix(in srgb, var(--network-paper) 72%, transparent);
+}
+
+.network-standard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-width: 0;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--network-rule);
+}
+
+.network-standard-header h2 {
+  margin: 0.35rem 0 0.45rem;
+  color: var(--network-deep);
+  font-family: inherit;
+  font-size: clamp(1.45rem, 2.8vw, 2.15rem);
+}
+
+.network-standard-status {
+  margin: 0;
+  color: var(--network-deep);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.network-standard-detail {
+  max-width: 70ch;
+  margin: 0.25rem 0 0;
+  color: var(--network-ink);
+  font-size: 0.8rem;
+  line-height: 1.65;
+}
+
+.network-fallback-mascot {
+  width: clamp(4.8rem, 11vw, 7.5rem);
+  height: auto;
+  flex: 0 0 auto;
+  object-fit: contain;
+  filter: drop-shadow(0 7px 5px rgb(33 78 67 / 12%));
+}
+
+.network-standard-map {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.network-standard-overview,
+.network-standard-selected {
+  display: grid;
+  gap: 1rem;
+}
+
+.network-standard-section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--network-rule);
+}
+
+.network-standard-section-heading h3 {
+  margin: 0;
+  color: var(--network-deep);
+}
+
+.network-standard-section-heading p {
+  max-width: 54ch;
+  margin: 0.4rem 0 0;
+  color: color-mix(in srgb, var(--network-ink) 70%, transparent);
+  font-size: 0.86rem;
+}
+
+.network-overview-counts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+  gap: 0.8rem 1.2rem;
+  color: color-mix(in srgb, var(--network-ink) 66%, transparent);
+  font-size: 0.72rem;
+  text-align: right;
+}
+
+.network-overview-counts strong {
+  color: var(--network-deep);
+  font-size: 1.2rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.network-standard-economy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 0.55rem;
+}
+
+.network-standard-economy {
+  display: grid;
+  gap: 0.25rem;
+  min-height: 3.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--network-rule);
+  border-radius: var(--radius-control, 0.375rem);
+  background: transparent;
+  color: var(--network-deep);
+  text-align: left;
+}
+
+.network-standard-economy:hover {
+  border-color: var(--network-deep);
+  background: var(--network-soft);
+}
+
+.network-standard-economy span {
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.network-standard-economy small {
+  color: var(--network-ink);
+  font-size: 0.68rem;
+}
+
+.network-standard-mobile-select {
+  display: grid;
+  gap: 0.4rem;
+  grid-column: 1 / -1;
+  color: var(--network-deep);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.network-standard-mobile-select select {
+  width: 100%;
+}
+
+.network-standard-back {
+  justify-self: start;
+  min-height: 2.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--network-rule);
+  border-radius: var(--radius-control, 0.375rem);
+  background: transparent;
+  color: var(--network-deep);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.network-standard-back:hover {
+  border-color: var(--network-deep);
+  background: var(--network-soft);
+}
+
+.network-standard-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.network-standard-empty {
+  margin: 0;
+  padding: 1rem 0;
+  color: color-mix(in srgb, var(--network-ink) 68%, transparent);
+}
+
+@media (max-width: 1023px) {
+  .network-explorer-layout {
+    grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
+  }
+
+  .network-canvas-frame {
+    min-height: 29rem;
+  }
+
+  .network-panel {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .network-stage .network-mobile-economy-control {
+    order: 0;
+    margin-block: 0 1rem;
+  }
+  .network-standard-mobile-select {
+    order: -1;
+  }
+  .network-standard-header {
+    order: -2;
+  }
+  .network-explorer-heading {
+    display: block;
+  }
+
+  .network-explorer-heading .network-schematic-note {
+    max-width: 48ch;
+    margin-top: 0.6rem;
+    text-align: left;
+  }
+
+  .network-explorer-layout {
+    display: block;
+  }
+
+  .network-explorer-layout:has(.network-panel-overview) .network-canvas-frame {
+    aspect-ratio: 1000 / 760;
+    min-height: 0;
+  }
+
+  .network-canvas-frame,
+  .network-standard-map {
+    min-height: 0;
+    aspect-ratio: 1000 / 760;
+    border-radius: var(--radius-card, 0.625rem);
+  }
+
+  .network-three-layer {
+    display: none;
+  }
+
+  .network-map-svg-wrap {
+    padding: 0.25rem;
+  }
+
+  .network-map-label {
+    font-size: 17px;
+  }
+
+  .network-map-guide-note {
+    right: 0.6rem;
+    bottom: 0.45rem;
+  }
+
+  .network-destination-controls {
+    display: none;
+  }
+
+  .network-mobile-economy-control,
+  .network-standard-mobile-select {
+    display: grid;
+  }
+
+  .network-panel {
+    min-height: 0;
+    margin-top: 1rem;
+    padding: 1rem;
+  }
+
+  .network-panel-overview {
+    min-height: 0;
+  }
+
+  .network-panel-overview .network-overview-panel {
+    display: block;
+  }
+
+  .network-panel-overview .network-overview-panel p {
+    margin-top: 0.5rem;
+  }
+
+  .network-panel-overview .network-overview-acronyms {
+    margin-top: 1rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--network-rule);
+  }
+
+  .network-panel .institution-card-grid {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .network-panel .institution-snapshot-card .institution-metric-strip,
+  .network-standard-selected .institution-snapshot-card .institution-metric-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .network-standard-shell {
+    padding: 0.9rem;
+  }
+
+  .network-standard-header {
+    align-items: end;
+  }
+
+  .network-fallback-mascot {
+    width: 4.5rem;
+  }
+
+  .network-standard-section-heading {
+    display: block;
+  }
+
+  .network-overview-counts {
+    justify-content: start;
+    margin-top: 0.8rem;
+    text-align: left;
+  }
+
+  .network-standard-economy-grid {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .network-map-svg {
+    transition: none;
+  }
+}

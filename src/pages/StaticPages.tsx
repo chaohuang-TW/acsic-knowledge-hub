@@ -1,4 +1,4 @@
-import { lazy, Suspense, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { PageHeader, ResearchBadge } from '../components/Layout';
 import { coverageStats, membershipStats } from '../data/coverage';
 import { acsicEvents, formatEventDate } from '../data/events';
@@ -17,9 +17,6 @@ import { systemCards } from '../features/institutions/systemEvidence';
 import { useLocale } from '../i18n';
 import { routePath } from '../routing';
 import type { Locale, SourceType } from '../types';
-import { NetworkExplorerSkeleton } from '../features/network-explorer/NetworkExplorerSkeleton';
-
-const LazyNetworkExplorer = lazy(() => import('../features/network-explorer/NetworkExplorer'));
 
 const sourceTypeLabels: Record<SourceType, Record<Locale, string>> = {
   official_membership_roster: { en: 'Official membership roster', 'zh-TW': '官方會員名冊' },
@@ -273,66 +270,6 @@ const pageCopy = {
   },
 } as const;
 
-export function HomePage() {
-  const { locale } = useLocale();
-  const c = pageCopy[locale].home;
-  return (
-    <>
-      <section className="hero section-shell network-hero-page">
-        <div className="hero-copy">
-          <ResearchBadge />
-          <h1>{c.title}</h1>
-          <p>{c.intro}</p>
-          <div className="button-row">
-            <a className="button primary" href={'#' + routePath(locale, 'members')}>
-              {c.primary}
-            </a>
-            <a className="button secondary" href={'#' + routePath(locale, 'compare')}>
-              {c.secondary}
-            </a>
-          </div>
-          <a className="text-link" href={'#' + routePath(locale, 'overview')}>
-            {c.tertiary}
-          </a>
-        </div>
-        <dl className="network-hero-counts" aria-label={c.networkTitle}>
-          <div>
-            <dt>{c.formalMembers}</dt>
-            <dd>{membershipStats.formalMembers}</dd>
-          </div>
-          <div>
-            <dt>{c.countriesEconomies}</dt>
-            <dd>{membershipStats.countriesEconomies}</dd>
-          </div>
-          <div>
-            <dt>{c.observer}</dt>
-            <dd>{membershipStats.observers}</dd>
-          </div>
-        </dl>
-      </section>
-      <Suspense fallback={<NetworkExplorerSkeleton locale={locale} />}>
-        <LazyNetworkExplorer locale={locale} />
-      </Suspense>
-      <section className="section-shell problem-section">
-        <h2>{c.scopeTitle}</h2>
-        <div className="problem-grid">
-          {c.scope.map(([title, text]) => (
-            <article key={title}>
-              <h3>{title}</h3>
-              <p>{text}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-      <section className="section-shell boundary-section home-boundary">
-        <div>
-          <h3>{c.boundaryTitle}</h3>
-          <p>{c.boundary}</p>
-        </div>
-      </section>
-    </>
-  );
-}
 export function OverviewPage() {
   const { locale } = useLocale();
   const c = pageCopy[locale].overview;
@@ -465,7 +402,8 @@ export function SystemsPage() {
                   <span key={sourceId}>
                     {index > 0 ? ' · ' : ''}
                     <a href={source.finalResolvedUrl} target="_blank" rel="noreferrer">
-                      {locale === 'en' ? 'Official source' : '官方來源'}
+                      {locale === 'en' ? 'Official source' : '官方來源'}:{' '}
+                      <span lang={source.originalLanguage}>{source.title}</span>
                     </a>
                   </span>
                 );
@@ -774,7 +712,8 @@ export function ResourcesPage() {
                       <span key={sourceId}>
                         {index > 0 ? ' · ' : ''}
                         <a href={source.finalResolvedUrl} target="_blank" rel="noreferrer">
-                          {locale === 'en' ? 'Official source' : '官方來源'}
+                          {locale === 'en' ? 'Official source' : '官方來源'}:{' '}
+                          <span lang={source.originalLanguage}>{source.title}</span>
                         </a>
                       </span>
                     );

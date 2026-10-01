@@ -31,6 +31,14 @@ An independent bilingual public-data research platform for ACSIC member institut
 
 Comparison, reports, source governance and downloads remain available as research tools. Empty future sections use explicit bilingual states and do not contain invented institutions or systems.
 
+## Living Atlas experience
+
+The homepage offers direct institution search and a real-geography SVG atlas. Desktop visitors may opt into a separately loaded Three.js view; mobile, reduced-motion and no-WebGL visitors retain the complete standard explorer. Economy and institution selection share one state model. The directory preserves search/filter context when returning from a profile.
+
+Shared design tokens live in `src/styles/tokens.css`; shared elements in `global.css`; home, institutions, network and research tools each own their feature stylesheet. The previous accumulated `theme.css` override layer has been removed.
+
+Design rationale, official award references, baseline observations, asset provenance and release gates are recorded in [Experience Rebuild](docs/experience-redesign/brief.md). Screenshots, traces and raw audit reports are external QA artifacts, not production data or committed page assets.
+
 ## Multilingual data contract
 
 Institution records are centralized in `src/data/institutions.json`. The contract preserves:
@@ -64,6 +72,7 @@ The current research release is documented in [Reference Institutions](docs/REFE
 pnpm install --frozen-lockfile
 pnpm dev
 pnpm check
+pnpm exec playwright install chromium webkit firefox
 pnpm test:e2e
 ```
 

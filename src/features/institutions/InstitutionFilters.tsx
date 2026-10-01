@@ -12,6 +12,8 @@ const copy = {
     member: 'Members',
     observer: 'Observer',
     clear: 'Clear filters',
+    moreFilters: 'More filters',
+    filterNote: 'Filters update the directory immediately.',
   },
   'zh-TW': {
     search: '搜尋機構',
@@ -23,6 +25,8 @@ const copy = {
     member: '正式會員',
     observer: '觀察員',
     clear: '清除篩選',
+    moreFilters: '更多篩選',
+    filterNote: '篩選條件會即時更新機構目錄。',
   },
 } as const;
 
@@ -54,60 +58,73 @@ export function InstitutionFilters({
   const c = copy[locale];
   return (
     <form className="directory-filters" onSubmit={(event) => event.preventDefault()}>
-      <label className="directory-filter directory-filter--search">
-        <span>{c.search}</span>
-        <input
-          type="search"
-          value={filters.query}
-          placeholder={c.search}
-          aria-label={c.search}
-          onChange={(event) => onQueryChange(event.target.value)}
-        />
-      </label>
-      <label className="directory-filter">
-        <span>{c.economy}</span>
-        <select
-          value={filters.economy}
-          aria-label={c.economy}
-          onChange={(event) => onEconomyChange(event.target.value)}
-        >
-          <option value="all">{c.allEconomies}</option>
-          {economies.map((economy) => (
-            <option key={economy.id} value={economy.id}>
-              {economy.label[locale]}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label className="directory-filter">
-        <span>{c.type}</span>
-        <select
-          value={filters.type}
-          aria-label={c.type}
-          onChange={(event) => onTypeChange(event.target.value as InstitutionRoleCategory | 'all')}
-        >
-          <option value="all">{c.all}</option>
-          {types.map((type) => (
-            <option key={type.id} value={type.id}>
-              {type.label[locale]}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label className="directory-filter">
-        <span>{c.membership}</span>
-        <select
-          value={filters.membership}
-          aria-label={c.membership}
-          onChange={(event) =>
-            onMembershipChange(event.target.value as AcsicMembershipStatus | 'all')
-          }
-        >
-          <option value="all">{c.all}</option>
-          <option value="member">{c.member}</option>
-          <option value="observer">{c.observer}</option>
-        </select>
-      </label>
+      <div className="directory-primary-filters">
+        <label className="directory-filter directory-filter--search">
+          <span>{c.search}</span>
+          <input
+            type="search"
+            value={filters.query}
+            placeholder={c.search}
+            aria-label={c.search}
+            onChange={(event) => onQueryChange(event.target.value)}
+          />
+        </label>
+        <label className="directory-filter directory-filter--economy">
+          <span>{c.economy}</span>
+          <select
+            value={filters.economy}
+            aria-label={c.economy}
+            onChange={(event) => onEconomyChange(event.target.value)}
+          >
+            <option value="all">{c.allEconomies}</option>
+            {economies.map((economy) => (
+              <option key={economy.id} value={economy.id}>
+                {economy.label[locale]}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+      <details
+        className="directory-filter-details"
+        open={filters.type !== 'all' || filters.membership !== 'all'}
+      >
+        <summary>{c.moreFilters}</summary>
+        <div className="directory-secondary-filters">
+          <label className="directory-filter">
+            <span>{c.type}</span>
+            <select
+              value={filters.type}
+              aria-label={c.type}
+              onChange={(event) =>
+                onTypeChange(event.target.value as InstitutionRoleCategory | 'all')
+              }
+            >
+              <option value="all">{c.all}</option>
+              {types.map((type) => (
+                <option key={type.id} value={type.id}>
+                  {type.label[locale]}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="directory-filter">
+            <span>{c.membership}</span>
+            <select
+              value={filters.membership}
+              aria-label={c.membership}
+              onChange={(event) =>
+                onMembershipChange(event.target.value as AcsicMembershipStatus | 'all')
+              }
+            >
+              <option value="all">{c.all}</option>
+              <option value="member">{c.member}</option>
+              <option value="observer">{c.observer}</option>
+            </select>
+          </label>
+        </div>
+      </details>
+      <p className="directory-filter-note">{c.filterNote}</p>
       <button
         className="button secondary directory-filter__clear"
         type="button"

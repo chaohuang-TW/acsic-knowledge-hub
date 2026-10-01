@@ -1,0 +1,83 @@
+{
+  "schema": "acsic-knowledge-hub-protected-checksums/v1",
+  "generatedAt": "2026-10-01T01:10:50.061Z",
+  "commit": "4ff4217a0bb297cc5d56ccf088c3c06a9135cc34",
+  "scope": ["src/data/**/*", "public/assets/mascot/meng-ge-guide.webp"],
+  "files": [
+    {
+      "path": "src/data/coverage.ts",
+      "bytes": 5605,
+      "sha256": "80247faf0428be4184125881b1873eacf6a42bab503719544316ef3619bbfa1a"
+    },
+    {
+      "path": "src/data/events.ts",
+      "bytes": 4407,
+      "sha256": "46db0c2f3bfa4d6943fd23521adfb281ae3b0fe53c21bfe39f59094c18daa381"
+    },
+    {
+      "path": "src/data/indicator-dictionary.json",
+      "bytes": 32394,
+      "sha256": "686aef5671c14aa1d57292a0555c8dd50f55fde0221943643bcb91b5c794bd4f"
+    },
+    {
+      "path": "src/data/indicator-readiness.json",
+      "bytes": 14847,
+      "sha256": "8c79b6cedc1fe865b079e333cea08dad77a206827264290426b8dba57108e4bf"
+    },
+    {
+      "path": "src/data/indicators.ts",
+      "bytes": 6544,
+      "sha256": "efcab53c90cbbe3331ed90fe7e86cef6427d58f584ac846e85aa58532a489024"
+    },
+    {
+      "path": "src/data/institutions.json",
+      "bytes": 43961,
+      "sha256": "31b6048f9c4f12a4a44b2b8af4abbb0a310bbfc6e432944b3eb263eb7babec18"
+    },
+    {
+      "path": "src/data/institutions.ts",
+      "bytes": 19368,
+      "sha256": "f74c0797220442919572a901fa043a09aacea391b95c732434cd75c0c50b4afd"
+    },
+    {
+      "path": "src/data/level2-standard.json",
+      "bytes": 2394,
+      "sha256": "a5a3a594769679aa5641283a03dfae043a51ecdcb23013f8856483a9fad18e46"
+    },
+    {
+      "path": "src/data/level2-standards.ts",
+      "bytes": 5185,
+      "sha256": "45d5c1bf96601066e9c795251d1c0f413978961ace8bde1ba2b6c1c898c4c823"
+    },
+    {
+      "path": "src/data/level3-pilot.json",
+      "bytes": 54727,
+      "sha256": "d87b12ed5c48023fc6bcc19b3b4f377ccae514ee51d535c0e120896d3356ac2c"
+    },
+    {
+      "path": "src/data/reference-set.ts",
+      "bytes": 3542,
+      "sha256": "fcca8aefc13ecd4bc28349add490100d0404d71db7498b6905f110fbca079bcf"
+    },
+    {
+      "path": "src/data/research-priority.ts",
+      "bytes": 6557,
+      "sha256": "7eb6da889ec96f908e7c8706f8f218a0aa3e7da451051db227a3568e759fa158"
+    },
+    {
+      "path": "src/data/sources.json",
+      "bytes": 55006,
+      "sha256": "2b2cef4f80eecc6caaf94b631e5ef6b2dee94dac957a9a3f720ab1ad9215ba1c"
+    },
+    {
+      "path": "src/data/translations.ts",
+      "bytes": 13842,
+      "sha256": "98d867c5dd9ffdc6a1d955f0cfc5b715b6c9c4e0669e2f1e0774aaa613f2bce9"
+    },
+    {
+      "path": "public/assets/mascot/meng-ge-guide.webp",
+      "bytes": 14868,
+      "sha256": "004be82ab2487e1e1b9866a54a84438921e91a5d40505ce13e25432bd9c5adf9"
+    }
+  ]
+}
