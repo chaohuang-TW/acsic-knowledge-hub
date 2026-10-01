@@ -1,7 +1,7 @@
 # ACSIC Knowledge Hub production-build review
 
-- Captured: 2026-10-01T02:23:49.211Z
-- Base checkout commit: `4ff4217a0bb297cc5d56ccf088c3c06a9135cc34` (working-tree presentation is captured before release)
+- Captured: 2026-10-01T02:41:08.132Z
+- Base checkout commit: `98a0cb0b134d14215c5173d06654cceaa5b73f7f` (working-tree presentation is captured before release)
 - Base URL: http://127.0.0.1:4176/acsic-knowledge-hub/
 - Screenshots and raw observations are retained in the external experience-audit artifact bundle.
 - Viewports: desktop 1440×1000; mobile 390×844
@@ -240,23 +240,23 @@ This is an observed browser capture for the Award-Caliber Experience Rebuild. It
 
 ## Slowest observed resources
 
-| Result                        | Initiator | Duration (ms) | Resource                                                           |
-| ----------------------------- | --------- | ------------: | ------------------------------------------------------------------ |
-| en/desktop/compare            | script    |            24 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-CcPymYIO.js |
-| en/desktop/home               | script    |            22 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-CcPymYIO.js |
-| en/desktop/map                | script    |            20 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-CcPymYIO.js |
-| en/desktop/unknownInstitution | script    |            13 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-CcPymYIO.js |
-| en/desktop/resources          | script    |            13 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-CcPymYIO.js |
-| en/desktop/systems            | script    |            11 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-CcPymYIO.js |
-| zh-TW/desktop/systems         | script    |            11 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-CcPymYIO.js |
-| en/desktop/data               | script    |            11 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-CcPymYIO.js |
-| en/desktop/directory          | script    |            11 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-CcPymYIO.js |
-| zh-TW/desktop/map             | script    |            11 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-CcPymYIO.js |
-| en/desktop/selectedTaiwan     | script    |            11 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-CcPymYIO.js |
-| en/desktop/acgf               | script    |            10 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-CcPymYIO.js |
-| en/desktop/standardExplorer   | script    |            10 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-CcPymYIO.js |
-| en/desktop/sparseKOTEC        | script    |            10 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-CcPymYIO.js |
-| en/desktop/unknownRoute       | script    |            10 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-CcPymYIO.js |
+| Result                       | Initiator | Duration (ms) | Resource                                                                           |
+| ---------------------------- | --------- | ------------: | ---------------------------------------------------------------------------------- |
+| en/mobile/compare            | script    |            41 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-sXOFnJX7.js                 |
+| en/mobile/acgf               | script    |            37 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/indicators-CHkZ1MFg.js            |
+| en/mobile/acgf               | script    |            37 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/systemEvidence-BI_UK5IY.js        |
+| en/mobile/acgf               | link      |            36 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/institutions-C46a92sW.css         |
+| en/mobile/acgf               | script    |            36 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/InstitutionSnapshot-D9ptIpfl.js   |
+| zh-TW/desktop/selectedTaiwan | script    |            35 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-sXOFnJX7.js                 |
+| en/mobile/acgf               | script    |            35 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/InstitutionDetailPage-pZw_E4n6.js |
+| en/mobile/acgf               | script    |            34 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/core-bmp1JV-J.js                  |
+| en/mobile/acgf               | script    |            31 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/metric-format-CL9GBDTe.js         |
+| zh-TW/desktop/directory      | script    |            23 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-sXOFnJX7.js                 |
+| en/mobile/directory          | script    |            20 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-sXOFnJX7.js                 |
+| zh-TW/desktop/sparseKOTEC    | script    |            20 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-sXOFnJX7.js                 |
+| en/mobile/acgf               | script    |            19 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-sXOFnJX7.js                 |
+| zh-TW/desktop/resources      | script    |            17 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-sXOFnJX7.js                 |
+| en/desktop/home              | script    |            15 | http://127.0.0.1:4176/acsic-knowledge-hub/assets/index-sXOFnJX7.js                 |
 
 ## Protected checksums
 

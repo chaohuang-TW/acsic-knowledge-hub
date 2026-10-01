@@ -13,6 +13,7 @@
   --institution-pear: #f4eee7;
   --institution-deepgreen: #214e43;
   --institution-ink: #203b34;
+  --institution-muted: #405b52;
   --institution-rule: color-mix(in srgb, var(--institution-celadon) 34%, #d8dfd5);
   --institution-soft-rule: color-mix(in srgb, var(--institution-celadon) 18%, #d8dfd5);
   --institution-radius-sm: 6px;
@@ -84,7 +85,7 @@
 }
 
 .directory-page .directory-stats dt {
-  color: color-mix(in srgb, var(--institution-ink) 66%, transparent);
+  color: var(--institution-muted);
   font-size: 0.73rem;
   font-weight: 650;
   letter-spacing: 0.04em;
@@ -119,7 +120,7 @@
 
 .directory-page .directory-filter-heading p {
   margin: 0;
-  color: color-mix(in srgb, var(--institution-ink) 64%, transparent);
+  color: var(--institution-muted);
   font-size: 0.83rem;
 }
 
@@ -153,7 +154,7 @@
   width: 100%;
   min-height: 2.85rem;
   padding: 0.65rem 0.75rem;
-  border: 1px solid color-mix(in srgb, var(--institution-celadon) 42%, #d8dfd5);
+  border: 1px solid var(--control-border);
   border-radius: var(--institution-radius-sm);
   background: #fffdf9;
   color: var(--institution-ink);
@@ -161,13 +162,13 @@
 }
 
 .directory-page .directory-filter input::placeholder {
-  color: color-mix(in srgb, var(--institution-ink) 52%, transparent);
+  color: var(--institution-muted);
 }
 
 .directory-page .directory-filter input:focus-visible,
 .directory-page .directory-filter select:focus-visible,
 .directory-page .directory-filter-details summary:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--institution-celadon) 62%, white);
+  outline: 3px solid var(--institution-deepgreen);
   outline-offset: 2px;
 }
 
@@ -214,7 +215,7 @@
 .directory-page .directory-filter-note {
   margin: 0;
   padding: 0.8rem 0;
-  color: color-mix(in srgb, var(--institution-ink) 60%, transparent);
+  color: var(--institution-muted);
   font-size: 0.76rem;
 }
 
@@ -229,7 +230,7 @@
 
 .directory-page .directory-result-count {
   margin: 1.6rem 0 2rem;
-  color: color-mix(in srgb, var(--institution-ink) 68%, transparent);
+  color: var(--institution-muted);
   font-size: 0.84rem;
   font-variant-numeric: tabular-nums;
 }
@@ -256,7 +257,7 @@
 
 .directory-page .economy-group__eyebrow {
   margin: 0 0 0.25rem;
-  color: color-mix(in srgb, var(--institution-ink) 58%, transparent);
+  color: var(--institution-muted);
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -274,7 +275,7 @@
 
 .directory-page .economy-group__count {
   flex: 0 0 auto;
-  color: color-mix(in srgb, var(--institution-ink) 64%, transparent);
+  color: var(--institution-muted);
   font-size: 0.76rem;
   font-variant-numeric: tabular-nums;
 }
@@ -371,7 +372,7 @@
 .directory-page .directory-card__economy,
 .directory-page .directory-card__type {
   margin: 0;
-  color: color-mix(in srgb, var(--institution-ink) 68%, transparent);
+  color: var(--institution-muted);
   font-size: 0.77rem;
   line-height: 1.5;
 }
@@ -443,7 +444,7 @@
 
 .directory-page .directory-total {
   margin: 2.5rem 0 0;
-  color: color-mix(in srgb, var(--institution-ink) 54%, transparent);
+  color: var(--institution-muted);
   font-size: 0.72rem;
 }
 

@@ -114,7 +114,7 @@ textarea {
   max-width: 100%;
   min-height: 44px;
   padding: 0.65rem 0.75rem;
-  border: 1px solid #7d9588;
+  border: 1px solid var(--control-border);
   border-radius: var(--radius-control);
   background: var(--surface);
 }

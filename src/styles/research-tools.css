@@ -173,7 +173,7 @@
   min-width: 0;
   min-height: 2.65rem;
   padding: 0.55rem 0.7rem;
-  border: 1px solid var(--research-rule);
+  border: 1px solid var(--control-border);
   border-radius: var(--research-radius-sm);
   background: var(--research-pear);
   color: var(--research-ink);
@@ -183,7 +183,7 @@
 .research-tool-page input:focus-visible,
 .research-tool-page button:focus-visible,
 .research-tool-page summary:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--research-jade) 65%, white);
+  outline: 3px solid var(--accent-strong);
   outline-offset: 2px;
 }
 
