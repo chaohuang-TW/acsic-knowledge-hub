@@ -16,6 +16,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: pnpm/action-setup@v4
         with:
           version: 11.7.0
@@ -25,6 +26,8 @@ jobs:
           cache: pnpm
       - name: Install
         run: pnpm install --frozen-lockfile
+      - name: Coverage documentation consistency
+        run: pnpm coverage:check
       - name: Format
         run: pnpm format:check
       - name: Lint
@@ -32,13 +35,15 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
       - name: Unit test
-        run: pnpm test
+        run: pnpm test --reporter=default --reporter=json --outputFile="$RUNNER_TEMP/acsic-verify-results/unit-results.json"
       - name: Build
         run: pnpm build
       - name: Install browsers
         run: pnpm exec playwright install --with-deps chromium webkit firefox
       - name: End-to-end test
-        run: pnpm test:e2e
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_NAME: ${{ runner.temp }}/acsic-verify-results/e2e-results.json
+        run: pnpm test:e2e --reporter=github,json
       - name: Secret scan
         run: pnpm secret:scan
       - name: Retain browser test evidence
@@ -49,5 +54,112 @@ jobs:
           path: |
             test-results/
             playwright-report/
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Retain structured verification results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experience-verification-results
+          path: ${{ runner.temp }}/acsic-verify-results/
+          if-no-files-found: error
+          retention-days: 14
+
+  polish-evidence:
+    needs: verify
+    if: >-
+      needs.verify.result == 'success' &&
+      ((github.event_name == 'pull_request' && github.head_ref == 'experience-final-polish') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Read scoped baseline marker
+        id: baseline
+        run: >-
+          node --input-type=module -e
+          'import fs from "node:fs";
+          const p="docs/experience-redesign/polish-baseline.json";
+          if(!fs.existsSync(p)){fs.appendFileSync(process.env.GITHUB_OUTPUT,"present=false\n");process.exit(0);}
+          const m=JSON.parse(fs.readFileSync(p,"utf8"));
+          if(m.schema!=="acsic-experience-polish-baseline/v1"||!/^[a-f0-9]{40}$/.test(m.baselineSha))throw new Error("Invalid baseline marker");
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,`present=true\nsha=${m.baselineSha}\n`);'
+      - uses: pnpm/action-setup@v4
+        if: steps.baseline.outputs.present == 'true'
+        with:
+          version: 11.7.0
+      - uses: actions/setup-node@v4
+        if: steps.baseline.outputs.present == 'true'
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Checkout exact baseline outside source tree
+        if: steps.baseline.outputs.present == 'true'
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          ref: ${{ steps.baseline.outputs.sha }}
+          path: .polish-baseline-checkout
+      - name: Move baseline to runner temp
+        if: steps.baseline.outputs.present == 'true'
+        run: mv .polish-baseline-checkout "$RUNNER_TEMP/acsic-polish-baseline"
+      - name: Build baseline and exact candidate
+        if: steps.baseline.outputs.present == 'true'
+        run: |
+          pnpm --dir "$RUNNER_TEMP/acsic-polish-baseline" install --frozen-lockfile
+          pnpm --dir "$RUNNER_TEMP/acsic-polish-baseline" build
+          pnpm install --frozen-lockfile
+          pnpm build
+      - name: Install QA-only tooling and Chromium
+        if: steps.baseline.outputs.present == 'true'
+        run: |
+          npm install --prefix "$RUNNER_TEMP/acsic-polish-qa" --no-save --ignore-scripts lighthouse@13.5.0 axe-core@4.13.0
+          pnpm exec playwright install --with-deps chromium
+      - uses: actions/download-artifact@v4
+        if: steps.baseline.outputs.present == 'true'
+        with:
+          name: experience-verification-results
+          path: ${{ runner.temp }}/acsic-polish-verification
+      - name: Collect before/after evidence and create downloadable ZIP
+        if: steps.baseline.outputs.present == 'true'
+        env:
+          LIGHTHOUSE_BIN: ${{ runner.temp }}/acsic-polish-qa/node_modules/.bin/lighthouse
+          AXE_CORE_PATH: ${{ runner.temp }}/acsic-polish-qa/node_modules/axe-core/axe.js
+        run: >-
+          node scripts/package-polish-evidence.mjs
+          --collect-ci
+          --baseline-workspace "$RUNNER_TEMP/acsic-polish-baseline"
+          --verification-root "$RUNNER_TEMP/acsic-polish-verification"
+          --verified-ci
+          --output "$RUNNER_TEMP/acsic-polish-evidence"
+          --source ci-production-build
+          --ref "${{ github.head_ref || github.ref_name }}"
+          --workflow-url "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          --strict
+      - name: Retain requested evidence ZIP
+        if: always() && steps.baseline.outputs.present == 'true'
+        id: evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: ACSIC-Experience-Polish-Evidence
+          path: |
+            ${{ runner.temp }}/acsic-polish-evidence/ACSIC-Experience-Polish-Evidence.zip
+            ${{ runner.temp }}/acsic-polish-evidence/ACSIC-Experience-Polish-Evidence.zip.sha256
+            ${{ runner.temp }}/acsic-polish-evidence/package-result.json
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
+      - name: Retain full raw evidence matrix
+        if: always() && steps.baseline.outputs.present == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ACSIC-Experience-Polish-Raw
+          path: |
+            ${{ runner.temp }}/acsic-polish-evidence/before/
+            ${{ runner.temp }}/acsic-polish-evidence/after/
           if-no-files-found: ignore
           retention-days: 14

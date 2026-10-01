@@ -1,0 +1,8 @@
+{
+  "schema": "acsic-experience-polish-baseline/v1",
+  "baselineSha": "6c009fcf4e2c8cca0902e64c2de7323b39727819",
+  "publicUrl": "https://chaohuang-tw.github.io/acsic-knowledge-hub/",
+  "artifactName": "ACSIC-Experience-Polish-Evidence",
+  "retentionDays": 14,
+  "humanAcceptance": "pending"
+}

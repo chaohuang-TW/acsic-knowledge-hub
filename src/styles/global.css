@@ -246,6 +246,8 @@ html[lang='zh-Hant-TW'] li {
 .site-header nav a {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-width: 44px;
   min-height: 44px;
   padding: 0.55rem 0.5rem;
   font-size: 0.875rem;

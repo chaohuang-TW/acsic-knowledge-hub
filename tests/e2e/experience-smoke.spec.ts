@@ -29,7 +29,7 @@ test('direct lookup reaches a profile and preserves the directory context', asyn
     'href',
     /^https:\/\//,
   );
-  await page.getByRole('link', { name: 'Back to all institutions', exact: true }).click();
+  await page.getByRole('link', { name: '← Back to all institutions', exact: true }).click();
   await expect(page.getByRole('searchbox', { name: 'Search institutions' })).toHaveValue('KODIT');
   await expect(page.locator('.directory-card')).toHaveCount(1);
 });

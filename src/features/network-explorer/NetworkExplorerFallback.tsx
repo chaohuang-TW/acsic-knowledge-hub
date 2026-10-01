@@ -1,5 +1,4 @@
 import type { Locale } from '../../types';
-import { getMembershipStats } from '../institutions/directoryUtils';
 import { DeferredInstitutionSnapshot as InstitutionSnapshotCard } from './DeferredInstitutionSnapshot';
 import {
   getRegion,
@@ -94,7 +93,6 @@ export function NetworkExplorerFallback({
 }: Props) {
   const c = copy[locale];
   const selected = getRegion(selectedRegion);
-  const stats = getMembershipStats();
   const selectedCounts = selected ? getRegionMembershipCounts(selected) : null;
   const statusDetail = reasonDetail(reason, c);
 
@@ -110,9 +108,6 @@ export function NetworkExplorerFallback({
             <p className="network-standard-status">{c.standardMode}</p>
             <h2 id="network-title">{c.title}</h2>
             <p className="network-standard-detail">{statusDetail}</p>
-            <p className="network-standard-detail">
-              {c.standardDetail(stats.economies, stats.institutions)}
-            </p>
           </div>
           <img
             className="network-fallback-mascot"
@@ -122,24 +117,6 @@ export function NetworkExplorerFallback({
             alt={locale === 'en' ? 'Meng-Ge mascot guide' : '萌哥導覽員吉祥物'}
           />
         </header>
-
-        <div
-          className="network-standard-map"
-          data-testid="asia-map-stage"
-          data-selected-economy={selectedRegion ?? ''}
-          role="group"
-          aria-label={c.schematic}
-        >
-          <AtlasSvg
-            locale={locale}
-            selectedRegion={selectedRegion}
-            selectedInstitutionId={selectedInstitutionId}
-            onSelectRegion={onSelectRegion}
-            onSelectInstitution={onSelectInstitution}
-            ariaLabel={c.schematic}
-            mascotAlt={locale === 'en' ? 'Meng-Ge guide' : '萌哥導覽員'}
-          />
-        </div>
 
         <label className="network-standard-mobile-select">
           <span>{c.economySelector}</span>
@@ -158,14 +135,27 @@ export function NetworkExplorerFallback({
             ))}
           </select>
         </label>
+        <div
+          className="network-standard-map"
+          data-testid="asia-map-stage"
+          data-selected-economy={selectedRegion ?? ''}
+          role="group"
+          aria-label={c.schematic}
+        >
+          <AtlasSvg
+            locale={locale}
+            selectedRegion={selectedRegion}
+            selectedInstitutionId={selectedInstitutionId}
+            onSelectRegion={onSelectRegion}
+            onSelectInstitution={onSelectInstitution}
+            ariaLabel={c.schematic}
+            mascotAlt={locale === 'en' ? 'Meng-Ge guide' : '萌哥導覽員'}
+          />
+        </div>
+
+        <p className="network-schematic-note">{c.schematic}</p>
         {!selected ? (
           <div className="network-standard-overview">
-            <div className="network-standard-section-heading">
-              <div>
-                <h3>{c.economySelector}</h3>
-                <p>{c.prompt}</p>
-              </div>
-            </div>
             <div
               className="network-standard-economy-grid"
               role="group"

@@ -13,7 +13,6 @@ const copy = {
     observer: 'Observer',
     clear: 'Clear filters',
     moreFilters: 'More filters',
-    filterNote: 'Filters update the directory immediately.',
   },
   'zh-TW': {
     search: '搜尋機構',
@@ -26,7 +25,6 @@ const copy = {
     observer: '觀察員',
     clear: '清除篩選',
     moreFilters: '更多篩選',
-    filterNote: '篩選條件會即時更新機構目錄。',
   },
 } as const;
 
@@ -124,7 +122,6 @@ export function InstitutionFilters({
           </label>
         </div>
       </details>
-      <p className="directory-filter-note">{c.filterNote}</p>
       <button
         className="button secondary directory-filter__clear"
         type="button"

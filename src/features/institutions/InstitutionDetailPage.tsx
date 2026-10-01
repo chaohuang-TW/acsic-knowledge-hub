@@ -187,9 +187,6 @@ export function InstitutionDetailPage({ institutionId }: { institutionId: string
           >
             {experience.officialWebsite} ↗
           </a>
-          <a className="button secondary" href={`#${routePath(locale, 'members')}`}>
-            {c.back}
-          </a>
         </div>
       </header>
 

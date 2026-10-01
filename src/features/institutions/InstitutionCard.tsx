@@ -8,12 +8,14 @@ const copy = {
     observer: 'Observer',
     profile: 'View profile',
     website: 'Official website ↗',
+    summary: 'Read summary',
   },
   'zh-TW': {
     member: '正式會員',
     observer: '觀察員',
     profile: '查看機構檔案',
     website: '官方網站 ↗',
+    summary: '閱讀機構簡介',
   },
 } as const;
 
@@ -43,9 +45,11 @@ export function InstitutionCard({
         </span>
       </div>
       <h3>{record.name[locale]}</h3>
-      <p className="directory-card__economy">{record.countryName[locale]}</p>
       <p className="directory-card__type">{record.type[locale]}</p>
-      <p className="directory-card__summary">{record.summary[locale]}</p>
+      <details className="directory-card__description">
+        <summary>{c.summary}</summary>
+        <p className="directory-card__summary">{record.summary[locale]}</p>
+      </details>
       <div className="directory-card__actions">
         <a
           className="button"

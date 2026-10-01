@@ -218,7 +218,6 @@ export function AtlasSvg({
           <ellipse className="network-map-mascot-shadow" cx="0" cy="-3" rx="32" ry="7" />
         </g>
       </svg>
-      <p className="visually-hidden">{ariaLabel}</p>
       <p className="network-map-guide-note" aria-hidden="true">
         {mascotAlt}
       </p>

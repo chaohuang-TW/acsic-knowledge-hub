@@ -24,9 +24,7 @@ const copy = {
   en: {
     eyebrow: 'Interactive Asia network explorer',
     title: 'ACSIC Network Explorer',
-    description: 'Choose an economy to explore its ACSIC institutions across the region.',
     overview: 'Asia overview',
-    overviewPrompt: 'Choose an economy to explore its ACSIC institutions.',
     economySelector: 'Choose an economy',
     schematic: 'Simplified Asia map for visual exploration only.',
     selected: 'Economy focus',
@@ -42,8 +40,6 @@ const copy = {
     mapMode: 'Use map preview',
     threeMode: 'Try 3D view',
     svgMode: 'Use SVG map',
-    acronymsTitle: 'Research abbreviations',
-    acronyms: 'ACGF · JFC · JFG · KODIT · KOTEC',
     select: 'Select institution',
     selectedInstitution: 'Selected',
     networkStatus: (name: string, members: number, observers: number) =>
@@ -56,9 +52,7 @@ const copy = {
   'zh-TW': {
     eyebrow: '互動式亞洲網絡探索器',
     title: 'ACSIC 網絡探索器',
-    description: '選擇一個國家／經濟體，探索亞洲各地的 ACSIC 機構。',
     overview: '亞洲總覽',
-    overviewPrompt: '選擇一個國家／經濟體，探索當地 ACSIC 機構。',
     economySelector: '選擇國家／經濟體',
     schematic: '亞洲地圖為視覺化簡化示意。',
     selected: '經濟體聚焦',
@@ -74,8 +68,6 @@ const copy = {
     mapMode: '使用地圖預覽',
     threeMode: '試用 3D 檢視',
     svgMode: '使用 SVG 地圖',
-    acronymsTitle: '研究縮寫',
-    acronyms: 'ACGF · JFC · JFG · KODIT · KOTEC',
     select: '選取機構',
     selectedInstitution: '已選取',
     networkStatus: (name: string, members: number, observers: number) =>
@@ -196,14 +188,19 @@ export default function NetworkExplorer({ locale }: Props) {
       <section className="network-explorer" aria-labelledby="network-explorer-title">
         <div className="network-explorer-heading">
           <div>
-            <span className="eyebrow">{c.eyebrow}</span>
             <h2 id="network-explorer-title">{c.title}</h2>
-            <p>{c.description}</p>
           </div>
-          <p className="network-schematic-note">{c.schematic}</p>
         </div>
         <div className="network-explorer-layout">
           <div className="network-stage">
+            <EconomyControls
+              locale={locale}
+              selectedRegion={selectedRegion}
+              onSelectRegion={selectRegion}
+              onReturnToOverview={returnToOverview}
+              overviewLabel={c.overview}
+              selectLabel={c.economySelector}
+            />
             <div
               className="network-canvas-frame asia-map-frame"
               data-testid="asia-map-stage"
@@ -242,17 +239,9 @@ export default function NetworkExplorer({ locale }: Props) {
                 ) : null}
               </div>
             </div>
-            <p className="visually-hidden" id="network-canvas-description">
+            <p className="network-schematic-note" id="network-canvas-description">
               {c.schematic}
             </p>
-            <EconomyControls
-              locale={locale}
-              selectedRegion={selectedRegion}
-              onSelectRegion={selectRegion}
-              onReturnToOverview={returnToOverview}
-              overviewLabel={c.overview}
-              selectLabel={c.economySelector}
-            />
           </div>
           <aside
             className={selected ? 'network-panel' : 'network-panel network-panel-overview'}
@@ -298,15 +287,9 @@ export default function NetworkExplorer({ locale }: Props) {
               </>
             ) : (
               <div className="network-overview-panel">
-                <span className="eyebrow">{c.overview}</span>
-                <h2 id="network-region-title">{c.overview}</h2>
-                <p>{c.overviewPrompt}</p>
-                <dl className="network-overview-acronyms">
-                  <div>
-                    <dt>{c.acronymsTitle}</dt>
-                    <dd>{c.acronyms}</dd>
-                  </div>
-                </dl>
+                <h2 className="visually-hidden" id="network-region-title">
+                  {c.overview}
+                </h2>
               </div>
             )}
           </aside>
