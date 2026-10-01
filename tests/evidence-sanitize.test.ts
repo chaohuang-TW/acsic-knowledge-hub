@@ -1,12 +1,27 @@
 import { describe, expect, it } from 'vitest';
 
 const modulePath = '../scripts/evidence-sanitize.mjs';
-const { sanitizeEvidence, findEvidenceSecrets } = (await import(modulePath)) as {
+const { decodeEvidenceText, sanitizeEvidence, findEvidenceSecrets } = (await import(
+  modulePath
+)) as {
+  decodeEvidenceText: (bytes: Uint8Array) => string | null;
   sanitizeEvidence: <T>(value: T, replacements?: [string, string][]) => T;
   findEvidenceSecrets: (value: unknown) => { kind: string; at: string }[];
 };
 
 describe('shareable evidence redaction', () => {
+  it('recognizes extensionless UTF-8 text but keeps binary resources out of text redaction', () => {
+    const markdown = '# Error\n繁體中文 trace resource\n';
+    const json = '{"stats":{"expected":172,"unexpected":0}}';
+    expect(decodeEvidenceText(new TextEncoder().encode(markdown))).toBe(markdown);
+    expect(decodeEvidenceText(new TextEncoder().encode(json))).toBe(json);
+    const bomText = '\uFEFF# Error\n';
+    expect(decodeEvidenceText(new TextEncoder().encode(bomText))).toBe(bomText);
+    expect(decodeEvidenceText(new Uint8Array([0xff, 0xd8, 0xff, 0xe0]))).toBeNull();
+    expect(decodeEvidenceText(new Uint8Array([65, 0, 66]))).toBeNull();
+    expect(decodeEvidenceText(new Uint8Array([65, 1, 66]))).toBeNull();
+  });
+
   it('removes nested project Git identities and diffs without changing assertions, stats or SHA', () => {
     const sha = '34fce0fa89a360049a5825dfe4ba7177d522f407';
     const input = {
@@ -113,10 +128,11 @@ describe('shareable evidence redaction', () => {
     );
   });
 
-  it('preserves Playwright hashed source resource references so traces remain usable', () => {
+  it('preserves Playwright hashed source and screencast references so traces remain usable', () => {
     const reference = `resources/src@${'a'.repeat(40)}.txt`;
-    expect(sanitizeEvidence({ reference })).toEqual({ reference });
-    expect(findEvidenceSecrets({ reference })).toEqual([]);
+    const screenshot = `page@${'b'.repeat(32)}-1790834678404.jpeg`;
+    expect(sanitizeEvidence({ reference, screenshot })).toEqual({ reference, screenshot });
+    expect(findEvidenceSecrets({ reference, screenshot })).toEqual([]);
   });
 
   it('detects unsanitized metadata and privacy findings without returning sensitive text', () => {

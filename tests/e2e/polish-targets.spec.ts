@@ -77,10 +77,12 @@ function expectTargetsUsable(targets: Target[]) {
   }
 }
 
-test('frequent lookup, directory, profile and download targets are large and separate', async ({
-  page,
-}) => {
-  for (const locale of ['en', 'zh-TW']) {
+// Keep every viewport/assertion, but isolate languages so the complete matrix
+// does not share a single 30-second test budget across forty route changes.
+for (const locale of ['en', 'zh-TW']) {
+  test(`${locale} frequent lookup, directory, profile and download targets are large and separate`, async ({
+    page,
+  }) => {
     for (const width of [320, 390, 430, 768, 1440]) {
       await page.setViewportSize({ width, height: 900 });
       await page.goto(`./?networkFallback=1#/${locale}/`);
@@ -136,8 +138,8 @@ test('frequent lookup, directory, profile and download targets are large and sep
         true,
       );
     }
-  }
-});
+  });
+}
 
 test('SVG selection keeps snapshot disclosures clear of return controls', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });

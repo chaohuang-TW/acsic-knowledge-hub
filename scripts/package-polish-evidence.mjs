@@ -17,7 +17,7 @@ import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import { chromium } from '@playwright/test';
-import { findEvidenceSecrets, sanitizeEvidence } from './evidence-sanitize.mjs';
+import { decodeEvidenceText, findEvidenceSecrets, sanitizeEvidence } from './evidence-sanitize.mjs';
 
 const execFile = promisify(execFileCallback);
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -334,7 +334,8 @@ async function evidenceContent(path) {
       .split(/\r?\n/)
       .filter(Boolean)
       .map((line) => JSON.parse(line));
-  return content.toString('utf8');
+  // Compressed screenshot pixels are not text and can resemble random emails.
+  return textFiles.has(extension) ? content.toString('utf8') : decodeEvidenceText(content);
 }
 
 async function scanEvidenceDirectory(directory) {
@@ -396,6 +397,25 @@ async function copyShareableFile(source, destination, replacements) {
         'Embedded report archive requires explicit sanitization; artifact was not published',
       );
     await copyText(source, destination, replacements);
+  } else if (!extension) {
+    const text = decodeEvidenceText(await readFile(source));
+    if (text === null) {
+      await cp(source, destination);
+    } else {
+      if (/playwrightReportBase64|data:application\/zip;base64/.test(text))
+        throw new Error(
+          'Embedded report archive requires explicit sanitization; artifact was not published',
+        );
+      let structured;
+      try {
+        structured = JSON.parse(text);
+      } catch {
+        // The actual extensionless error attachments are plain Markdown.
+        await writeFile(destination, sanitize(text, replacements));
+        return;
+      }
+      await saveJson(destination, structured, replacements);
+    }
   } else {
     await cp(source, destination);
   }
@@ -411,7 +431,7 @@ async function requireSafeEvidence(directory) {
     passed: true,
     filesScanned: result.filesScanned,
     policy:
-      'Git identity/diff metadata, emails and incidental local paths redacted; credential signatures fail closed. Original evidence is preserved.',
+      'Recognized JSON/JSONL and UTF-8 text are scanned; Git identity/diff metadata, emails and incidental local paths redacted; credential signatures fail closed. Binary resources remain byte-identical and are not interpreted as text. Original evidence is preserved.',
   };
 }
 

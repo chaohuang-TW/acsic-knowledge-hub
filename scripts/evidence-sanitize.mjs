@@ -4,9 +4,9 @@ const emailPattern = /\b[A-Z0-9._%+-]+(?:@|%40)[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
 const localPathPattern =
   /\/(?:Users|home\/runner|home\/[^/\s]+|private\/tmp|tmp|var\/folders)\/[^\s"'<>),]+/g; // secret-scan:allow
 const windowsPathPattern = /\b[A-Z]:\\(?:Users|Temp)\\[^\s"'<>),]+/gi;
-const traceSourceReference = /^src@[a-f0-9]{16,}\.txt$/i;
-const withoutTraceSourceReferences = (text) =>
-  text.replace(/\bsrc@[a-f0-9]{16,}\.txt\b/gi, '[trace-source-resource]');
+const traceResourceReference = /^(?:src@[a-f0-9]{16,}\.txt|page@[a-f0-9]{16,}-\d+\.jpeg)$/i;
+const withoutTraceResourceReferences = (text) =>
+  text.replace(/\b(?:src@[a-f0-9]{16,}\.txt|page@[a-f0-9]{16,}-\d+\.jpeg)\b/gi, '[trace-resource]');
 const secretPatterns = [
   ['email', new RegExp(emailPattern.source, 'i')],
   ['local path', new RegExp(localPathPattern.source)],
@@ -23,13 +23,23 @@ const secretPatterns = [
 
 const normalizeKey = (key) => key.replace(/[^a-z]/gi, '').toLowerCase();
 
+/** Trace resources may be extensionless Markdown/JSON; binary resources stay byte-identical. */
+export function decodeEvidenceText(bytes) {
+  if (bytes.some((byte) => byte < 32 && byte !== 9 && byte !== 10 && byte !== 13)) return null;
+  try {
+    return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes);
+  } catch {
+    return null;
+  }
+}
+
 export function sanitizeEvidence(value, replacements = [], gitContext = false) {
   if (typeof value === 'string') {
     let text = value;
     for (const [from, to] of replacements) text = text.split(from).join(to);
     return text
       .replace(emailPattern, (match) =>
-        traceSourceReference.test(match) ? match : '[email-redacted]',
+        traceResourceReference.test(match) ? match : '[email-redacted]',
       )
       .replace(localPathPattern, '[local-path-redacted]')
       .replace(windowsPathPattern, '[local-path-redacted]');
@@ -59,7 +69,7 @@ export function sanitizeEvidence(value, replacements = [], gitContext = false) {
 export function findEvidenceSecrets(value, at = '$') {
   if (typeof value === 'string')
     return secretPatterns
-      .filter(([, pattern]) => pattern.test(withoutTraceSourceReferences(value)))
+      .filter(([, pattern]) => pattern.test(withoutTraceResourceReferences(value)))
       .map(([kind]) => ({ kind, at }));
   if (Array.isArray(value))
     return value.flatMap((item, index) => findEvidenceSecrets(item, `${at}[${index}]`));
