@@ -455,7 +455,7 @@
 
 .institution-detail-page .institution-profile-hero > .eyebrow {
   margin: 0;
-  color: color-mix(in srgb, var(--institution-ink) 62%, transparent);
+  color: var(--institution-muted);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -494,7 +494,7 @@
 }
 
 .institution-detail-page .institution-official-name {
-  color: color-mix(in srgb, var(--institution-ink) 62%, transparent);
+  color: var(--institution-muted);
   font-size: 0.82rem;
 }
 
@@ -578,7 +578,7 @@
 .institution-detail-page .detail-grid h3,
 .institution-detail-page .detail-grid h4 {
   margin: 0 0 0.3rem;
-  color: color-mix(in srgb, var(--institution-ink) 64%, transparent);
+  color: var(--institution-muted);
   font-size: 0.74rem;
   font-weight: 750;
   line-height: 1.45;
@@ -620,6 +620,10 @@
   font-weight: 750;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.institution-detail-page .institution-metrics-heading {
+  color: var(--institution-muted);
 }
 
 .institution-detail-page .institution-metric-strip,

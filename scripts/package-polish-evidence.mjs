@@ -10,12 +10,14 @@
 
 import { execFile as execFileCallback, execFileSync, spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { cp, mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
+import { cp, mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
-import { dirname, join, relative, resolve } from 'node:path';
+import { dirname, extname, join, relative, resolve } from 'node:path';
+import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import { chromium } from '@playwright/test';
+import { decodeEvidenceText, findEvidenceSecrets, sanitizeEvidence } from './evidence-sanitize.mjs';
 
 const execFile = promisify(execFileCallback);
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -173,14 +175,16 @@ async function collectPhase(workspace, paths, baselineChecksum, isAfter, beforeT
     await run(
       process.execPath,
       [
-        join(workspace, 'scripts/experience-accessibility.mjs'),
+        join(root, 'scripts/experience-accessibility.mjs'),
         '--base-url',
         baseUrl,
         '--output',
         paths.accessibility,
+        '--build-sha',
+        commit(workspace),
         ...(isAfter ? ['--strict'] : []),
       ],
-      workspace,
+      root,
     );
     const targetScript = join(root, 'scripts/polish-target-audit.mjs');
     if (existsSync(targetScript))
@@ -282,23 +286,188 @@ async function collectFilteredScreenshots(baseUrl, directory) {
   );
 }
 
-function sanitize(value, replacements) {
-  if (typeof value === 'string') {
-    let text = value;
-    for (const [from, to] of replacements) text = text.split(from).join(to);
-    // The evidence must not retain incidental local-user or CI-runner paths.
-    text = text.replace(
-      /\/(?:Users|home\/runner|private\/tmp|tmp)\/[^\s"'<>),]+/g,
-      '[local-path-redacted]',
-    ); // secret-scan:allow
-    return text;
+const sanitize = sanitizeEvidence;
+
+// Traces contain JSONL plus source/resources; never mutate the original artifact.
+const jsonFiles = new Set(['.json', '.stacks']);
+const jsonLines = new Set(['.jsonl', '.trace', '.network']);
+const textFiles = new Set([
+  '.md',
+  '.txt',
+  '.log',
+  '.csv',
+  '.html',
+  '.js',
+  '.css',
+  '.svg',
+  '.xml',
+  '.yml',
+  '.yaml',
+  '.sha256',
+]);
+
+async function withArchive(source, task) {
+  const members = (await execFile('unzip', ['-Z1', source], { maxBuffer: 16 * 1024 * 1024 })).stdout
+    .split('\n')
+    .filter(Boolean);
+  if (
+    members.some(
+      (member) =>
+        member.startsWith('/') || member.includes('\\') || member.split('/').includes('..'),
+    )
+  )
+    throw new Error('Unsafe archive member path; artifact was not published');
+  const temporary = await mkdtemp(join(tmpdir(), 'acsic-evidence-scan-'));
+  try {
+    await execFile('unzip', ['-q', source, '-d', temporary], { maxBuffer: 16 * 1024 * 1024 });
+    return await task(temporary);
+  } finally {
+    await rm(temporary, { recursive: true, force: true });
   }
-  if (Array.isArray(value)) return value.map((item) => sanitize(item, replacements));
-  if (value && typeof value === 'object')
-    return Object.fromEntries(
-      Object.entries(value).map(([key, item]) => [key, sanitize(item, replacements)]),
+}
+
+async function evidenceContent(path) {
+  const content = await readFile(path);
+  const extension = extname(path).toLowerCase();
+  if (jsonFiles.has(extension)) return JSON.parse(content.toString('utf8'));
+  if (jsonLines.has(extension))
+    return content
+      .toString('utf8')
+      .split(/\r?\n/)
+      .filter(Boolean)
+      .map((line) => JSON.parse(line));
+  // Compressed screenshot pixels are not text and can resemble random emails.
+  return textFiles.has(extension) ? content.toString('utf8') : decodeEvidenceText(content);
+}
+
+async function scanEvidenceDirectory(directory) {
+  let count = 0;
+  const findings = [];
+  for (const path of await files(directory)) {
+    count += 1;
+    const label = relative(directory, path);
+    if (extname(path).toLowerCase() === '.zip') {
+      const nested = await withArchive(path, scanEvidenceDirectory);
+      count += nested.filesScanned;
+      findings.push(
+        ...nested.findings.map((finding) => ({ ...finding, file: `${label}/${finding.file}` })),
+      );
+    } else {
+      findings.push(
+        ...findEvidenceSecrets(await evidenceContent(path)).map(({ kind, at }) => ({
+          file: label,
+          kind,
+          at,
+        })),
+      );
+    }
+  }
+  return { filesScanned: count, findings };
+}
+
+async function copyShareableFile(source, destination, replacements) {
+  await mkdir(dirname(destination), { recursive: true });
+  const extension = extname(source).toLowerCase();
+  if (extension === '.zip') {
+    await withArchive(source, async (temporary) => {
+      const clean = await mkdtemp(join(tmpdir(), 'acsic-evidence-clean-'));
+      try {
+        for (const member of await files(temporary))
+          await copyShareableFile(member, join(clean, relative(temporary, member)), replacements);
+        await requireSafeEvidence(clean);
+        await execFile('zip', ['-q', '-r', destination, '.'], {
+          cwd: clean,
+          maxBuffer: 16 * 1024 * 1024,
+        });
+      } finally {
+        await rm(clean, { recursive: true, force: true });
+      }
+    });
+  } else if (jsonFiles.has(extension)) {
+    await saveJson(destination, await json(source), replacements);
+  } else if (jsonLines.has(extension)) {
+    const lines = await evidenceContent(source);
+    await writeFile(
+      destination,
+      `${lines.map((line) => JSON.stringify(sanitize(line, replacements))).join('\n')}\n`,
     );
-  return value;
+  } else if (textFiles.has(extension)) {
+    const text = await readFile(source, 'utf8');
+    // Do not pretend to sanitize an embedded compressed HTML report.
+    if (/playwrightReportBase64|data:application\/zip;base64/.test(text))
+      throw new Error(
+        'Embedded report archive requires explicit sanitization; artifact was not published',
+      );
+    await copyText(source, destination, replacements);
+  } else if (!extension) {
+    const text = decodeEvidenceText(await readFile(source));
+    if (text === null) {
+      await cp(source, destination);
+    } else {
+      if (/playwrightReportBase64|data:application\/zip;base64/.test(text))
+        throw new Error(
+          'Embedded report archive requires explicit sanitization; artifact was not published',
+        );
+      let structured;
+      try {
+        structured = JSON.parse(text);
+      } catch {
+        // The actual extensionless error attachments are plain Markdown.
+        await writeFile(destination, sanitize(text, replacements));
+        return;
+      }
+      await saveJson(destination, structured, replacements);
+    }
+  } else {
+    await cp(source, destination);
+  }
+}
+
+async function requireSafeEvidence(directory) {
+  const result = await scanEvidenceDirectory(directory);
+  if (result.findings.length)
+    throw new Error(`Shareable evidence scan failed: ${JSON.stringify(result.findings)}`);
+  return {
+    schema: 'acsic-shareable-evidence-scan/v1',
+    generatedAt: new Date().toISOString(),
+    passed: true,
+    filesScanned: result.filesScanned,
+    policy:
+      'Recognized JSON/JSONL and UTF-8 text are scanned; Git identity/diff metadata, emails and incidental local paths redacted; credential signatures fail closed. Binary resources remain byte-identical and are not interpreted as text. Original evidence is preserved.',
+  };
+}
+
+async function prepareShareable() {
+  if (!args.input || !args.output) throw new Error('--input and --output are required');
+  const input = resolve(args.input);
+  const output = resolve(args.output);
+  if (
+    output === input ||
+    output.startsWith(`${input}/`) ||
+    output === root ||
+    output.startsWith(`${root}/`)
+  )
+    throw new Error('Shareable copy must be outside its source and the repository');
+  if (!existsSync(input)) throw new Error('Evidence input is missing; artifact was not published');
+  if (existsSync(output) && (await readdir(output)).length)
+    throw new Error('Shareable output must be a fresh directory');
+  await mkdir(output, { recursive: true });
+  const selected = args.include ? String(args.include).split(',') : ['.'];
+  for (const item of selected) {
+    const source = resolve(input, item);
+    if (source !== input && !source.startsWith(`${input}/`))
+      throw new Error('Invalid evidence include path');
+    if (!existsSync(source)) continue;
+    const paths = (await stat(source)).isDirectory() ? await files(source) : [source];
+    for (const path of paths)
+      await copyShareableFile(path, join(output, relative(input, path)), [
+        [root, 'repository'],
+        [input, 'evidence-input'],
+      ]);
+  }
+  const scan = await requireSafeEvidence(output);
+  await saveJson(join(output, 'privacy-scan.json'), scan, []);
+  console.log(JSON.stringify(scan));
 }
 
 async function saveJson(destination, value, replacements) {
@@ -561,6 +730,7 @@ async function tooling() {
 }
 
 async function main() {
+  if (args['prepare-shareable']) return prepareShareable();
   if (args.help) {
     console.log(
       'Usage: node scripts/package-polish-evidence.mjs --before ROOT --after ROOT --output ROOT --baseline-sha SHA --release-sha SHA [--before-captures DIR ...] [--tests-report JSON] [--unit-report JSON] [--before-build DIST] [--after-build DIST] [--strict]\nCI: --collect-ci --baseline-workspace DIR --verification-root DIR --verified-ci',
@@ -667,7 +837,9 @@ async function main() {
       accessibilityViolations === 0 &&
       overflowFailures === 0 &&
       after.accessibility.tooling.axe.status === 'available' &&
-      after.accessibility.results.every((result) => result.axe.status === 'ok'),
+      after.accessibility.results.every(
+        (result) => result.axe.status === 'ok' && result.readiness?.status === 'ready',
+      ),
     captures:
       after.capture.report.summary.issueCount === 0 &&
       after.capture.report.summary.navigationFailures === 0 &&
@@ -766,11 +938,17 @@ async function main() {
     join(staging, 'README.md'),
     `# ACSIC Experience Polish Evidence\n\nThis ZIP contains selected before/after screenshots, raw Lighthouse and axe observations, build identifiers, protected-file checksums, supplied automated-test results and an unexecuted bilingual human usability kit.\n\nStart with release-summary.md and manifest.json. Screenshots are sorted by before/after, language, route state and viewport. Research facts are not changed by this package.\n\nThe GitHub Actions artifact download contains ${zipName} plus its SHA256 sidecar. Extract the artifact wrapper, then verify the named ZIP with its sidecar. Inside this ZIP, checksums.sha256 lists every included file except itself.\n\nArtifacts are retained for 14 days from upload, not permanently. Download and save them before the exact expiration shown by GitHub. Long-term lightweight records remain in the repository PR/commit.\n\nThe full raw screenshot matrix is in the same workflow's ACSIC-Experience-Polish-Raw artifact. Both artifacts have the same retention policy. No participant personal data, recordings, fonts, dependency folders or credentials are included.\n\nReproduce on exact checkouts with the repository's package-polish-evidence.mjs --collect-ci workflow; Lighthouse13.5.0 and axe-core4.13.0 are external QA-only tools. No runtime translation or QA service is required by the website.\n`,
   );
+  // Scan the actual final staging tree, not only the source checkout, before ZIP creation.
+  const privacyScan = await requireSafeEvidence(staging);
+  gates.shareableEvidencePrivacy = privacyScan.passed;
+  await saveJson(join(staging, 'privacy-scan.json'), privacyScan, []);
+  await saveJson(join(staging, 'manifest.json'), manifest, replacements);
   const included = await files(staging);
   const sums = [];
   for (const path of included)
     sums.push(`${sha256(await readFile(path))}  ${relative(staging, path)}`);
   await writeFile(join(staging, 'checksums.sha256'), `${sums.join('\n')}\n`);
+  await requireSafeEvidence(staging);
   const archive = join(output, zipName);
   await execFile('zip', ['-q', '-r', archive, '.'], { cwd: staging, maxBuffer: 4 * 1024 * 1024 });
   await execFile('unzip', ['-t', archive], { maxBuffer: 4 * 1024 * 1024 });
@@ -823,6 +1001,6 @@ async function main() {
 try {
   await main();
 } catch (error) {
-  console.error(error.stack || String(error));
+  console.error(sanitize(error.stack || String(error), [[root, 'repository']]));
   process.exitCode = 1;
 }

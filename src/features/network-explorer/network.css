@@ -17,6 +17,23 @@
   color: var(--network-ink);
 }
 
+/* Reserve the existing explorer's map aspect ratio while its code is fetched.
+   There is deliberately no animation, duplicate navigation or fake map. */
+.network-skeleton-status {
+  min-height: 2.25rem;
+  margin: 0 0 1rem;
+}
+.network-skeleton-controls {
+  height: 7rem;
+}
+.network-skeleton-footer {
+  height: 5rem;
+}
+.network-explorer-skeleton .network-skeleton-canvas {
+  width: 100%;
+  min-height: 0;
+}
+
 .network-explorer-heading {
   display: flex;
   align-items: end;
@@ -692,6 +709,9 @@
 }
 
 @media (max-width: 767px) {
+  .network-skeleton-controls {
+    height: 5rem;
+  }
   .network-stage .network-mobile-economy-control {
     margin-block: 0 1rem;
   }

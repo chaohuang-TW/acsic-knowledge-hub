@@ -46,22 +46,34 @@ jobs:
         run: pnpm test:e2e --reporter=github,json
       - name: Secret scan
         run: pnpm secret:scan
-      - name: Retain browser test evidence
+      - name: Prepare shareable browser evidence
         if: always()
+        id: safe-browser
+        run: >-
+          node scripts/package-polish-evidence.mjs --prepare-shareable
+          --input "$GITHUB_WORKSPACE" --include test-results,playwright-report
+          --output "$RUNNER_TEMP/acsic-browser-shareable"
+      - name: Retain browser test evidence
+        if: always() && steps.safe-browser.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: experience-browser-evidence
-          path: |
-            test-results/
-            playwright-report/
+          path: ${{ runner.temp }}/acsic-browser-shareable/
           if-no-files-found: ignore
           retention-days: 14
-      - name: Retain structured verification results
+      - name: Prepare shareable verification results
         if: always()
+        id: safe-verify
+        run: >-
+          node scripts/package-polish-evidence.mjs --prepare-shareable
+          --input "$RUNNER_TEMP/acsic-verify-results"
+          --output "$RUNNER_TEMP/acsic-verification-shareable"
+      - name: Retain structured verification results
+        if: always() && steps.safe-verify.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: experience-verification-results
-          path: ${{ runner.temp }}/acsic-verify-results/
+          path: ${{ runner.temp }}/acsic-verification-shareable/
           if-no-files-found: error
           retention-days: 14
 
@@ -69,7 +81,8 @@ jobs:
     needs: verify
     if: >-
       needs.verify.result == 'success' &&
-      ((github.event_name == 'pull_request' && github.head_ref == 'experience-final-polish') ||
+      ((github.event_name == 'pull_request' &&
+      (github.head_ref == 'experience-final-polish' || github.head_ref == 'experience-release-repair')) ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main'))
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -126,6 +139,7 @@ jobs:
           path: ${{ runner.temp }}/acsic-polish-verification
       - name: Collect before/after evidence and create downloadable ZIP
         if: steps.baseline.outputs.present == 'true'
+        id: collect
         env:
           LIGHTHOUSE_BIN: ${{ runner.temp }}/acsic-polish-qa/node_modules/.bin/lighthouse
           AXE_CORE_PATH: ${{ runner.temp }}/acsic-polish-qa/node_modules/axe-core/axe.js
@@ -141,7 +155,7 @@ jobs:
           --workflow-url "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           --strict
       - name: Retain requested evidence ZIP
-        if: always() && steps.baseline.outputs.present == 'true'
+        if: always() && steps.collect.outcome == 'success'
         id: evidence
         uses: actions/upload-artifact@v4
         with:
@@ -153,13 +167,18 @@ jobs:
           if-no-files-found: error
           retention-days: 14
           compression-level: 0
-      - name: Retain full raw evidence matrix
+      - name: Prepare shareable raw evidence matrix
         if: always() && steps.baseline.outputs.present == 'true'
+        id: safe-raw
+        run: >-
+          node scripts/package-polish-evidence.mjs --prepare-shareable
+          --input "$RUNNER_TEMP/acsic-polish-evidence" --include before,after
+          --output "$RUNNER_TEMP/acsic-polish-raw-shareable"
+      - name: Retain full raw evidence matrix
+        if: always() && steps.safe-raw.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: ACSIC-Experience-Polish-Raw
-          path: |
-            ${{ runner.temp }}/acsic-polish-evidence/before/
-            ${{ runner.temp }}/acsic-polish-evidence/after/
+          path: ${{ runner.temp }}/acsic-polish-raw-shareable/
           if-no-files-found: ignore
           retention-days: 14
