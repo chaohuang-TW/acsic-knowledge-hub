@@ -13,6 +13,8 @@ This lightweight repository record complements the downloadable evidence artifac
 
 The final PR release record must include exact-head CI, main CI, completed Pages deployment, deployment-head SHA, live asset comparison and English/Traditional-Chinese core operations. A successful candidate CI, a triggered deployment or HTTP200 alone is not release acceptance.
 
+PR #27 was merged, but its main release did not meet the desktop performance gate. The explicitly authorized [scoped release repair](release-repair.md) preserves that history and closes performance, evidence privacy and deployment acceptance without starting another design phase.
+
 ## Evidence delivery
 
 The existing repository CI creates `ACSIC-Experience-Polish-Evidence.zip` using sequential baseline/candidate production builds on one runner. The actual artifact retains the ZIP, SHA256 sidecar and `package-result.json`; the complete raw matrix is a separate artifact in the same run. No bulky screenshots or videos are committed to source.

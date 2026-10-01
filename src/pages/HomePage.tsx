@@ -1,9 +1,14 @@
-import { useState, type FormEvent } from 'react';
+import { lazy, Suspense, useState, type FormEvent } from 'react';
 import { getMembershipStats } from '../features/institutions/directoryUtils';
 import { useLocale } from '../i18n';
 import { routePath } from '../routing';
-import NetworkExplorer from '../features/network-explorer/NetworkExplorer';
+import { NetworkExplorerSkeleton } from '../features/network-explorer/NetworkExplorerSkeleton';
+import '../features/network-explorer/network.css';
 import './home.css';
+
+// Keep the title, search and canonical membership counts on the first-paint
+// path; load the SVG explorer without blocking those primary entry points.
+const NetworkExplorer = lazy(() => import('../features/network-explorer/NetworkExplorer'));
 
 const copy = {
   en: {
@@ -119,7 +124,9 @@ export default function HomePage() {
             )}
           </dl>
         </div>
-        <NetworkExplorer locale={locale} />
+        <Suspense fallback={<NetworkExplorerSkeleton locale={locale} />}>
+          <NetworkExplorer locale={locale} />
+        </Suspense>
       </section>
       <section className="home-research-index section-shell" aria-labelledby="home-index-title">
         <header>

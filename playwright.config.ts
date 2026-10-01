@@ -7,6 +7,8 @@ export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: true,
   retries: process.env.CI ? 2 : 0,
+  // Public QA evidence does not need commit authors, emails or source diffs.
+  captureGitInfo: { commit: false, diff: false },
   reporter: process.env.CI ? 'github' : 'list',
   use: {
     baseURL,
