@@ -175,14 +175,16 @@ async function collectPhase(workspace, paths, baselineChecksum, isAfter, beforeT
     await run(
       process.execPath,
       [
-        join(workspace, 'scripts/experience-accessibility.mjs'),
+        join(root, 'scripts/experience-accessibility.mjs'),
         '--base-url',
         baseUrl,
         '--output',
         paths.accessibility,
+        '--build-sha',
+        commit(workspace),
         ...(isAfter ? ['--strict'] : []),
       ],
-      workspace,
+      root,
     );
     const targetScript = join(root, 'scripts/polish-target-audit.mjs');
     if (existsSync(targetScript))
@@ -835,7 +837,9 @@ async function main() {
       accessibilityViolations === 0 &&
       overflowFailures === 0 &&
       after.accessibility.tooling.axe.status === 'available' &&
-      after.accessibility.results.every((result) => result.axe.status === 'ok'),
+      after.accessibility.results.every(
+        (result) => result.axe.status === 'ok' && result.readiness?.status === 'ready',
+      ),
     captures:
       after.capture.report.summary.issueCount === 0 &&
       after.capture.report.summary.navigationFailures === 0 &&

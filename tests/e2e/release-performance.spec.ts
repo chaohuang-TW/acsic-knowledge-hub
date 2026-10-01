@@ -1,5 +1,7 @@
 import { expect, test, type Locator } from '@playwright/test';
 import { readFileSync } from 'node:fs';
+// @ts-expect-error QA-only JavaScript helper has no application type contract.
+import { waitForAuditReady } from '../../scripts/audit-readiness.mjs';
 
 // Expected counts come from the same governed registry, not a second set of
 // homepage constants. This test does not modify or substitute production data.
@@ -96,6 +98,7 @@ for (const locale of ['en', 'zh-TW'] as const) {
         }));
         expect(loadingLayout.document).toBeLessThanOrEqual(loadingLayout.viewport);
         expect(loadingLayout.body).toBeLessThanOrEqual(loadingLayout.viewport);
+        await expect(waitForAuditReady(page, `home-${locale}`, 100)).rejects.toThrow();
 
         const reservedMap = await loading.locator('.network-skeleton-canvas').boundingBox();
         expect(reservedMap).not.toBeNull();
@@ -132,6 +135,7 @@ for (const locale of ['en', 'zh-TW'] as const) {
         const stage = page.getByTestId('asia-map-stage');
         await expect(stage.locator('.network-map-svg')).toBeVisible();
         await expect(loading).toHaveCount(0);
+        expect((await waitForAuditReady(page, `home-${locale}`)).status).toBe('ready');
         expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
           width,
         );

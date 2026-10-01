@@ -22,6 +22,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { chromium } from '@playwright/test';
+import { waitForAuditReady } from './audit-readiness.mjs';
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const args = parseArgs(process.argv.slice(2));
@@ -322,9 +323,11 @@ async function inspectPage(browser, route, viewport, axeSource) {
   const url = buildUrl(route.route, route.query);
   let navigationError = null;
   let axeInstalled = false;
+  let readiness = { status: 'error', mainHeading: null };
   try {
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 45_000 });
     await page.waitForLoadState('load', { timeout: 45_000 }).catch(() => undefined);
+    readiness = await waitForAuditReady(page, route.id);
     if (viewport.textZoom) {
       await page.evaluate((zoom) => {
         document.documentElement.dataset.qaTextZoom = `${zoom * 100}%`;
@@ -359,6 +362,7 @@ async function inspectPage(browser, route, viewport, axeSource) {
     viewport,
     capturedAt: iso(),
     navigationError,
+    readiness,
     axe,
     keyboard,
     touchTargets: {
@@ -403,6 +407,7 @@ function markdownReport(report) {
     '',
     `- axe-core: ${report.tooling.axe.status === 'available' ? `available (${axeResults.length} samples)` : 'not installed; automated axe checks were not run'}`,
     `- axe violations: ${violationCount}`,
+    `- fully rendered route samples: ${allResults.filter((result) => result.readiness.status === 'ready').length}/${allResults.length}`,
     `- samples with horizontal overflow: ${overflowCount}`,
     `- interactive targets under 44×44 CSS px: ${targetCount}`,
     `- focus stops needing manual focus-ring review: ${focusReviewCount}`,
@@ -449,6 +454,7 @@ async function main() {
     generatedAt: iso(),
     repositoryRoot,
     baseUrl,
+    buildSha: args['build-sha'] || null,
     tooling: {
       axe: { status: axeSource ? 'available' : 'unavailable', package: 'axe-core' },
       playwright: '@playwright/test',
@@ -473,7 +479,11 @@ async function main() {
 
   const axeViolations = flatten(results.map((result) => result.axe.violations));
   const overflowFailures = results.filter((result) => result.layout.noHorizontalOverflow === false);
-  if (strict && (axeViolations.length || overflowFailures.length)) process.exitCode = 1;
+  const incompleteAudits = results.filter(
+    (result) => result.readiness.status !== 'ready' || result.axe.status !== 'ok',
+  );
+  if (strict && (axeViolations.length || overflowFailures.length || incompleteAudits.length))
+    process.exitCode = 1;
 }
 
 try {

@@ -2,6 +2,8 @@
 
 This lightweight repository record complements the downloadable evidence artifact. It does not replace raw tests, claim an award, or imply a real participant study.
 
+The current exact release/CI/Pages/artifact status is maintained in the permanent [authorized repair PR #28](https://github.com/chaohuang-TW/acsic-knowledge-hub/pull/28), with earlier failed measurements retained separately.
+
 ## Exact release identity
 
 - Repository: `chaohuang-TW/acsic-knowledge-hub` (public).
@@ -48,7 +50,7 @@ The existing repository CI creates `ACSIC-Experience-Polish-Evidence.zip` using 
 - One complete local E2E run: 165 cases, 156 passed and 9 failed because old selectors still pointed at intentionally removed duplicate text/actions. No application regression was inferred from those selector failures. After updating them to the retained return action and actual selected/overview state, all 11 affected regression cases passed. The exact-head CI full-suite JSON remains the final authoritative browser result.
 - Fresh local baseline Lighthouse medians: mobile 100 / LCP 1299.30ms; desktop 95 / LCP 1175.64ms; CLS 0. A pre-contrast-fix candidate measurement had desktop 93 and did not meet the 95 gate. It is not reported as a pass. Final CI collects both revisions sequentially on one runner and must meet all gates before merge.
 - After the confirmed contrast fix, the final frozen production build's six cold local runs had medians mobile 100 / LCP 1281.83ms and desktop 96 / LCP 1125.40ms, CLS 0. Initial JavaScript gzip changed from 126551 to 126399 bytes (−0.12%). The earlier 93 result is retained separately, not relabeled; these are lab measurements, not field INP or a claim that a typography fix caused a performance gain.
-- The final 144-state axe matrix has zero violations and zero page overflow/errors; incomplete findings remain for manual review. All 52 final capture cases pass with protected-file equality.
+- The historical 150ms 144-state axe matrix reported zero findings, but this fixed-delay method can scan a loading shell. It is not sufficient proof of complete route coverage; the scoped repair's real-content readiness reports and exact-head gate supersede it. All 52 capture cases include separate interaction/ready checks and protected-file equality.
 - Fresh captures and checksum verification cover 52 route/language/viewport cases and all 15 protected data/mascot files (14 data files plus the original mascot). The final artifact records current successful/failed results, not this document's intent.
 - A first final axe matrix exposed metric-text contrast at 200% root-font approximation. The three affected text styles were fixed; final scans are required rather than suppressing the finding.
 
