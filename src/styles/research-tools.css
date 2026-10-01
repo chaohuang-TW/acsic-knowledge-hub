@@ -171,7 +171,7 @@
 .research-tool-page input[type='search'] {
   width: 100%;
   min-width: 0;
-  min-height: 2.65rem;
+  min-height: 44px;
   padding: 0.55rem 0.7rem;
   border: 1px solid var(--control-border);
   border-radius: var(--research-radius-sm);
@@ -218,7 +218,7 @@
 }
 
 .research-tool-page .button {
-  min-height: 2.6rem;
+  min-height: 44px;
   border-radius: var(--research-radius-sm);
   font-size: 0.84rem;
   letter-spacing: 0;
@@ -352,9 +352,9 @@
 
 .record-reading {
   display: grid;
-  grid-template-columns: minmax(170px, 1.25fr) minmax(140px, 0.8fr) minmax(220px, 1fr);
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, 0.65fr);
   gap: 1px;
-  margin-bottom: 1.2rem;
+  margin: 0 0 1rem;
   border: 1px solid var(--research-rule);
   border-radius: var(--research-radius-md);
   overflow: hidden;
@@ -371,7 +371,7 @@
   border-left: 1px solid var(--research-rule);
 }
 
-.record-reading span {
+.record-reading dt {
   display: block;
   margin-bottom: 0.35rem;
   color: var(--muted);
@@ -379,21 +379,40 @@
   font-weight: 750;
 }
 
-.record-reading strong {
+.record-reading dd {
   display: block;
+  margin: 0;
   overflow-wrap: anywhere;
   color: var(--research-dark);
   font-size: 1.05rem;
+  font-weight: 700;
   line-height: 1.3;
 }
 
-.record-reading > div:first-child strong {
+.record-reading > div:first-child dd {
   font-size: clamp(1.35rem, 3vw, 1.9rem);
   letter-spacing: -0.035em;
 }
 
-.record-reading > .record-reading-raw {
-  background: var(--research-paper);
+.research-data-page .record-definition,
+.research-data-page .record-source,
+.research-data-page .record-limitations {
+  margin: 0.65rem 0;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.research-data-page .record-limitations {
+  color: var(--muted);
+}
+
+.research-data-page .record-source a {
+  display: inline-flex;
+  min-height: 2.75rem;
+  max-width: 100%;
+  align-items: center;
+  vertical-align: middle;
+  overflow-wrap: anywhere;
 }
 
 .research-record-grid {
@@ -561,8 +580,9 @@
 
 .selection-chip button {
   display: grid;
-  width: 1.5rem;
-  height: 1.5rem;
+  min-width: 44px;
+  min-height: 44px;
+  flex-shrink: 0;
   place-items: center;
   border: 0;
   border-radius: var(--research-radius-sm);
@@ -897,9 +917,17 @@
     grid-template-columns: 1fr 1fr;
   }
 
-  .record-reading-raw {
+  .record-reading > div:last-child {
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
     grid-column: 1 / -1;
+    padding-block: 0.5rem;
     border-top: 1px solid var(--research-rule);
+  }
+
+  .record-reading > div:last-child dt {
+    margin: 0;
   }
 
   .record-reading > div + div {
@@ -962,8 +990,7 @@
 
   .research-compare-page .export-buttons {
     width: 100%;
-    overflow-x: auto;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     padding-bottom: 0.15rem;
   }
 

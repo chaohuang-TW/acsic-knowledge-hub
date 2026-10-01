@@ -69,6 +69,8 @@ const copy = {
     institutions: 'institutions',
     indicators: 'indicators',
     download: 'Download data',
+    noRecords: 'No verified records match these filters.',
+    clearFilters: 'Clear filters',
     institution: 'Institution',
     indicator: 'Indicator',
     all: 'All',
@@ -77,6 +79,7 @@ const copy = {
     exportCsv: 'Export readiness CSV',
     officialLabel: 'Official reported label',
     reportedValue: 'Reported value',
+    displayValue: 'Value',
     reportedUnit: 'Original unit',
     originalCurrency: 'Original currency',
     period: 'Reporting period',
@@ -84,6 +87,8 @@ const copy = {
     scheme: 'Scheme',
     normalized: 'Normalized interpretation',
     comparability: 'Comparability',
+    limitations: 'Interpretation limits',
+    notDisclosed: 'Not disclosed',
     source: 'Official source',
     page: 'Page / section',
     verifiedDate: 'Verification date',
@@ -135,6 +140,8 @@ const copy = {
     institutions: '家機構',
     indicators: '個指標',
     download: '下載資料',
+    noRecords: '沒有符合目前篩選條件的已查證資料。',
+    clearFilters: '清除篩選',
     institution: '機構',
     indicator: '指標',
     all: '全部',
@@ -143,6 +150,7 @@ const copy = {
     exportCsv: '匯出準備度 CSV',
     officialLabel: '官方原始欄位名稱',
     reportedValue: '官方原始值',
+    displayValue: '數值',
     reportedUnit: '原始單位',
     originalCurrency: '原始幣別',
     period: '報告期間',
@@ -150,6 +158,8 @@ const copy = {
     scheme: '方案',
     normalized: '標準化解讀',
     comparability: '可比性',
+    limitations: '解讀限制',
+    notDisclosed: '官方未揭露',
     source: '官方來源',
     page: '頁碼／章節',
     verifiedDate: '查證日期',
@@ -477,6 +487,21 @@ export function DataPilotPage() {
       )}
 
       <div className="pilot-records research-record-list" aria-live="polite">
+        {records.length === 0 && (
+          <div className="state-message" role="status">
+            <h2>{c.noRecords}</h2>
+            <button
+              className="button secondary"
+              type="button"
+              onClick={() => {
+                setInstitutionFilter('all');
+                setIndicatorFilter('all');
+              }}
+            >
+              {c.clearFilters}
+            </button>
+          </div>
+        )}
         {records.map((record) => {
           const source = sourceRegistry.find((item) => item.sourceId === record.source.sourceId)!;
           const scheme =
@@ -487,69 +512,62 @@ export function DataPilotPage() {
                 ? 'Institution-wide reported value'
                 : '機構整體公布值');
           return (
-            <article className="pilot-record-card research-record-card" key={record.recordId}>
+            <article
+              className="pilot-record-card research-record-card"
+              key={record.recordId}
+              data-record-id={record.recordId}
+            >
               <div className="record-title">
                 <div>
-                  <span className="eyebrow">
-                    {institutionName(record.institutionId)} ·{' '}
-                    {formatDisplayPeriod(record.period, locale)}
-                  </span>
+                  <span className="eyebrow">{institutionName(record.institutionId)}</span>
                   <h2>{indicatorName(record.indicatorId)}</h2>
                 </div>
                 <span className="data-status">
                   {statusLabels[record.verificationStatus][locale]}
                 </span>
               </div>
-              <div className="record-reading" aria-label={`${c.reportedValue} · ${c.period}`}>
+              <dl className="record-reading pilot-record-grid">
                 <div>
-                  <span>{c.reportedValue}</span>
-                  <strong>{formatReportedValue(record, locale)}</strong>
-                </div>
-                <div>
-                  <span>{c.period}</span>
-                  <strong>{formatDisplayPeriod(record.period, locale)}</strong>
-                </div>
-                <div className="record-reading-raw">
-                  <span>
-                    {c.reportedValue} · {c.originalCurrency}
-                  </span>
-                  <strong>{formatRawValue(record, locale)}</strong>
-                </div>
-              </div>
-              <dl className="pilot-record-grid research-record-grid">
-                <div>
-                  <dt>{c.reportedValue}</dt>
-                  <dd className="reported-number">{formatReportedValue(record, locale)}</dd>
-                </div>
-                <div>
-                  <dt>{c.originalCurrency}</dt>
-                  <dd>{record.reported.currency ?? '—'}</dd>
+                  <dt>{c.displayValue}</dt>
+                  <dd>{formatReportedValue(record, locale)}</dd>
                 </div>
                 <div>
                   <dt>{c.period}</dt>
                   <dd>{formatDisplayPeriod(record.period, locale)}</dd>
                 </div>
                 <div>
-                  <dt>{c.dataYear}</dt>
-                  <dd>{record.period.calendarYear ?? '—'}</dd>
-                </div>
-                <div>
-                  <dt>{c.publicationYear}</dt>
-                  <dd>{record.source.publicationDate?.slice(0, 4) ?? '—'}</dd>
-                </div>
-                <div>
-                  <dt>{c.source}</dt>
+                  <dt>{c.originalCurrency}</dt>
                   <dd>
-                    <a href={source.url} target="_blank" rel="noreferrer">
-                      {source.publisher}
-                    </a>
+                    {record.reported.currency ?? (locale === 'en' ? 'Not applicable' : '不適用')}
                   </dd>
                 </div>
               </dl>
+              <p className="record-definition">{record.reported.definition[locale]}</p>
+              <p className="record-source">
+                <strong>{c.source}:</strong>{' '}
+                <a href={source.url} target="_blank" rel="noreferrer">
+                  {source.publisher}
+                </a>
+              </p>
+              {record.comparability.issues[locale].length > 0 && (
+                <p className="record-limitations">
+                  <strong>{c.limitations}:</strong> {record.comparability.issues[locale].join(' ')}
+                </p>
+              )}
 
               <details className="provenance-viewer research-provenance">
                 <summary>{c.viewProvenance}</summary>
                 <dl className="pilot-record-grid methodology-grid">
+                  <div>
+                    <dt>{c.dataYear}</dt>
+                    <dd>
+                      {record.period.calendarYear ?? record.period.fiscalYear ?? c.notDisclosed}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>{c.publicationYear}</dt>
+                    <dd>{record.source.publicationDate?.slice(0, 4) ?? c.notDisclosed}</dd>
+                  </div>
                   <div>
                     <dt>{c.officialLabel}</dt>
                     <dd lang={source.originalLanguage}>{record.reported.label}</dd>
@@ -601,9 +619,8 @@ export function DataPilotPage() {
                   </li>
                   <li>
                     <strong>{c.reported}</strong>
-                    <span>
-                      {record.reported.label}: {formatNumber(record.reported.value, locale)}{' '}
-                      {record.reported.unit}
+                    <span lang={source.originalLanguage}>
+                      {record.reported.label}: {formatRawValue(record, locale)}
                     </span>
                   </li>
                   <li>

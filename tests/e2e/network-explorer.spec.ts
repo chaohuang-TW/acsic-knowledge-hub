@@ -145,10 +145,8 @@ test('overview exposes all governed economies and dynamic network counts', async
         .locator('.network-destination-controls')
         .getByRole('button', { name: 'Asia overview', exact: true }),
     ).toHaveAttribute('aria-pressed', 'true');
-    await expect(
-      page.getByText('Choose an economy to explore its ACSIC institutions.'),
-    ).toBeVisible();
-    await expect(page.locator('.network-overview-acronyms')).toContainText('ACGF');
+    await expect(page.locator('.network-schematic-note')).toHaveCount(1);
+    await expect(page.locator('.network-schematic-note')).toBeVisible();
   }
   await expect(page.locator('.network-institution-card')).toHaveCount(0);
 });
@@ -255,9 +253,6 @@ test('institution selection and return-to-overview stay synchronized', async ({ 
     await expect(page.getByRole('combobox', { name: 'Choose an economy' })).toHaveValue('');
   } else {
     await expect(
-      page.getByText('Choose an economy to explore its ACSIC institutions.'),
-    ).toBeVisible();
-    await expect(
       page
         .locator('.network-destination-controls')
         .getByRole('button', { name: 'Asia overview', exact: true }),
@@ -342,9 +337,16 @@ test('DOM fallback keeps all economy navigation and selected institution coverag
     '#/en/institutions/cgcc-kh',
   );
   await page.locator('.network-standard-actions .network-standard-back').click();
-  await expect(
-    page.getByText('Choose an economy to explore its ACSIC institutions.'),
-  ).toBeVisible();
+  await expect(page.locator('.network-institution-card')).toHaveCount(0);
+  if (await page.locator('.network-standard-mobile-select').isVisible()) {
+    await expect(page.getByRole('combobox', { name: 'Choose an economy' })).toHaveValue('');
+  } else {
+    await expect(page.locator('.network-standard-economy-grid')).toBeVisible();
+    await expect(page.locator('.network-standard-map')).toHaveAttribute(
+      'data-selected-economy',
+      '',
+    );
+  }
 });
 
 test('Traditional Chinese economy labels and actions stay governed', async ({ page }) => {

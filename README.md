@@ -39,6 +39,8 @@ Shared design tokens live in `src/styles/tokens.css`; shared elements in `global
 
 Design rationale, official award references, baseline observations, asset provenance and release gates are recorded in [Experience Rebuild](docs/experience-redesign/brief.md). Screenshots, traces and raw audit reports are external QA artifacts, not production data or committed page assets.
 
+The scoped [Final Polish acceptance](docs/experience-redesign/polish-acceptance.md) links the downloadable before/after evidence and [bilingual human test kit](docs/experience-redesign/usability-test-plan.md). Real participant testing remains pending; automated mobile and WebKit checks do not establish physical iPhone acceptance.
+
 ## Multilingual data contract
 
 Institution records are centralized in `src/data/institutions.json`. The contract preserves:

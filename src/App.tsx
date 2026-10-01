@@ -89,7 +89,13 @@ const legacyPages: Record<string, PageId> = {
   '/disclaimer': 'disclaimer',
 };
 
-type AppRoute = { locale: Locale; page: PageId; canonical: boolean; institutionId?: string };
+type AppRoute = {
+  locale: Locale;
+  page: PageId;
+  canonical: boolean;
+  institutionId?: string;
+  query?: string;
+};
 
 function routeState(): AppRoute {
   const hash = window.location.hash.replace(/^#/, '') || '/';
@@ -109,8 +115,15 @@ function routeState(): AppRoute {
     if (pages.includes(page)) return { locale: match[1] as Locale, page, canonical: true };
     return { locale: match[1] as Locale, page: 'not-found', canonical: true };
   }
-  if (legacyPages[hash])
-    return { locale: browserLocale(), page: legacyPages[hash], canonical: false };
+  const queryIndex = hash.indexOf('?');
+  const legacyPath = (queryIndex < 0 ? hash : hash.slice(0, queryIndex)).replace(/\/$/, '') || '/';
+  if (legacyPages[legacyPath])
+    return {
+      locale: browserLocale(),
+      page: legacyPages[legacyPath],
+      canonical: false,
+      query: queryIndex < 0 ? '' : hash.slice(queryIndex),
+    };
   return { locale: browserLocale(), page: 'not-found', canonical: true };
 }
 
@@ -127,7 +140,11 @@ export default function App() {
 
   useEffect(() => {
     if (!state.canonical)
-      window.history.replaceState(null, '', `#${routePath(state.locale, state.page)}`);
+      window.history.replaceState(
+        null,
+        '',
+        `#${routePath(state.locale, state.page)}${state.query ?? ''}`,
+      );
   }, [state]);
 
   useEffect(() => {

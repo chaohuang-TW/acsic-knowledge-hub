@@ -120,11 +120,6 @@ export function InstitutionDirectory() {
       </dl>
       <div className="directory-filter-heading">
         <h2>{c.filterHeading}</h2>
-        <p>
-          {locale === 'en'
-            ? 'Start with a name, acronym or economy.'
-            : '先從名稱、縮寫或國家／經濟體開始。'}
-        </p>
       </div>
       <InstitutionFilters
         locale={locale}
@@ -157,12 +152,7 @@ export function InstitutionDirectory() {
               aria-labelledby={`economy-${group.id}`}
             >
               <header className="economy-group__header">
-                <div>
-                  <p className="economy-group__eyebrow">
-                    {locale === 'en' ? 'Economy' : '國家／經濟體'}
-                  </p>
-                  <h2 id={`economy-${group.id}`}>{group.label[locale]}</h2>
-                </div>
+                <h2 id={`economy-${group.id}`}>{group.label[locale]}</h2>
                 <span className="economy-group__count">
                   {countLabel(group.institutions.length, locale, c)}
                 </span>
