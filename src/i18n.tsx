@@ -28,6 +28,7 @@ export const copy = {
     nav: {
       overview: 'ACSIC',
       members: 'Institutions',
+      systems: 'Systems',
       compare: 'Compare',
       dataPilot: 'Data',
       resources: 'Resources',
@@ -49,6 +50,7 @@ export const copy = {
     nav: {
       overview: 'ACSIC',
       members: '會員機構',
+      systems: '制度',
       compare: '制度比較',
       dataPilot: '官方數據',
       resources: '資源',

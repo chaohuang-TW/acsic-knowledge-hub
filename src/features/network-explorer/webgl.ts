@@ -14,8 +14,8 @@ type NetworkWindow = Window & {
 };
 
 /**
- * Detect the least capable context Three.js can use instead of treating a
- * missing WebGL2 context as a total 3D failure.
+ * The installed Three.js renderer requires WebGL2. WebGL1-only devices use
+ * the complete SVG explorer rather than attempting an unsupported renderer.
  */
 export function getWebGLCapability(): WebGLCapability {
   if (typeof window === 'undefined' || typeof document === 'undefined') {
@@ -31,17 +31,13 @@ export function getWebGLCapability(): WebGLCapability {
   const canvas = document.createElement('canvas');
   let webgl2Failed = false;
   try {
-    if (canvas.getContext('webgl2')) return { available: true, mode: 'webgl2' };
-  } catch {
-    webgl2Failed = true;
-  }
-
-  try {
-    if (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')) {
-      return { available: true, mode: 'webgl1' };
+    const context = canvas.getContext('webgl2');
+    if (context) {
+      context.getExtension?.('WEBGL_lose_context')?.loseContext();
+      return { available: true, mode: 'webgl2' };
     }
   } catch {
-    return { available: false, mode: 'none', reason: 'context-creation-failed' };
+    webgl2Failed = true;
   }
 
   return {
@@ -63,5 +59,7 @@ export function reportNetworkDiagnostic(
 ) {
   const errorName = error instanceof Error ? error.name : undefined;
   const details = { reason, ...(errorName ? { errorName } : {}), ...metadata };
-  console.error('[ACSIC Network Explorer]', details);
+  if (reason === 'manual-test' || reason === 'capability-unavailable')
+    console.info('[ACSIC Network Explorer]', details);
+  else console.error('[ACSIC Network Explorer]', details);
 }

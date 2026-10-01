@@ -16,7 +16,8 @@ export type PageId =
   | 'governance'
   | 'about'
   | 'disclaimer'
-  | 'institution';
+  | 'institution'
+  | 'not-found';
 
 export function routePath(locale: Locale, page: PageId) {
   return page === 'home' ? `/${locale}/` : `/${locale}/${page}`;

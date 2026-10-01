@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocale } from '../../i18n';
 import { institutions } from '../../data/institutions';
 import type { AcsicMembershipStatus, InstitutionRoleCategory } from '../../types';
+import './institutions.css';
 import { InstitutionCard } from './InstitutionCard';
 import { InstitutionFilters } from './InstitutionFilters';
 import {
@@ -11,6 +12,10 @@ import {
   getMembershipStats,
   groupInstitutionsByEconomy,
   hasActiveDirectoryFilters,
+  normalizeDirectoryFilters,
+  parseDirectoryQuery,
+  readDirectorySession,
+  writeDirectorySession,
   type DirectoryFilters,
 } from './directoryUtils';
 
@@ -27,6 +32,7 @@ const copy = {
     groupCount: 'institutions',
     noResults: 'No institutions match these filters.',
     clear: 'Clear filters',
+    filterHeading: 'Find an institution',
   },
   'zh-TW': {
     title: 'ACSIC 會員機構',
@@ -39,6 +45,7 @@ const copy = {
     groupCount: '家機構',
     noResults: '沒有符合目前篩選條件的機構。',
     clear: '清除篩選',
+    filterHeading: '尋找機構',
   },
 } as const;
 
@@ -50,12 +57,15 @@ function countLabel(count: number, locale: 'en' | 'zh-TW', c: { result: string; 
 export function InstitutionDirectory() {
   const { locale } = useLocale();
   const c = copy[locale];
-  const [filters, setFilters] = useState<DirectoryFilters>({
-    query: '',
-    economy: 'all',
-    type: 'all',
-    membership: 'all',
+  const [restoreSession] = useState(() => {
+    const query = parseDirectoryQuery();
+    return Object.keys(query).length ? null : readDirectorySession();
   });
+  const [filters, setFilters] = useState<DirectoryFilters>(() => {
+    const session = readDirectorySession();
+    return normalizeDirectoryFilters({ ...session?.filters, ...parseDirectoryQuery() });
+  });
+  const hydrated = useRef(false);
   const economies = useMemo(() => getEconomies(), []);
   const types = useMemo(() => getInstitutionTypes(), []);
   const stats = useMemo(() => getMembershipStats(), []);
@@ -66,9 +76,27 @@ export function InstitutionDirectory() {
     setFilters((current) => ({ ...current, [key]: value }));
   const clear = () => setFilters({ query: '', economy: 'all', type: 'all', membership: 'all' });
 
+  useEffect(() => {
+    if (!hydrated.current) {
+      hydrated.current = true;
+      return;
+    }
+    writeDirectorySession(filters, window.scrollY);
+  }, [filters]);
+
+  useEffect(() => {
+    if (!restoreSession) return;
+    const frame = window.requestAnimationFrame(() => {
+      window.scrollTo({ top: restoreSession.scrollY, left: 0, behavior: 'instant' });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [restoreSession]);
+
+  const saveDirectoryContext = () => writeDirectorySession(filters, window.scrollY);
+
   return (
     <section className="section-shell page-section directory-page">
-      <header className="page-header">
+      <header className="page-header directory-page__header">
         <p className="directory-kicker">ACSIC Knowledge Hub</p>
         <h1>{c.title}</h1>
         <p>{c.intro}</p>
@@ -90,6 +118,14 @@ export function InstitutionDirectory() {
           <dd>{stats.observers}</dd>
         </div>
       </dl>
+      <div className="directory-filter-heading">
+        <h2>{c.filterHeading}</h2>
+        <p>
+          {locale === 'en'
+            ? 'Start with a name, acronym or economy.'
+            : '先從名稱、縮寫或國家／經濟體開始。'}
+        </p>
+      </div>
       <InstitutionFilters
         locale={locale}
         filters={filters}
@@ -133,7 +169,11 @@ export function InstitutionDirectory() {
               </header>
               <div className="directory-card-grid">
                 {group.institutions.map((record) => (
-                  <InstitutionCard key={record.id} record={record} />
+                  <InstitutionCard
+                    key={record.id}
+                    record={record}
+                    onOpenProfile={saveDirectoryContext}
+                  />
                 ))}
               </div>
             </section>

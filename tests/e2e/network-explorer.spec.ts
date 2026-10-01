@@ -7,7 +7,10 @@ async function chooseEconomy(page: Page, optionValue: string, buttonLabel: strin
     await selector.waitFor({ state: 'visible' });
     await selector.selectOption(optionValue);
   } else {
-    await page.getByRole('button', { name: buttonLabel, exact: true }).click();
+    await page
+      .locator('.network-destination-controls')
+      .getByRole('button', { name: buttonLabel, exact: true })
+      .click();
   }
 }
 
@@ -18,7 +21,14 @@ async function returnToOverview(page: Page) {
     await selector.waitFor({ state: 'visible' });
     await selector.selectOption('');
   } else {
-    await page.getByRole('button', { name: 'Back to Asia overview', exact: true }).click();
+    const networkBack = page
+      .locator('.network-panel')
+      .getByRole('button', { name: 'Back to Asia overview', exact: true });
+    if (await networkBack.count()) {
+      await networkBack.click();
+    } else {
+      await page.locator('.network-standard-actions .network-standard-back').click();
+    }
   }
 }
 
@@ -26,20 +36,49 @@ test('supported Chromium keeps the normal 3D explorer path', async ({ page, brow
   test.skip(browserName !== 'chromium', 'The blocking WebGL smoke is defined for Chromium.');
   await page.goto('./#/en/');
   await expect(page.locator('.network-explorer-fallback')).toHaveCount(0);
-  await expect(page.locator('.network-canvas canvas')).toBeVisible();
+  await expect(page.locator('.network-map-svg')).toBeVisible();
   await expect(page.getByTestId('asia-map-stage')).toHaveAttribute(
     'aria-label',
     'Simplified Asia map for visual exploration only.',
   );
+  if ((page.viewportSize()?.width ?? 1280) > 767) {
+    await page.getByRole('button', { name: 'Try 3D view', exact: true }).click();
+    await expect(page.locator('.network-canvas canvas')).toBeVisible();
+  } else {
+    await expect(page.locator('.network-canvas canvas')).toHaveCount(0);
+  }
   await chooseEconomy(page, 'JP', 'Japan');
-  await expect(page.getByText('JFC', { exact: true })).toBeVisible();
+  await expect(
+    page
+      .locator('.network-institution-card')
+      .filter({ hasText: 'JFC' })
+      .getByText('JFC', { exact: true }),
+  ).toBeVisible();
 });
 
 test('bilingual map stage preserves geographic focus and profile navigation', async ({ page }) => {
   for (const locale of ['en', 'zh-TW']) {
     await page.goto(`./#/${locale}/`);
     const stage = page.getByTestId('asia-map-stage');
-    await expect(stage.locator('canvas')).toBeVisible();
+    await expect(stage.locator('.network-map-svg')).toBeVisible();
+    if ((page.viewportSize()?.width ?? 1280) > 767) {
+      await page
+        .getByRole('button', {
+          name: locale === 'en' ? 'Try 3D view' : '試用 3D 檢視',
+          exact: true,
+        })
+        .click();
+      await expect(stage.locator('canvas')).toBeVisible();
+      await page
+        .getByRole('button', {
+          name: locale === 'en' ? 'Use SVG map' : '使用 SVG 地圖',
+          exact: true,
+        })
+        .click();
+      await expect(stage.locator('.network-map-svg')).toBeVisible();
+    } else {
+      await expect(stage.locator('canvas')).toHaveCount(0);
+    }
     if ((page.viewportSize()?.width ?? 1280) <= 767) {
       await page
         .getByRole('combobox', {
@@ -68,12 +107,18 @@ test('bilingual map stage preserves geographic focus and profile navigation', as
           })
           .selectOption(id);
       } else {
-        await page.getByRole('button', { name: locale === 'en' ? en : zh, exact: true }).click();
+        await page
+          .locator('.network-destination-controls')
+          .getByRole('button', { name: locale === 'en' ? en : zh, exact: true })
+          .click();
       }
       await expect(stage).toHaveAttribute('data-selected-economy', id);
-      await expect(stage.locator('canvas')).toBeVisible();
+      await expect(stage.locator('.network-map-svg')).toBeVisible();
       await expect(
-        page.locator('.network-panel').getByText(abbreviation, { exact: true }),
+        page
+          .locator('.network-institution-card')
+          .filter({ hasText: abbreviation })
+          .getByText(abbreviation, { exact: true }),
       ).toBeVisible();
     }
     const card = page.locator('.network-institution-card').filter({ hasText: 'CGCC' });
@@ -93,35 +138,69 @@ test('overview exposes all governed economies and dynamic network counts', async
     const selector = page.getByRole('combobox', { name: 'Choose an economy' });
     await expect(selector.locator('option')).toHaveCount(15);
     await expect(selector).toHaveValue('');
-    await expect(page.locator('.network-panel-overview')).toBeHidden();
+    await expect(page.locator('.network-map-svg')).toBeVisible();
   } else {
-    await expect(page.getByRole('button', { name: 'Asia overview', exact: true })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
+    await expect(
+      page
+        .locator('.network-destination-controls')
+        .getByRole('button', { name: 'Asia overview', exact: true }),
+    ).toHaveAttribute('aria-pressed', 'true');
     await expect(
       page.getByText('Choose an economy to explore its ACSIC institutions.'),
     ).toBeVisible();
-    await expect(page.locator('.network-overview-counts')).toContainText('20');
-    await expect(page.locator('.network-overview-counts')).toContainText('14');
-    await expect(page.locator('.network-overview-counts')).toContainText('1');
+    await expect(page.locator('.network-overview-acronyms')).toContainText('ACGF');
   }
-  await expect(page.locator('.network-panel .network-institution-card')).toHaveCount(0);
+  await expect(page.locator('.network-institution-card')).toHaveCount(0);
 });
 
 test('prototype economies retain their governed institutions', async ({ page }) => {
   await page.goto('./#/en/');
   await chooseEconomy(page, 'TW', 'Taiwan');
   await expect(page.getByRole('heading', { name: 'Taiwan', exact: true })).toBeVisible();
-  await expect(page.locator('.network-panel').getByText('TSMEG', { exact: true })).toBeVisible();
-  await expect(page.locator('.network-panel').getByText('ACGF', { exact: true })).toBeVisible();
+  await expect(
+    page
+      .locator('.network-institution-card')
+      .filter({ hasText: 'TSMEG' })
+      .getByText('TSMEG', { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page
+      .locator('.network-institution-card')
+      .filter({ hasText: 'ACGF' })
+      .getByText('ACGF', { exact: true }),
+  ).toBeVisible();
   await chooseEconomy(page, 'JP', 'Japan');
-  await expect(page.getByText('JFC', { exact: true })).toBeVisible();
-  await expect(page.getByText('JFG', { exact: true })).toBeVisible();
+  await expect(
+    page
+      .locator('.network-institution-card')
+      .filter({ hasText: 'JFC' })
+      .getByText('JFC', { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page
+      .locator('.network-institution-card')
+      .filter({ hasText: 'JFG' })
+      .getByText('JFG', { exact: true }),
+  ).toBeVisible();
   await chooseEconomy(page, 'KR', 'Republic of Korea');
-  await expect(page.getByText('KODIT', { exact: true })).toBeVisible();
-  await expect(page.getByText('KOREG', { exact: true })).toBeVisible();
-  await expect(page.getByText('KOTEC', { exact: true })).toBeVisible();
+  await expect(
+    page
+      .locator('.network-institution-card')
+      .filter({ hasText: 'KODIT' })
+      .getByText('KODIT', { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page
+      .locator('.network-institution-card')
+      .filter({ hasText: 'KOREG' })
+      .getByText('KOREG', { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page
+      .locator('.network-institution-card')
+      .filter({ hasText: 'KOTEC' })
+      .getByText('KOTEC', { exact: true }),
+  ).toBeVisible();
 });
 
 test('additional governed economies reveal their complete institution groups', async ({ page }) => {
@@ -138,7 +217,10 @@ test('additional governed economies reveal their complete institution groups', a
     await expect(page.getByRole('heading', { name: economy, exact: true })).toBeVisible();
     for (const abbreviation of abbreviations)
       await expect(
-        page.locator('.network-panel').getByText(abbreviation, { exact: true }),
+        page
+          .locator('.network-institution-card')
+          .filter({ hasText: abbreviation })
+          .getByText(abbreviation, { exact: true }),
       ).toBeVisible();
   }
 });
@@ -168,17 +250,18 @@ test('institution selection and return-to-overview stay synchronized', async ({ 
     'true',
   );
   await returnToOverview(page);
-  await expect(page.locator('.network-panel .network-institution-card')).toHaveCount(0);
+  await expect(page.locator('.network-institution-card')).toHaveCount(0);
   if (await page.locator('.network-mobile-economy-control').isVisible()) {
     await expect(page.getByRole('combobox', { name: 'Choose an economy' })).toHaveValue('');
   } else {
     await expect(
       page.getByText('Choose an economy to explore its ACSIC institutions.'),
     ).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Asia overview', exact: true })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
+    await expect(
+      page
+        .locator('.network-destination-controls')
+        .getByRole('button', { name: 'Asia overview', exact: true }),
+    ).toHaveAttribute('aria-pressed', 'true');
   }
 });
 
@@ -189,12 +272,21 @@ test('mobile economy selector remains usable at 390px and 320px', async ({ page 
     await expect(page.locator('body')).toHaveJSProperty('scrollWidth', width);
     await expect(page.locator('.network-destination-controls')).toBeHidden();
     await expect(page.locator('.network-mobile-economy-control')).toBeVisible();
-    await expect(page.locator('.network-panel-overview')).toBeHidden();
     const selector = page.getByRole('combobox', { name: 'Choose an economy' });
     await expect(selector.locator('option')).toHaveCount(15);
+    await expect(page.locator('.network-map-marker')).toHaveCount(14);
+    await expect(page.locator('.network-map-svg')).toBeVisible();
     await selector.selectOption('KH');
     await expect(page.getByRole('heading', { name: 'Cambodia', exact: true })).toBeVisible();
-    await expect(page.getByText('CGCC', { exact: true })).toBeVisible();
+    await expect(
+      page
+        .locator('.network-institution-card')
+        .filter({ hasText: 'CGCC' })
+        .getByText('CGCC', { exact: true }),
+    ).toBeVisible();
+    await expect(page.locator('.network-map-marker[data-economy-id="KH"]')).toHaveClass(
+      /is-selected/,
+    );
   }
 });
 
@@ -204,9 +296,19 @@ test('reduced motion supports nearby and distant selections without an animation
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('./#/en/');
   await chooseEconomy(page, 'JP', 'Japan');
-  await expect(page.getByText('JFC', { exact: true })).toBeVisible();
+  await expect(
+    page
+      .locator('.network-institution-card')
+      .filter({ hasText: 'JFC' })
+      .getByText('JFC', { exact: true }),
+  ).toBeVisible();
   await chooseEconomy(page, 'PG', 'Papua New Guinea');
-  await expect(page.getByText('CGCPNG', { exact: true })).toBeVisible();
+  await expect(
+    page
+      .locator('.network-institution-card')
+      .filter({ hasText: 'CGCPNG' })
+      .getByText('CGCPNG', { exact: true }),
+  ).toBeVisible();
 });
 
 test('DOM fallback keeps all economy navigation and selected institution coverage', async ({
@@ -220,16 +322,26 @@ test('DOM fallback keeps all economy navigation and selected institution coverag
   if (await page.locator('.network-standard-mobile-select').isVisible()) {
     await page.getByRole('combobox', { name: 'Choose an economy' }).selectOption('KH');
   } else {
-    await page.getByRole('button', { name: 'Cambodia', exact: true }).click();
+    await page
+      .locator('.network-standard-economy-grid')
+      .getByRole('button', { name: 'Cambodia', exact: true })
+      .click();
   }
-  await expect(page.getByText('CGCC', { exact: true })).toBeVisible();
+  await expect(
+    page
+      .locator('.network-institution-card')
+      .filter({ hasText: 'CGCC' })
+      .getByText('CGCC', { exact: true }),
+  ).toBeVisible();
   await expect(page.locator('.network-institution-card')).toHaveCount(1);
-  await expect(page.getByRole('button', { name: 'Select institution' })).toHaveCount(0);
+  await expect(
+    page.locator('.network-institution-card').getByRole('button', { name: 'Select institution' }),
+  ).toHaveCount(1);
   await expect(page.getByRole('link', { name: 'View full profile' })).toHaveAttribute(
     'href',
     '#/en/institutions/cgcc-kh',
   );
-  await page.getByRole('button', { name: /Back to Asia overview/ }).click();
+  await page.locator('.network-standard-actions .network-standard-back').click();
   await expect(
     page.getByText('Choose an economy to explore its ACSIC institutions.'),
   ).toBeVisible();
@@ -247,7 +359,10 @@ test('Traditional Chinese economy labels and actions stay governed', async ({ pa
     await expect(
       page.locator('.network-standard-economy').filter({ hasText: '印度' }),
     ).toBeVisible();
-    await page.getByRole('button', { name: '臺灣', exact: true }).click();
+    await page
+      .locator('.network-standard-economy-grid')
+      .getByRole('button', { name: '臺灣', exact: true })
+      .click();
   }
   await expect(page.getByRole('heading', { name: '臺灣', exact: true })).toBeVisible();
   await expect(
@@ -257,14 +372,21 @@ test('Traditional Chinese economy labels and actions stay governed', async ({ pa
     'href',
     '#/zh-TW/institutions/tsmeg-tw',
   );
-  await expect(page.getByRole('link', { name: /官方網站/ }).first()).toHaveAttribute(
-    'target',
-    '_blank',
-  );
+  await expect(
+    page.locator('.network-standard-selected a[target="_blank"]').first(),
+  ).toHaveAttribute('target', '_blank');
 });
 
 test('context loss switches to standard explorer with an explicit reason', async ({ page }) => {
   await page.goto('./#/en/');
+  if ((page.viewportSize()?.width ?? 1280) <= 767) {
+    await expect(page.locator('.network-canvas canvas')).toHaveCount(0);
+    await expect(page.locator('.network-map-svg')).toBeVisible();
+    await page.getByRole('combobox', { name: 'Choose an economy' }).selectOption('KH');
+    await expect(page.getByTestId('asia-map-stage')).toHaveAttribute('data-selected-economy', 'KH');
+    return;
+  }
+  await page.getByRole('button', { name: 'Try 3D view', exact: true }).click();
   const canvas = page.locator('.network-canvas canvas');
   await expect(canvas).toBeVisible();
   await page.waitForTimeout(250);
@@ -275,7 +397,9 @@ test('context loss switches to standard explorer with an explicit reason', async
     'context-lost',
   );
   await expect(
-    page.getByText('The 3D view was interrupted. The standard explorer is available below.'),
+    page.getByText(
+      'The 3D view was interrupted. The map preview and standard explorer remain available.',
+    ),
   ).toBeVisible();
 });
 
@@ -292,7 +416,9 @@ test('mobile standard explorer uses a compact selector without horizontal overfl
     ).toBe(true);
     await page.getByRole('combobox', { name: 'Choose an economy' }).selectOption('JP');
     await expect(page.getByRole('heading', { name: 'Japan', exact: true })).toBeVisible();
-    await expect(page.getByText('JFC', { exact: true })).toBeVisible();
+    await expect(
+      page.locator('.network-standard-selected').getByText('JFC', { exact: true }),
+    ).toBeVisible();
     await expect(page.getByRole('link', { name: 'View full profile' }).first()).toBeVisible();
   }
 });

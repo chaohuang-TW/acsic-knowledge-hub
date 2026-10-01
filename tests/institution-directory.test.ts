@@ -5,6 +5,10 @@ import {
   getEconomies,
   getMembershipStats,
   groupInstitutionsByEconomy,
+  normalizeDirectoryFilters,
+  parseDirectoryQuery,
+  readDirectorySession,
+  writeDirectorySession,
 } from '../src/features/institutions/directoryUtils';
 
 describe('ACSIC institution directory helpers', () => {
@@ -134,5 +138,38 @@ describe('ACSIC institution directory helpers', () => {
         .find((group) => group.id === 'TW')
         ?.institutions.map((record) => record.institutionAbbreviation),
     ).toEqual(['TSMEG', 'ACGF']);
+  });
+
+  it('normalizes and restores directory context across a profile hand-off', () => {
+    const values = new Map<string, string>();
+    const storage = {
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => values.set(key, value),
+      removeItem: (key: string) => values.delete(key),
+    } as unknown as Storage;
+    const filters = normalizeDirectoryFilters({
+      query: ' guarantee ',
+      economy: 'TW',
+      type: 'credit_guarantee_corporation',
+      membership: 'member',
+    });
+
+    writeDirectorySession(filters, 480, storage);
+    const restored = readDirectorySession(storage);
+
+    expect(restored?.filters).toEqual(filters);
+    expect(restored?.scrollY).toBe(480);
+    expect(restored?.savedAt).toEqual(expect.any(Number));
+  });
+
+  it('accepts query hand-offs in both search and hash routes', () => {
+    expect(parseDirectoryQuery('?q=KODIT&economy=KR', '')).toEqual({
+      query: 'KODIT',
+      economy: 'KR',
+    });
+    expect(parseDirectoryQuery('', '#/en/members?query=TSMEG&membership=member')).toEqual({
+      query: 'TSMEG',
+      membership: 'member',
+    });
   });
 });

@@ -23,6 +23,7 @@ type SceneProps = {
   onSelectInstitution: (institutionId: string) => void;
   selectedInstitutionId: string | null;
   onSceneIssue: (reason: Extract<NetworkFallbackReason, 'context-lost'>) => void;
+  onReady?: () => void;
 };
 
 export function NetworkScene({
@@ -33,18 +34,37 @@ export function NetworkScene({
   selectedInstitutionId,
   locale,
   onSceneIssue,
+  onReady,
 }: SceneProps) {
   const region = getRegion(selectedRegion);
   const mascotTarget: Vec3 = region?.mascotTarget ?? [5.8, 0.18, 0.9];
+  const contextListener = useRef<{
+    canvas: HTMLCanvasElement;
+    listener: (event: Event) => void;
+  } | null>(null);
+  useEffect(
+    () => () => {
+      const current = contextListener.current;
+      current?.canvas.removeEventListener('webglcontextlost', current.listener);
+      contextListener.current = null;
+    },
+    [],
+  );
   const handleCreated = useCallback(
     ({ gl }: RootState) => {
       const onContextLost = (event: Event) => {
+        // Renderer disposal when choosing SVG is intentional, not a device failure.
+        if (!gl.domElement.isConnected || contextListener.current?.canvas !== gl.domElement) return;
         event.preventDefault();
         onSceneIssue('context-lost');
       };
+      const previous = contextListener.current;
+      previous?.canvas.removeEventListener('webglcontextlost', previous.listener);
+      contextListener.current = { canvas: gl.domElement, listener: onContextLost };
       gl.domElement.addEventListener('webglcontextlost', onContextLost, { once: true });
+      onReady?.();
     },
-    [onSceneIssue],
+    [onSceneIssue, onReady],
   );
   return (
     <Canvas

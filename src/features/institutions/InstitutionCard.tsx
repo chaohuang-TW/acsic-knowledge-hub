@@ -21,7 +21,13 @@ function anchor(locale: Locale, path: string) {
   return `#${path}`;
 }
 
-export function InstitutionCard({ record }: { record: Institution }) {
+export function InstitutionCard({
+  record,
+  onOpenProfile,
+}: {
+  record: Institution;
+  onOpenProfile?: () => void;
+}) {
   const { locale } = useLocale();
   const c = copy[locale];
   const membershipLabel = record.acsicMembershipStatus === 'member' ? c.member : c.observer;
@@ -41,7 +47,11 @@ export function InstitutionCard({ record }: { record: Institution }) {
       <p className="directory-card__type">{record.type[locale]}</p>
       <p className="directory-card__summary">{record.summary[locale]}</p>
       <div className="directory-card__actions">
-        <a className="button" href={anchor(locale, institutionPath(locale, record.id))}>
+        <a
+          className="button"
+          href={anchor(locale, institutionPath(locale, record.id))}
+          onClick={onOpenProfile}
+        >
           {c.profile}
         </a>
         <a

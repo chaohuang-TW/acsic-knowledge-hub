@@ -18,10 +18,10 @@ describe('WebGL capability detection', () => {
     expect(isWebGLAvailable()).toBe(true);
   });
 
-  it('falls back to WebGL1 when WebGL2 is unavailable', () => {
+  it('uses the standard explorer on WebGL1-only devices', () => {
     stubCanvas((contextId) => (contextId === 'webgl' ? {} : null));
 
-    expect(getWebGLCapability()).toEqual({ available: true, mode: 'webgl1' });
+    expect(getWebGLCapability()).toEqual({ available: false, mode: 'none', reason: 'unsupported' });
   });
 
   it('reports unsupported when neither context exists', () => {

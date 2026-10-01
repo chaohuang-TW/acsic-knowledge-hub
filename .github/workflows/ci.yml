@@ -35,9 +35,19 @@ jobs:
         run: pnpm test
       - name: Build
         run: pnpm build
-      - name: Install browser
-        run: pnpm exec playwright install --with-deps chromium
+      - name: Install browsers
+        run: pnpm exec playwright install --with-deps chromium webkit firefox
       - name: End-to-end test
         run: pnpm test:e2e
       - name: Secret scan
         run: pnpm secret:scan
+      - name: Retain browser test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: experience-browser-evidence
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: ignore
+          retention-days: 14

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import './institutions.css';
 import type { Institution, Locale } from '../../types';
 import {
   buildInstitutionSnapshot,
@@ -16,6 +17,7 @@ type InstitutionSnapshotCardProps = {
   onSelect?: () => void;
   showProfileLink?: boolean;
   provenance?: boolean;
+  compact?: boolean;
 };
 
 export function InstitutionSnapshotCard({
@@ -27,6 +29,7 @@ export function InstitutionSnapshotCard({
   onSelect,
   showProfileLink = true,
   provenance = false,
+  compact = false,
 }: InstitutionSnapshotCardProps) {
   const snapshot = buildInstitutionSnapshot(institution, locale, metricLimit);
   const c = institutionExperienceCopy[locale];
@@ -54,65 +57,102 @@ export function InstitutionSnapshotCard({
       {snapshot.roleSummary ? (
         <p className="institution-snapshot-role">{snapshot.roleSummary}</p>
       ) : null}
-
-      {snapshot.systemHighlights.length > 0 ? (
-        <section className="institution-snapshot-evidence" aria-label={c.systemHighlights}>
-          <h4>{c.systemHighlights}</h4>
-          <ul className="institution-snapshot-highlights">
-            {snapshot.systemHighlights.map((highlight, index) => (
-              <li key={`${highlight.label}-${index}`}>
-                <span className="institution-highlight-label">{highlight.label}</span>
-                <span>{highlight.value}</span>
-                {provenance && highlight.sources.length > 0 ? (
-                  <ul className="institution-highlight-sources">
-                    {highlight.sources.map((source) => (
-                      <li key={source.sourceId}>
-                        <a href={source.url} target="_blank" rel="noreferrer">
-                          {c.openSource}: {source.title}
-                        </a>
-                        {highlight.evidenceSummary ? (
-                          <span> · {highlight.evidenceSummary}</span>
-                        ) : null}
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        </section>
+      {compact ? (
+        <SnapshotActions
+          snapshot={snapshot}
+          locale={locale}
+          selected={selected}
+          onSelect={onSelect}
+          showProfileLink={showProfileLink}
+        />
       ) : null}
+      <details className="institution-snapshot-disclosure" open={!compact || selected}>
+        <summary>{locale === 'en' ? 'Institution snapshot' : '機構重點速覽'}</summary>
+        {snapshot.systemHighlights.length > 0 ? (
+          <section className="institution-snapshot-evidence" aria-label={c.systemHighlights}>
+            <h4>{c.systemHighlights}</h4>
+            <ul className="institution-snapshot-highlights">
+              {snapshot.systemHighlights.map((highlight, index) => (
+                <li key={`${highlight.label}-${index}`}>
+                  <span className="institution-highlight-label">{highlight.label}</span>
+                  <span>{highlight.value}</span>
+                  {provenance && highlight.sources.length > 0 ? (
+                    <ul className="institution-highlight-sources">
+                      {highlight.sources.map((source) => (
+                        <li key={source.sourceId}>
+                          <a href={source.url} target="_blank" rel="noreferrer">
+                            {c.openSource}: {source.title}
+                          </a>
+                          {highlight.evidenceSummary ? (
+                            <span> · {highlight.evidenceSummary}</span>
+                          ) : null}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
-      <InstitutionMetrics snapshot={snapshot} locale={locale} provenance={provenance} />
-
-      <div className="network-card-actions institution-snapshot-actions">
-        {onSelect ? (
-          <button
-            type="button"
-            className="button secondary network-card-select"
-            aria-pressed={selected}
-            onClick={onSelect}
-          >
-            {selected ? c.selected : c.select}
-          </button>
-        ) : null}
-        {showProfileLink ? (
-          <a className="button secondary" href={`#${snapshot.profilePath}`}>
-            {c.viewProfile}
-          </a>
-        ) : null}
-        {snapshot.officialWebsite ? (
-          <a
-            href={snapshot.officialWebsite}
-            target="_blank"
-            rel="noreferrer"
-            aria-label={`${c.officialWebsite}: ${institution.name[locale]} (${c.opensNewTab})`}
-          >
-            {c.officialWebsite} ↗
-          </a>
-        ) : null}
-      </div>
+        <InstitutionMetrics snapshot={snapshot} locale={locale} provenance={provenance} />
+      </details>
+      {!compact ? (
+        <SnapshotActions
+          snapshot={snapshot}
+          locale={locale}
+          selected={selected}
+          onSelect={onSelect}
+          showProfileLink={showProfileLink}
+        />
+      ) : null}
     </article>
+  );
+}
+
+function SnapshotActions({
+  snapshot,
+  locale,
+  selected,
+  onSelect,
+  showProfileLink,
+}: {
+  snapshot: InstitutionSnapshot;
+  locale: Locale;
+  selected: boolean;
+  onSelect?: () => void;
+  showProfileLink: boolean;
+}) {
+  const c = institutionExperienceCopy[locale];
+  return (
+    <div className="network-card-actions institution-snapshot-actions">
+      {onSelect ? (
+        <button
+          type="button"
+          className="button secondary network-card-select"
+          aria-pressed={selected}
+          onClick={onSelect}
+        >
+          {selected ? c.selected : c.select}
+        </button>
+      ) : null}
+      {showProfileLink ? (
+        <a className="button secondary" href={`#${snapshot.profilePath}`}>
+          {c.viewProfile}
+        </a>
+      ) : null}
+      {snapshot.officialWebsite ? (
+        <a
+          href={snapshot.officialWebsite}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`${c.officialWebsite}: ${snapshot.identity.name} (${c.opensNewTab})`}
+        >
+          {c.officialWebsite} ↗
+        </a>
+      ) : null}
+    </div>
   );
 }
 
@@ -130,7 +170,7 @@ export function InstitutionMetrics({
 
   return (
     <section className="institution-official-metrics" aria-label={c.officialMetrics}>
-      <h3>{c.officialMetrics}</h3>
+      <h3 className="institution-metrics-heading">{c.officialMetrics}</h3>
       <div className="institution-metric-strip">
         {snapshot.latestMetrics.map((metric) => (
           <article className="institution-metric" key={metric.recordId}>
@@ -138,12 +178,14 @@ export function InstitutionMetrics({
             {metric.schemeName ? (
               <span className="institution-metric-scheme">{metric.schemeName}</span>
             ) : null}
-            <strong>{metric.formattedValue}</strong>
             <span className="institution-metric-label">{metric.label}</span>
-            <span className="institution-metric-unit">{metric.unit}</span>
-            {metric.qualification ? (
-              <span className="institution-metric-qualification">{metric.qualification}</span>
-            ) : null}
+            <div className="institution-metric-reading">
+              <strong>{metric.formattedValue}</strong>
+              <span className="institution-metric-unit">{metric.unit}</span>
+              {metric.qualification ? (
+                <span className="institution-metric-qualification">{metric.qualification}</span>
+              ) : null}
+            </div>
             {provenance ? <MetricProvenance metric={metric} locale={locale} /> : null}
           </article>
         ))}

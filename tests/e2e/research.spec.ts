@@ -33,9 +33,11 @@ test('international default uses English and preserves the independent disclaime
     await expect(selector.locator('option')).toHaveCount(15);
     await expect(selector).toHaveValue('');
   } else {
-    await expect(page.getByRole('button', { name: 'Taiwan' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Japan' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Republic of Korea' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Taiwan', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Japan', exact: true })).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: 'Republic of Korea', exact: true }),
+    ).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Asia overview', exact: true })).toBeVisible();
     await expect(
       page.getByText('Choose an economy to explore its ACSIC institutions.'),
@@ -43,8 +45,12 @@ test('international default uses English and preserves the independent disclaime
   }
   await chooseHomepageEconomy(page, 'TW', 'Taiwan', 'Choose an economy');
   await expect(page.getByRole('heading', { name: 'Taiwan', exact: true })).toBeVisible();
-  await expect(page.getByText('TSMEG', { exact: true })).toBeVisible();
-  await expect(page.getByText('ACGF', { exact: true })).toBeVisible();
+  await expect(page.locator('[data-institution-id="tsmeg-tw"] .network-abbreviation')).toHaveText(
+    'TSMEG',
+  );
+  await expect(page.locator('[data-institution-id="acgf-tw"] .network-abbreviation')).toHaveText(
+    'ACGF',
+  );
   await expect(page.getByText('Observer', { exact: true }).first()).toBeVisible();
   await expect(page.getByRole('link', { name: 'Explore all institutions' })).toHaveAttribute(
     'href',
@@ -87,9 +93,9 @@ test('Traditional Chinese homepage renders the interactive ACSIC network explore
     await expect(selector.locator('option')).toHaveCount(15);
     await expect(selector).toHaveValue('');
   } else {
-    await expect(page.getByRole('button', { name: '臺灣' })).toBeVisible();
-    await expect(page.getByRole('button', { name: '日本' })).toBeVisible();
-    await expect(page.getByRole('button', { name: '韓國' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '臺灣', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: '日本', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: '韓國', exact: true })).toBeVisible();
     await expect(page.getByRole('heading', { name: '亞洲總覽', exact: true })).toBeVisible();
     await expect(page.getByText('選擇一個國家／經濟體，探索當地 ACSIC 機構。')).toBeVisible();
   }
@@ -155,6 +161,7 @@ test('search and all member filter classes use readable bilingual labels', async
   await page.getByRole('button', { name: 'Clear filters' }).click();
   await page.getByLabel('Economy').selectOption('KR');
   await expect(page.locator('.directory-card')).toHaveCount(3);
+  await page.getByText('More filters', { exact: true }).click();
   await page
     .getByLabel('Institution type')
     .selectOption('technology_finance_guarantee_institution');
@@ -163,6 +170,7 @@ test('search and all member filter classes use readable bilingual labels', async
     'technology_finance_guarantee_institution',
   );
   await page.getByRole('button', { name: 'Clear filters' }).click();
+  await page.getByText('More filters', { exact: true }).click();
   await page.getByLabel('Membership').selectOption('observer');
   await expect(page.locator('.directory-card')).toHaveCount(1);
 });
@@ -502,8 +510,14 @@ test('Traditional Chinese pilot route, filters and bilingual statuses work', asy
   await expect(
     page.locator('.pilot-record-card').filter({ hasText: '2025 年' }).first(),
   ).toBeVisible();
-  await expect(page.getByText('截至 2025 年 12 月 31 日', { exact: true })).toHaveCount(4);
-  await expect(page.getByText('1974–2025', { exact: true })).toBeVisible();
+  await expect(
+    page
+      .locator('.pilot-record-grid, .historical-series')
+      .getByText('截至 2025 年 12 月 31 日', { exact: true }),
+  ).toHaveCount(4);
+  await expect(
+    page.locator('.pilot-record-grid').getByText('1974–2025', { exact: true }),
+  ).toBeVisible();
   await page.locator('.historical-series summary').click();
   await expect(page.locator('.historical-series tbody tr')).toHaveCount(10);
   await expect(page.locator('.historical-series')).toContainText('2024 年');
@@ -630,6 +644,30 @@ test('pilot remains usable at 390px without page-level horizontal overflow', asy
   await expect(page.locator('.download-details')).not.toHaveAttribute('open', '');
   await page.locator('.pilot-record-card').first().getByText('查看來源與資料處理').click();
   await expect(page.getByText('Knowledge Hub 指標', { exact: true }).first()).toBeVisible();
+  expect(
+    await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1),
+  ).toBe(true);
+});
+
+test('data, compare and reports research tools remain usable on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+
+  await page.goto('./#/zh-TW/data-pilot');
+  await expect(page.locator('.research-data-page')).toBeVisible();
+  await expect(page.locator('.record-reading').first()).toBeVisible();
+  expect(
+    await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1),
+  ).toBe(true);
+
+  await page.goto('./#/zh-TW/compare');
+  await expect(page.locator('.research-compare-page .selection-tray')).toBeVisible();
+  await expect(page.locator('.research-compare-page .research-table-wrap')).toBeVisible();
+  expect(
+    await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1),
+  ).toBe(true);
+
+  await page.goto('./#/zh-TW/reports');
+  await expect(page.locator('.research-reports-page .report-markdown-preview')).toBeVisible();
   expect(
     await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1),
   ).toBe(true);
